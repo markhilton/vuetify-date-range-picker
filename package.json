@@ -1,6 +1,6 @@
 {
   "private": false,
-  "name": "vuetify-date-range-picker",
+  "name": "@nerd305/vuetify-date-range-picker",
   "version": "0.0.1",
   "description": "Responsive date range picker for COP",
   "main": "dist/vuetify-date-range-picker.umd.js",
