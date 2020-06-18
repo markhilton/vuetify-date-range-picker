@@ -1,0 +1,33 @@
+{
+  "private": false,
+  "name": "cop-date-range-picker",
+  "version": "0.0.1",
+  "description": "Responsive date range picker for COP",
+  "main": "dist/cop-date-range-picker.umd.js",
+  "module": "dist/cop-date-range-picker.esm.js",
+  "unpkg": "dist/cop-date-range-picker.min.js",
+  "browser": {
+    "./sfc": "src/CopDateRangePicker.vue"
+  },
+  "scripts": {
+    "build": "npm run build:umd & npm run build:es & npm run build:unpkg",
+    "build:umd": "rollup --config build/rollup.config.js --format umd --file dist/cop-date-range-picker.umd.js",
+    "build:es": "rollup --config build/rollup.config.js --format es --file dist/cop-date-range-picker.esm.js",
+    "build:unpkg": "rollup --config build/rollup.config.js --format iife --file dist/cop-date-range-picker.min.js"
+  },
+  "author": "Ryan",
+  "license": "MIT",
+  "dependencies": {
+    "moment": "^2.26.0",
+    "v-calendar": "^1.0.6"
+  },
+  "devDependencies": {
+    "@rollup/plugin-buble": "^0.21.3",
+    "@rollup/plugin-commonjs": "^11.1.0",
+    "@rollup/plugin-node-resolve": "^8.0.1",
+    "rollup": "^1.17.0",
+    "rollup-plugin-vue": "^5.0.1",
+    "vue": "^2.6.10",
+    "vue-template-compiler": "^2.6.10"
+  }
+}
