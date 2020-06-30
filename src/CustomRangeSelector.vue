@@ -22,10 +22,19 @@
 
       <v-divider />
 
-      <v-date-picker v-model="range" mode="range" :rows="2" is-inline is-expanded class="mt-3" />
+      <v-date-picker
+        v-model="range"
+        mode="range"
+        :isDark="dark"
+        :rows="2"
+        is-inline
+        is-expanded
+        class="mt-3"
+      />
 
-      <v-dialog v-model="showRangeEditor">
+      <v-dialog :dark="dark" v-model="showRangeEditor">
         <custom-range-editor
+          :dark="dark"
           :start="start"
           :end="end"
           @close="closeRangeEditor"
@@ -54,6 +63,10 @@ export default {
     end: {
       type: String,
       default: () => moment().format(INTERNAL_DATE_FORMAT_1),
+    },
+    dark: {
+      type: Boolean,
+      default: false,
     },
   },
   data() {
