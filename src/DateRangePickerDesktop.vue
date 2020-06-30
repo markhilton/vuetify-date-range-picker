@@ -58,6 +58,7 @@
         <v-date-picker
           v-model="range"
           mode="range"
+          :isDark="dark"
           :columns="2"
           :attributes="enableCompare ? attributes : []"
           is-inline
@@ -78,6 +79,17 @@ import moment from "moment"
 import { PRESETS_DESKTOP, PRESETS_DEFAULT_DESKTOP, INTERNAL_DATE_FORMAT_1 } from "./presets/constant"
 
 export default {
+  props: {
+    format: {
+      type: String,
+      default: () => moment().format(INTERNAL_DATE_FORMAT_1),
+    },
+    dark: {
+      type: Boolean,
+      default: false,
+    },
+  },
+
   watch: {
     currSelectedPreset: function() {
       this.updateCalendar(this.presets[this.currSelectedPreset])
@@ -140,8 +152,8 @@ export default {
       const {
         period: { start, end },
       } = preset
-      this.startDate = moment(start).format("YYYY-MM-DD")
-      this.endDate = moment(end).format("YYYY-MM-DD")
+      this.startDate = moment(start).format(this.format)
+      this.endDate = moment(end).format(this.format)
       this.range = {
         start: new Date(this.startDate),
         end: new Date(this.endDate),
@@ -158,8 +170,8 @@ export default {
         const {
           period: { start, end },
         } = this.presets[this.currSelectedPreset].compare[this.currSelectedCompare.id]
-        this.compareStartDate = moment(start).format("YYYY-MM-DD")
-        this.compareEndDate = moment(end).format("YYYY-MM-DD")
+        this.compareStartDate = moment(start).format(this.format)
+        this.compareEndDate = moment(end).format(this.format)
       }
     },
     close() {
@@ -169,11 +181,11 @@ export default {
       this.$emit("hideModal")
       this.$emit("saveDesktopConfig", {
         type: this.currSelectedPreset,
-        start: this.startDate && moment(this.startDate).format(INTERNAL_DATE_FORMAT_1),
-        until: this.endDate && moment(this.endDate).format(INTERNAL_DATE_FORMAT_1),
+        start: this.startDate && moment(this.startDate).format(this.format),
+        until: this.endDate && moment(this.endDate).format(this.format),
         compareType: this.currSelectedCompare,
-        compareStart: this.compareStartDate && moment(this.compareStartDate).format(INTERNAL_DATE_FORMAT_1),
-        compareEnd: this.compareEndDate && moment(this.compareEndDate).format(INTERNAL_DATE_FORMAT_1),
+        compareStart: this.compareStartDate && moment(this.compareStartDate).format(this.format),
+        compareEnd: this.compareEndDate && moment(this.compareEndDate).format(this.format),
       })
     },
   },

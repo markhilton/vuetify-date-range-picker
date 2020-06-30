@@ -55,6 +55,10 @@ export default {
       type: String,
       default: () => moment().format(INTERNAL_DATE_FORMAT_1),
     },
+    dark: {
+      type: Boolean,
+      default: false,
+    },
   },
   data() {
     return {

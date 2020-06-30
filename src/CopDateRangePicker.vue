@@ -1,10 +1,17 @@
 <template>
   <v-card>
     <div v-if="!isMobile">
-      <date-range-picker-desktop @hideModal="hideModal" @saveDesktopConfig="saveDesktopConfig"/>
+      <date-range-picker-desktop
+        :dark="dark"
+        :format="format"
+        @hideModal="hideModal"
+        @saveDesktopConfig="saveDesktopConfig"
+      />
     </div>
     <div v-else>
       <date-range-picker-mobile
+        :dark="dark"
+        :format="format"
         :savedPeriodConfig="savedPeriodConfig"
         :showDashboardDateSetting="showDashboardDateSetting"
         @hideModal="hideModal"
@@ -17,6 +24,8 @@
 <script>
 import DateRangePickerMobile from "./DateRangePickerMobile.vue"
 import DateRangePickerDesktop from "./DateRangePickerDesktop.vue"
+import moment from "moment"
+import { INTERNAL_DATE_FORMAT_1 } from "./presets/constant"
 
 export default {
   components: {
@@ -31,6 +40,14 @@ export default {
     },
     savedPeriodConfig: {},
     showDashboardDateSetting: {
+      type: Boolean,
+      default: false,
+    },
+    format: {
+      type: String,
+      default: () => moment().format(INTERNAL_DATE_FORMAT_1),
+    },
+    dark: {
       type: Boolean,
       default: false,
     },

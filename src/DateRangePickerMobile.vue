@@ -6,7 +6,9 @@
           <v-btn text @click="back">
             <v-icon>fas fa-arrow-left</v-icon>
           </v-btn>
-          <div class="d-flex align-center"><span>Date settings</span></div>
+          <div class="d-flex align-center">
+            <span>Date settings</span>
+          </div>
         </v-row>
 
         <v-btn text @click="saveSetting">Save</v-btn>
@@ -14,74 +16,88 @@
     </v-row>
 
     <v-row>
-      <v-tabs v-model="subtypeConverter">
+      <v-tabs v-model="subtypeConverter" :dark="dark">
         <v-tab v-for="type in periodTypes" :key="type.key">{{ type.label }}</v-tab>
 
-        <v-tab-item v-for="type in periodTypes" :key="type.key">
-          <v-col>
-            <v-radio-group
-              v-if="periodSubtype[type.key] && periodSubtype[type.key].length > 0"
-              v-model="selectedSubtype[type.key].subType"
-            >
-              <v-radio v-for="subType in periodSubtype[type.key]" :key="subType.key" :value="subType.key">
-                <template slot="label">
-                  <div class="d-flex flex-column">
-                    <span class="primary-label">{{ subType.label }}</span>
-                    <span class="second-label">{{ subType.periodText }}</span>
-                  </div>
-                </template>
-              </v-radio>
-            </v-radio-group>
+        <v-tabs-items :dark="dark" v-model="subtypeConverter">
+          <v-tab-item v-for="type in periodTypes" :key="type.key">
+            <v-col>
+              <v-radio-group
+                v-if="periodSubtype[type.key] && periodSubtype[type.key].length > 0"
+                v-model="selectedSubtype[type.key].subType"
+              >
+                <v-radio
+                  v-for="subType in periodSubtype[type.key]"
+                  :key="subType.key"
+                  :value="subType.key"
+                >
+                  <template slot="label">
+                    <div class="d-flex flex-column" :class="dark ? 'white--text' : 'black--text'">
+                      <span class="primary-label">{{ subType.label }}</span>
+                      <span class="second-label">{{ subType.periodText }}</span>
+                    </div>
+                  </template>
+                </v-radio>
+              </v-radio-group>
 
-            <v-col
-              v-if="type.key === 'CUSTOM'"
-              class="d-flex flex-column"
-              @click="showSelectionModal = !showSelectionModal"
-            >
-              <div class="pl-5 mb-3 d-flex flex-column">
-                <span class="primary-label">Start date</span>
-                <span class="second-label">{{ currCustomDate && currCustomDate.startText }}</span>
-              </div>
-              <div class="pl-5 d-flex flex-column">
-                <span class="primary-label">End date</span>
-                <span class="second-label">{{ currCustomDate && currCustomDate.endText }}</span>
-              </div>
-            </v-col>
+              <v-col
+                v-if="type.key === 'CUSTOM'"
+                class="d-flex flex-column"
+                @click="showSelectionModal = !showSelectionModal"
+              >
+                <div class="pl-5 mb-3 d-flex flex-column">
+                  <span class="primary-label">Start date</span>
+                  <span class="second-label">{{ currCustomDate && currCustomDate.startText }}</span>
+                </div>
+                <div class="pl-5 d-flex flex-column">
+                  <span class="primary-label">End date</span>
+                  <span class="second-label">{{ currCustomDate && currCustomDate.endText }}</span>
+                </div>
+              </v-col>
 
-            <v-divider></v-divider>
+              <v-divider></v-divider>
 
-            <v-row class="pa-3" justify="space-between">
-              <div>Compare to</div>
-              <v-switch class="compare-to-switch" v-model="enableCompareTo"></v-switch>
-            </v-row>
+              <v-row class="pa-3" justify="space-between">
+                <div>Compare to</div>
+                <v-switch class="compare-to-switch" v-model="enableCompareTo"></v-switch>
+              </v-row>
 
-            <v-radio-group v-if="enableCompareTo" v-model="selectedSubtype[type.key].compare">
-              <v-radio v-for="compare in periodCompare[type.key]" :key="compare.key" :value="compare.key">
-                <template slot="label">
-                  <div class="d-flex flex-column">
-                    <span class="primary-label">{{ compare.label }}</span>
-                    <span class="second-label" v-if="type.key !== 'CUSTOM'"
-                      >{{
+              <v-radio-group v-if="enableCompareTo" v-model="selectedSubtype[type.key].compare">
+                <v-radio
+                  v-for="compare in periodCompare[type.key]"
+                  :key="compare.key"
+                  :value="compare.key"
+                >
+                  <template slot="label">
+                    <div class="d-flex flex-column">
+                      <span class="primary-label">{{ compare.label }}</span>
+                      <span class="second-label" v-if="type.key !== 'CUSTOM'">
+                        {{
                         selectedSubtype &&
-                          selectedSubtype[type.key] &&
-                          selectedSubtype[type.key].subType &&
-                          compare.period &&
-                          compare.period[selectedSubtype[type.key].subType].periodText
-                      }}
-                    </span>
-                    <span class="second-label" v-if="type.key === 'CUSTOM'">{{ compare.periodText }}</span>
-                  </div>
-                </template>
-              </v-radio>
-            </v-radio-group>
-          </v-col>
-        </v-tab-item>
+                        selectedSubtype[type.key] &&
+                        selectedSubtype[type.key].subType &&
+                        compare.period &&
+                        compare.period[selectedSubtype[type.key].subType].periodText
+                        }}
+                      </span>
+                      <span
+                        class="second-label"
+                        v-if="type.key === 'CUSTOM'"
+                      >{{ compare.periodText }}</span>
+                    </div>
+                  </template>
+                </v-radio>
+              </v-radio-group>
+            </v-col>
+          </v-tab-item>
+        </v-tabs-items>
       </v-tabs>
     </v-row>
 
     <!--date selection modal for custom dates-->
-    <v-dialog v-model="showSelectionModal" fullscreen>
+    <v-dialog :dark="dark" v-model="showSelectionModal" fullscreen>
       <custom-range-selector
+        :dark="dark"
         :start="currCustomDate && currCustomDate.start"
         :end="currCustomDate && currCustomDate.end"
         @close="showSelectionModal = !showSelectionModal"
@@ -116,6 +132,14 @@ export default {
       type: Boolean,
       default: false,
     },
+    format: {
+      type: String,
+      default: "YYYY-MM-DD",
+    },
+    dark: {
+      type: Boolean,
+      default: false,
+    },
   },
 
   watch: {
@@ -142,7 +166,6 @@ export default {
     periodTypes() {
       return Object.keys(PERIOD_TYPE).map(key => ({ key, label: PERIOD_TYPE[key].label }))
     },
-
 
     savedType() {
       return this.savedPeriodConfig.type
@@ -221,8 +244,7 @@ export default {
                 const { start, end } = period[periodKey]
                 let periodText = ""
                 if (start && end) {
-                  periodText =
-                    moment(start).format(DISPLAY_DATE_FORMAT_1) + " - " + moment(end).format(DISPLAY_DATE_FORMAT_1)
+                  periodText = moment(start).format(this.format) + " - " + moment(end).format(this.format)
                 } else if (start && !end) {
                   periodText = moment(start).format(DISPLAY_DATE_FORMAT_2)
                 }
@@ -287,8 +309,8 @@ export default {
       this.currCustomDate = {
         start: moment(range.start).format(INTERNAL_DATE_FORMAT_1),
         end: moment(range.end).format(INTERNAL_DATE_FORMAT_1),
-        startText: moment(range.start).format(DISPLAY_DATE_FORMAT_2),
-        endText: moment(range.end).format(DISPLAY_DATE_FORMAT_2),
+        startText: moment(range.start).format(this.format),
+        endText: moment(range.end).format(this.format),
       }
       this.updateCustomComparePeriod()
     },
@@ -339,13 +361,13 @@ export default {
   margin-top: 0px;
 }
 
-.primary-label {
-  color: $cop-color-black;
-  font-size: 14px;
-}
+// .primary-label {
+//   color: $cop-color-black;
+//   font-size: 14px;
+// }
 
-.second-label {
-  color: $cop-color-grey;
-  font-size: 13px;
-}
+// .second-label {
+//   color: $cop-color-grey;
+//   font-size: 13px;
+// }
 </style>
