@@ -62,7 +62,7 @@
                 <v-switch class="compare-to-switch" v-model="enableCompareTo"></v-switch>
               </v-row>
 
-              <v-radio-group v-if="enableCompareTo" v-model="selectedSubtype[type.key].compare">
+              <v-radio-group v-if="enableCompareTo" v-model="selectedSubtype[type.key].compareType">
                 <v-radio
                   v-for="compare in periodCompare[type.key]"
                   :key="compare.key"
@@ -182,6 +182,9 @@ export default {
     savedCompareType() {
       return this.savedPeriodConfig.compareType
     },
+    getEnableCompareTo() {
+      return this.savedPeriodConfig.enableCompareTo
+    },
     getDashboardDateSetting() {
       return this.showDashboardDateSetting
     },
@@ -284,21 +287,25 @@ export default {
       if (this.selectedType === "CUSTOM") {
         this.$emit("saveMobileConfig", {
           type: "CUSTOM",
+          subType: "",
           start: this.currCustomDate.start,
-          until: this.currCustomDate.end,
+          until: this.currCustomDate.end ? this.currCustomDate.end : null,
+          compareType: "",
+          enableCompareTo: !!this.enableCompareTo,
         })
       } else {
         const currSelectedSubType = this.selectedSubtype[this.selectedType].subType
-        const currSelectedCompareType = this.selectedSubtype[this.selectedType].compare
+        const currSelectedCompareType = this.selectedSubtype[this.selectedType].compareType
         const { start, end } = this.periodSubtype[this.selectedType].find(
           type => type.key === currSelectedSubType,
         ).period
         this.$emit("saveMobileConfig", {
           type: this.selectedType,
-          subType: currSelectedSubType,
-          start,
-          until: end,
-          compareType: currSelectedCompareType,
+          subType: currSelectedSubType ? currSelectedSubType : null,
+          start: start ? start : null,
+          until: end ? end : null,
+          compareType: currSelectedCompareType ? currSelectedCompareType : null,
+          enableCompareTo: !!this.enableCompareTo,
         })
       }
       this.$emit("hideModal")
@@ -320,6 +327,7 @@ export default {
       this.selectedSubtype = JSON.parse(JSON.stringify(DEFAULT_TYPE_SELECTION))
       this.selectedSubtype[this.savedType].subType = this.savedSubtype
       this.selectedSubtype[this.savedType].compareType = this.savedCompareType
+      this.enableCompareTo = this.getEnableCompareTo
     },
     updateCustomComparePeriod() {
       const { CUSTOM } = this.periodCompare

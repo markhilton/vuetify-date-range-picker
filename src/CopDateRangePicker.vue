@@ -2,8 +2,8 @@
   <v-card>
     <div v-if="!isMobile">
       <date-range-picker-desktop
-        :dark="dark"
-        :format="format"
+        :savedDesktopConfig="savedDesktopConfig"
+        :showDashboardDateSetting="showDashboardDateSetting"
         @hideModal="hideModal"
         @saveDesktopConfig="saveDesktopConfig"
       />
@@ -38,6 +38,7 @@ export default {
       type: Boolean,
       default: false,
     },
+    savedDesktopConfig: {},
     savedPeriodConfig: {},
     showDashboardDateSetting: {
       type: Boolean,
