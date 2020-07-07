@@ -82,9 +82,15 @@ export default {
   props: {
     format: {
       type: String,
-      default: () => moment().format(INTERNAL_DATE_FORMAT_1),
+      // default: () => moment().format(INTERNAL_DATE_FORMAT_1),
+      default: () => INTERNAL_DATE_FORMAT_1,
     },
     dark: {
+      type: Boolean,
+      default: false,
+    },
+    savedDesktopConfig: {},
+    showDashboardDateSetting: {
       type: Boolean,
       default: false,
     },
@@ -99,6 +105,11 @@ export default {
     },
     currSelectedCompare: function() {
       this.updateComparePeriod()
+    },
+    getDashboardDateSetting(newValue) {
+      if (newValue) {
+        this.reloadType()
+      }
     },
   },
 
@@ -127,7 +138,9 @@ export default {
       this.presets[key].compareArray = compareArray
     })
 
-    this.updateCalendar(this.presets.TODAY)
+    // this.updateCalendar(this.presets.TODAY)
+
+    this.reloadType()
   },
 
   computed: {
@@ -143,6 +156,9 @@ export default {
           ],
         },
       ]
+    },
+    getDashboardDateSetting() {
+      return this.showDashboardDateSetting
     },
   },
 
@@ -186,7 +202,27 @@ export default {
         compareType: this.currSelectedCompare,
         compareStart: this.compareStartDate && moment(this.compareStartDate).format(this.format),
         compareEnd: this.compareEndDate && moment(this.compareEndDate).format(this.format),
+        enableCompare: !!this.enableCompare,
       })
+    },
+    reloadType() {
+      // if saved config is valid, then init configuration
+      if (this.savedDesktopConfig) {
+        const { compareEnd, compareStart, compareType, start, type, until, enableCompare } = this.savedDesktopConfig
+        this.compareStartDate = compareStart
+        this.compareEndDate = compareEnd
+        this.currSelectedCompare = compareType
+        this.startDate = start
+        this.endDate = until
+        this.currSelectedPreset = type
+        this.enableCompare = enableCompare
+      }
+
+      // this.updateCalendar(this.presets.TODAY)
+      this.range = {
+        start: new Date(this.startDate),
+        end: new Date(this.endDate),
+      }
     },
   },
 }
