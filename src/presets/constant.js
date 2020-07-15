@@ -215,6 +215,12 @@ const DEFAULT_CUSTOM_DATE = {
   end: moment().format(INTERNAL_DATE_FORMAT_1),
 }
 
+const DEFAULT_MOBILE_CONFIG = {
+  type: DEFAULT_TYPE_SELECTION.WEEK.id,
+  subType: DEFAULT_TYPE_SELECTION.WEEK.subType,
+  compareType: DEFAULT_TYPE_SELECTION.WEEK.compare,
+}
+
 /////////////////////PRESETS OPTIONS - DESKTOP///////////////////////
 const COMPARE_PERIODS_DESKTOP = {
   PREVIOUS_PERIOD: {
@@ -224,6 +230,10 @@ const COMPARE_PERIODS_DESKTOP = {
   PREVIOUS_YEAR: {
     id: "PREVIOUS_YEAR",
     label: "Previous year",
+  },
+  CUSTOM_PERIOD: {
+    id: "CUSTOM_PERIOD",
+    label: "Custom",
   },
 }
 
@@ -242,6 +252,11 @@ const PRESETS_DESKTOP = {
         label: "Previous year",
         period: Date.previousYear({ period: Date.todayWithStartEnd() }),
       },
+      CUSTOM_PERIOD: {
+        id: "CUSTOM_PERIOD",
+        label: "Custom",
+        period: {},
+      },
     },
     period: Date.todayWithStartEnd(),
   },
@@ -259,6 +274,11 @@ const PRESETS_DESKTOP = {
         label: "Previous year",
         period: Date.previousYear({ period: Date.lastWeek() }),
       },
+      CUSTOM_PERIOD: {
+        id: "CUSTOM_PERIOD",
+        label: "Custom",
+        period: {},
+      },
     },
     period: Date.lastWeek(),
   },
@@ -275,6 +295,11 @@ const PRESETS_DESKTOP = {
         id: "PREVIOUS_YEAR",
         label: "Previous year",
         period: Date.previousYear({ period: Date.lastMonthWithStartEnd() }),
+      },
+      CUSTOM_PERIOD: {
+        id: "CUSTOM_PERIOD",
+        label: "Custom",
+        period: {},
       },
     },
     period: Date.lastMonthWithStartEnd(),
@@ -309,14 +334,92 @@ const PRESETS_DESKTOP = {
     compare: {
       PREVIOUS_PERIOD: COMPARE_PERIODS_DESKTOP.PREVIOUS_PERIOD,
       PREVIOUS_YEAR: COMPARE_PERIODS_DESKTOP.PREVIOUS_YEAR,
+      CUSTOM_PERIOD: COMPARE_PERIODS_DESKTOP.CUSTOM_PERIOD,
     },
     period: Date.today(),
   },
 }
 
 const PRESETS_DEFAULT_DESKTOP = {
-  PRESET: PRESETS_DESKTOP.TODAY.id,
+  PRESET: PRESETS_DESKTOP.LAST_WEEK.id,
   COMPARE: COMPARE_PERIODS_DESKTOP.PREVIOUS_PERIOD,
+}
+
+/////////////////////// Convert Period List //////////////////////////////
+
+// mobile -> desktop
+const PERIOD_CONVERT_LIST_MOBILE = {
+  TODAY: "TODAY",
+  LAST7: "LAST_7DAY",
+  LAST_WEEK: "LAST_WEEK",
+  LAST30: "LAST_30DAY",
+  LAST_MONTH: "LAST_MONTH",
+}
+
+// desktop -> mobile
+const PERIOD_CONVERT_LIST_DESKTOP = {
+  TODAY: "TODAY",
+  LAST_7DAY: "LAST7",
+  LAST_WEEK: "LAST_WEEK",
+  LAST_30DAY: "LAST30",
+  LAST_MONTH: "LAST_MONTH",
+}
+
+// mobile -> desktop
+const PERIOD_COMPARE_CONVERT_LIST_MOBILE = {
+  TODAY: {
+    PREVIOUS_DAY: "PREVIOUS_PERIOD",
+    SAME_DATE_LAST_YEAR: "PREVIOUS_YEAR",
+  },
+  LAST7: {
+    PREVIOUS_PERIOD: "PREVIOUS_PERIOD",
+  },
+  LAST_WEEK: {
+    PREVIOUS_PERIOD: "PREVIOUS_PERIOD",
+  },
+  LAST30: {
+    PREVIOUS_PERIOD: "PREVIOUS_PERIOD",
+  },
+  LAST_MONTH: {
+    PREVIOUS_PERIOD: "PREVIOUS_PERIOD",
+    PREVIOUS_YEAR: "PREVIOUS_YEAR",
+  },
+  CUSTOM: {
+    PREVIOUS_PERIOD: "PREVIOUS_PERIOD",
+    PREVIOUS_YEAR: "PREVIOUS_YEAR",
+  },
+}
+
+// desktop -> mobile
+const PERIOD_COMPARE_CONVERT_LIST_DESKTOP = {
+  TODAY: {
+    PREVIOUS_PERIOD: "PREVIOUS_DAY",
+    PREVIOUS_YEAR: "SAME_DATE_LAST_YEAR",
+    MOBILE_TYPE: "DAY",
+  },
+  LAST_7DAY: {
+    PREVIOUS_PERIOD: "PREVIOUS_PERIOD",
+    MOBILE_TYPE: "WEEK",
+  },
+  LAST_WEEK: {
+    PREVIOUS_PERIOD: "PREVIOUS_PERIOD",
+    PREVIOUS_YEAR: "PREVIOUS_YEAR",
+    MOBILE_TYPE: "WEEK",
+  },
+  LAST_30DAY: {
+    PREVIOUS_PERIOD: "PREVIOUS_PERIOD",
+    MOBILE_TYPE: "MONTH",
+  },
+  LAST_MONTH: {
+    PREVIOUS_PERIOD: "PREVIOUS_PERIOD",
+    PREVIOUS_YEAR: "PREVIOUS_YEAR",
+    MOBILE_TYPE: "MONTH",
+  },
+  CUSTOM: {
+    PREVIOUS_PERIOD: "PREVIOUS_PERIOD",
+    PREVIOUS_YEAR: "PREVIOUS_YEAR",
+    MOBILE_TYPE: "CUSTOM",
+  },
 }
 
 export {
@@ -338,4 +441,9 @@ export {
   PRESETS_DESKTOP,
   COMPARE_PERIODS_DESKTOP,
   PRESETS_DEFAULT_DESKTOP,
+  PERIOD_CONVERT_LIST_MOBILE,
+  PERIOD_CONVERT_LIST_DESKTOP,
+  PERIOD_COMPARE_CONVERT_LIST_MOBILE,
+  PERIOD_COMPARE_CONVERT_LIST_DESKTOP,
+  DEFAULT_MOBILE_CONFIG,
 }

@@ -60,11 +60,11 @@
           mode="range"
           :isDark="dark"
           :columns="2"
-          :attributes="enableCompare ? attributes : []"
+          :attributes="attributes"
           is-inline
           is-expanded
         />
-
+          <!--:attributes="enableCompare ? attributes : []"-->
         <v-row justify="end" class="mt-3 mr-3">
           <v-btn text @click="close">Cancel</v-btn>
           <v-btn color="primary" @click="applySetting">Apply</v-btn>
@@ -76,7 +76,13 @@
 
 <script>
 import moment from "moment"
-import { PRESETS_DESKTOP, PRESETS_DEFAULT_DESKTOP, INTERNAL_DATE_FORMAT_1 } from "./presets/constant"
+import {
+  PRESETS_DESKTOP,
+  PRESETS_DEFAULT_DESKTOP,
+  INTERNAL_DATE_FORMAT_1,
+  PERIOD_CONVERT_LIST_DESKTOP,
+  PERIOD_COMPARE_CONVERT_LIST_DESKTOP,
+} from "./presets/constant"
 
 export default {
   props: {
@@ -102,6 +108,9 @@ export default {
     },
     enableCompare: function() {
       this.updateComparePeriod()
+      if (!this.enableCompare) {
+        this.range = {}
+      }
     },
     currSelectedCompare: function() {
       this.updateComparePeriod()
@@ -150,8 +159,8 @@ export default {
           highlight: "red",
           dates: [
             {
-              start: new Date(this.compareStartDate),
-              end: new Date(this.compareEndDate),
+              start: new Date(this.startDate),
+              end: new Date(this.endDate),
             },
           ],
         },
@@ -170,10 +179,6 @@ export default {
       } = preset
       this.startDate = moment(start).format(this.format)
       this.endDate = moment(end).format(this.format)
-      this.range = {
-        start: new Date(this.startDate),
-        end: new Date(this.endDate),
-      }
       this.updateComparePeriod()
     },
     updateComparePeriod() {
@@ -181,13 +186,19 @@ export default {
         this.currSelectedPreset !== "CUSTOM" &&
         this.enableCompare &&
         this.currSelectedPreset &&
-        this.currSelectedCompare
+        this.currSelectedCompare &&
+        this.currSelectedCompare.id !== "CUSTOM_PERIOD"
       ) {
         const {
           period: { start, end },
         } = this.presets[this.currSelectedPreset].compare[this.currSelectedCompare.id]
         this.compareStartDate = moment(start).format(this.format)
         this.compareEndDate = moment(end).format(this.format)
+
+        this.range = {
+          start: new Date(this.compareStartDate),
+          end: new Date(this.compareEndDate),
+        }
       }
     },
     close() {
@@ -195,14 +206,50 @@ export default {
     },
     applySetting() {
       this.$emit("hideModal")
-      this.$emit("saveDesktopConfig", {
+
+      // save desktop config
+      // this.updateComparePeriod() // set compare period from preset if it is not custom mode
+      let compareStart = (this.range && this.range.start) ?  moment(this.range.start).format(INTERNAL_DATE_FORMAT_1) : ""
+      let compareEnd = (this.range && this.range.end) ? moment(this.range.end).format(INTERNAL_DATE_FORMAT_1) : ""
+      const desktopConfig = {
         type: this.currSelectedPreset,
-        start: this.startDate && moment(this.startDate).format(this.format),
-        until: this.endDate && moment(this.endDate).format(this.format),
+        start: this.startDate && moment(this.startDate).format(INTERNAL_DATE_FORMAT_1),
+        until: this.endDate && moment(this.endDate).format(INTERNAL_DATE_FORMAT_1),
         compareType: this.currSelectedCompare,
-        compareStart: this.compareStartDate && moment(this.compareStartDate).format(this.format),
-        compareEnd: this.compareEndDate && moment(this.compareEndDate).format(this.format),
+        compareStart,
+        compareEnd,
         enableCompare: !!this.enableCompare,
+      }
+
+      // convert to mobile config & save
+      let newType
+      let newSubType
+      let newCompareType
+      if (this.currSelectedPreset) {
+        // new type and subtype
+        newType = PERIOD_COMPARE_CONVERT_LIST_DESKTOP[this.currSelectedPreset].MOBILE_TYPE
+        newSubType = PERIOD_CONVERT_LIST_DESKTOP[this.currSelectedPreset]
+      }
+      if (this.currSelectedCompare && desktopConfig.enableCompare && this.currSelectedPreset) {
+        // new compare type
+        newCompareType = PERIOD_COMPARE_CONVERT_LIST_DESKTOP[this.currSelectedPreset][this.currSelectedCompare.id]
+      }
+
+      const newMobileConfig = {
+        type: newType ? newType : null,
+        subType: newSubType ? newSubType : null,
+        start: desktopConfig.start,
+        until: newType !== "DAY" ? desktopConfig.until : null,
+        compareType: newCompareType ? newCompareType : null,
+        enableCompareTo: desktopConfig.enableCompare,
+        compareStart: desktopConfig.compareStart,
+        compareEnd: newType !== "DAY" ? desktopConfig.compareEnd : null,
+      }
+
+      // this.$emit("saveConvertedMobileConfig", newMobileConfig)
+      this.$emit("saveDesktopConfig", {
+        desktopConfig,
+        newMobileConfig,
       })
     },
     reloadType() {
@@ -216,13 +263,22 @@ export default {
         this.endDate = until
         this.currSelectedPreset = type
         this.enableCompare = enableCompare
+
+        if (this.enableCompare) {
+          this.range = {
+            start: new Date(this.compareStartDate),
+            end: new Date(this.compareEndDate),
+          }
+        } else {
+          this.range = {}
+        }
+      } else {
+        // init configuration
+        const { start, end } = this.presets[this.currSelectedPreset].period
+        this.startDate = start
+        this.endDate = end
       }
 
-      // this.updateCalendar(this.presets.TODAY)
-      this.range = {
-        start: new Date(this.startDate),
-        end: new Date(this.endDate),
-      }
     },
   },
 }

@@ -22,15 +22,7 @@
 
       <v-divider />
 
-      <v-date-picker
-        v-model="range"
-        mode="range"
-        :isDark="dark"
-        :rows="2"
-        is-inline
-        is-expanded
-        class="mt-3"
-      />
+      <v-date-picker v-model="range" mode="range" :isDark="dark" :rows="2" is-inline is-expanded class="mt-3" />
 
       <v-dialog :dark="dark" v-model="showRangeEditor">
         <custom-range-editor
@@ -72,8 +64,8 @@ export default {
   data() {
     return {
       range: {
-        start: this.start,
-        end: this.end,
+        start: new Date(this.start),
+        end: new Date(this.end),
       },
       showRangeEditor: false,
     }
@@ -93,6 +85,14 @@ export default {
       return this.startDate + " - " + this.endDate
     },
   },
+
+  mounted() {
+    this.range = {
+      start: new Date(this.start),
+      end: new Date(this.end),
+    }
+  },
+
   methods: {
     close() {
       this.$emit("close")

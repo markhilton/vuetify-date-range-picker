@@ -26,11 +26,7 @@
                 v-if="periodSubtype[type.key] && periodSubtype[type.key].length > 0"
                 v-model="selectedSubtype[type.key].subType"
               >
-                <v-radio
-                  v-for="subType in periodSubtype[type.key]"
-                  :key="subType.key"
-                  :value="subType.key"
-                >
+                <v-radio v-for="subType in periodSubtype[type.key]" :key="subType.key" :value="subType.key">
                   <template slot="label">
                     <div class="d-flex flex-column" :class="dark ? 'white--text' : 'black--text'">
                       <span class="primary-label">{{ subType.label }}</span>
@@ -63,27 +59,20 @@
               </v-row>
 
               <v-radio-group v-if="enableCompareTo" v-model="selectedSubtype[type.key].compareType">
-                <v-radio
-                  v-for="compare in periodCompare[type.key]"
-                  :key="compare.key"
-                  :value="compare.key"
-                >
+                <v-radio v-for="compare in periodCompare[type.key]" :key="compare.key" :value="compare.key">
                   <template slot="label">
                     <div class="d-flex flex-column">
                       <span class="primary-label">{{ compare.label }}</span>
                       <span class="second-label" v-if="type.key !== 'CUSTOM'">
                         {{
-                        selectedSubtype &&
-                        selectedSubtype[type.key] &&
-                        selectedSubtype[type.key].subType &&
-                        compare.period &&
-                        compare.period[selectedSubtype[type.key].subType].periodText
+                          selectedSubtype &&
+                            selectedSubtype[type.key] &&
+                            selectedSubtype[type.key].subType &&
+                            compare.period &&
+                            compare.period[selectedSubtype[type.key].subType].periodText
                         }}
                       </span>
-                      <span
-                        class="second-label"
-                        v-if="type.key === 'CUSTOM'"
-                      >{{ compare.periodText }}</span>
+                      <span class="second-label" v-if="type.key === 'CUSTOM'">{{ compare.periodText }}</span>
                     </div>
                   </template>
                 </v-radio>
@@ -117,6 +106,10 @@ import {
   DISPLAY_DATE_FORMAT_2,
   DEFAULT_CUSTOM_DATE,
   INTERNAL_DATE_FORMAT_1,
+  PERIOD_CONVERT_LIST_MOBILE,
+  PERIOD_COMPARE_CONVERT_LIST_MOBILE,
+  PRESETS_DESKTOP,
+  DEFAULT_MOBILE_CONFIG,
 } from "./presets/constant"
 import Date from "./presets/date"
 import CustomRangeSelector from "./CustomRangeSelector.vue"
@@ -166,7 +159,6 @@ export default {
     periodTypes() {
       return Object.keys(PERIOD_TYPE).map(key => ({ key, label: PERIOD_TYPE[key].label }))
     },
-
     savedType() {
       return this.savedPeriodConfig.type
     },
@@ -247,7 +239,8 @@ export default {
                 const { start, end } = period[periodKey]
                 let periodText = ""
                 if (start && end) {
-                  periodText = moment(start).format(this.format) + " - " + moment(end).format(this.format)
+                  periodText =
+                    moment(start).format(DISPLAY_DATE_FORMAT_1) + " - " + moment(end).format(DISPLAY_DATE_FORMAT_1)
                 } else if (start && !end) {
                   periodText = moment(start).format(DISPLAY_DATE_FORMAT_2)
                 }
@@ -284,50 +277,133 @@ export default {
       this.$emit("hideModal")
     },
     saveSetting() {
+      let config
       if (this.selectedType === "CUSTOM") {
-        this.$emit("saveMobileConfig", {
+        // set compare start & compare end
+        const currentCompareType = this.selectedSubtype.CUSTOM.compareType
+        const currPeriodCompare = this.periodCompare.CUSTOM.find(item => item.key === currentCompareType)
+        let start
+        let end
+        if (currPeriodCompare && currPeriodCompare.period) {
+          start = currPeriodCompare.period.start
+          end = currPeriodCompare.period.end
+        }
+
+        config = {
           type: "CUSTOM",
           subType: "",
           start: this.currCustomDate.start,
           until: this.currCustomDate.end ? this.currCustomDate.end : null,
-          compareType: "",
+          compareType: currentCompareType ? currentCompareType : null,
+          compareStart: start ? start : null,
+          compareEnd: end ? end : null,
           enableCompareTo: !!this.enableCompareTo,
-        })
+        }
       } else {
         const currSelectedSubType = this.selectedSubtype[this.selectedType].subType
         const currSelectedCompareType = this.selectedSubtype[this.selectedType].compareType
+
+        // set compare start & compare end
+        let compareStart
+        let compareEnd
+        const currComparePeriod = this.periodCompare[this.selectedType].find(
+          item => item.key === currSelectedCompareType,
+        )
+        if (currComparePeriod) {
+          const { start, end } = currComparePeriod.period[currSelectedSubType]
+          compareStart = start
+          compareEnd = end
+        }
+
         const { start, end } = this.periodSubtype[this.selectedType].find(
           type => type.key === currSelectedSubType,
         ).period
-        this.$emit("saveMobileConfig", {
-          type: this.selectedType,
-          subType: currSelectedSubType ? currSelectedSubType : null,
-          start: start ? start : null,
-          until: end ? end : null,
-          compareType: currSelectedCompareType ? currSelectedCompareType : null,
+
+        config = {
+          type: this.selectedType  || null,
+          subType: currSelectedSubType || null,
+          start: start || null,
+          until: end || null,
+          compareType: currSelectedCompareType || null,
           enableCompareTo: !!this.enableCompareTo,
-        })
+          compareStart: compareStart || null,
+          compareEnd: compareEnd || null,
+        }
       }
+
       this.$emit("hideModal")
       this.reloadType()
+
+      this.convertDesktopAndSave(config)
+    },
+    convertDesktopAndSave(mobileConfig) {
+      // convert mobile config into desktop config
+      let newType = PERIOD_CONVERT_LIST_MOBILE[mobileConfig.subType] || "CUSTOM"
+      let newCompareType
+
+      if (mobileConfig.enableCompareTo) {
+        const mobileCompare = PERIOD_COMPARE_CONVERT_LIST_MOBILE[mobileConfig.subType]
+        if (mobileCompare) {
+          newCompareType = mobileCompare[mobileConfig.compareType] || "CUSTOM_PERIOD"
+        } else {
+          newCompareType = "CUSTOM_PERIOD"
+        }
+      } else {
+        newCompareType = null
+      }
+
+      // const isUntilNull = (newType === "TODAY")
+
+      let desktopComparePeriod = PRESETS_DESKTOP[newType].compare
+      if (desktopComparePeriod) {
+        desktopComparePeriod = desktopComparePeriod[newCompareType]
+      }
+
+      let newDesktopConfig = {
+        type: newType || null,
+        start: mobileConfig.start || null,
+        until: (mobileConfig.until ? mobileConfig.until : mobileConfig.start) || null,
+        compareType: desktopComparePeriod || null,
+        compareStart: mobileConfig.compareStart || null,
+        compareEnd: (mobileConfig.compareEnd ? mobileConfig.compareEnd : mobileConfig.compareStart)  || null,
+        enableCompare: mobileConfig.enableCompareTo,
+      }
+
+      // save converted config to desktop
+      this.$emit("saveMobileConfig", {
+        mobileConfig,
+        newDesktopConfig,
+      })
     },
     setCustomRange(range) {
       this.showSelectionModal = !this.showSelectionModal
       this.currCustomDate = {
         start: moment(range.start).format(INTERNAL_DATE_FORMAT_1),
         end: moment(range.end).format(INTERNAL_DATE_FORMAT_1),
-        startText: moment(range.start).format(this.format),
-        endText: moment(range.end).format(this.format),
+        startText: moment(range.start).format(INTERNAL_DATE_FORMAT_1),
+        endText: moment(range.end).format(INTERNAL_DATE_FORMAT_1),
       }
       this.updateCustomComparePeriod()
     },
+    // get saved type or subtype from store
     reloadType() {
-      // get saved type or subtype from store
-      this.selectedType = this.savedType
-      this.selectedSubtype = JSON.parse(JSON.stringify(DEFAULT_TYPE_SELECTION))
-      this.selectedSubtype[this.savedType].subType = this.savedSubtype
-      this.selectedSubtype[this.savedType].compareType = this.savedCompareType
-      this.enableCompareTo = this.getEnableCompareTo
+      if (this.savedType) {
+        // if there is saved config
+        this.selectedType = this.savedType
+        this.selectedSubtype = JSON.parse(JSON.stringify(DEFAULT_TYPE_SELECTION))
+        this.selectedSubtype[this.savedType].subType = this.savedSubtype
+        this.selectedSubtype[this.savedType].compareType = this.savedCompareType
+        this.enableCompareTo = this.getEnableCompareTo
+      } else {
+        // if no valid config
+        const { type, subType, compareType } = DEFAULT_MOBILE_CONFIG
+        this.selectedType = type
+        this.selectedSubtype = JSON.parse(JSON.stringify(DEFAULT_TYPE_SELECTION))
+        this.selectedSubtype[type].subType = subType
+        this.selectedSubtype[type].compareType = compareType
+        this.enableCompareTo = false
+
+      }
     },
     updateCustomComparePeriod() {
       const { CUSTOM } = this.periodCompare
