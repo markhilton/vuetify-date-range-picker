@@ -2,7 +2,14 @@
   "private": false,
   "name": "@nerd305/vuetify-date-range-picker",
   "version": "0.0.3",
-  "description": "Responsive date range picker for COP",
+  "description": "Vuetify Date Range Picker optimized for best mobile and desktop user experience",
+  "author": "Mark Hilton",
+  "license": "MIT",
+  "homepage": "https://github.com/markhilton/vuetify-date-range-picker",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/markhilton/vuetify-date-range-picker"
+  },
   "main": "dist/vuetify-date-range-picker.umd.js",
   "module": "dist/vuetify-date-range-picker.esm.js",
   "unpkg": "dist/vuetify-date-range-picker.min.js",
@@ -10,25 +17,36 @@
     "./sfc": "src/DateRangePicker.vue"
   },
   "scripts": {
+    "serve": "vue-cli-service serve",
     "build": "npm run build:umd & npm run build:es & npm run build:unpkg",
     "build:umd": "rollup --config build/rollup.config.js --format umd --file dist/vuetify-date-range-picker.umd.js",
     "build:es": "rollup --config build/rollup.config.js --format es --file dist/vuetify-date-range-picker.esm.js",
     "build:unpkg": "rollup --config build/rollup.config.js --format iife --file dist/vuetify-date-range-picker.min.js"
   },
-  "author": "Mark Hilton",
-  "license": "MIT",
-  "homepage": "https://github.com/markhilton/vuetify-date-range-picker",
   "dependencies": {
-    "moment": "^2.26.0",
-    "v-calendar": "^1.0.6"
+    "moment": "^2.29.1",
+    "v-calendar": "^1.0.6",
+    "vuetify": "^2.3.14"
   },
   "devDependencies": {
+    "@mdi/font": "^5.7.55",
     "@rollup/plugin-buble": "^0.21.3",
     "@rollup/plugin-commonjs": "^11.1.0",
-    "@rollup/plugin-node-resolve": "^8.0.1",
+    "@rollup/plugin-node-resolve": "^8.4.0",
+    "@vue/cli-service": "^4.5.7",
+    "css-loader": "^3.6.0",
+    "eslint": "^5.16.0",
+    "eslint-plugin-prettier": "^3.1.4",
+    "eslint-plugin-promise": "^4.2.1",
+    "eslint-plugin-vue": "^5.0.0",
+    "prettier": "^1.18.2",
     "rollup": "^1.17.0",
     "rollup-plugin-vue": "^5.0.1",
-    "vue": "^2.6.10",
-    "vue-template-compiler": "^2.6.10"
+    "sass": "^1.27.0",
+    "sass-loader": "^8.0.2",
+    "vue": "^2.6.12",
+    "vue-cli-plugin-vuetify": "^2.0.7",
+    "vue-template-compiler": "^2.6.12",
+    "vuetify-loader": "^1.6.0"
   }
 }
