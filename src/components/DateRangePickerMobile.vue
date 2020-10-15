@@ -320,7 +320,7 @@ export default {
         ).period
 
         config = {
-          type: this.selectedType  || null,
+          type: this.selectedType || null,
           subType: currSelectedSubType || null,
           start: start || null,
           until: end || null,
@@ -365,7 +365,7 @@ export default {
         until: (mobileConfig.until ? mobileConfig.until : mobileConfig.start) || null,
         compareType: desktopComparePeriod || null,
         compareStart: mobileConfig.compareStart || null,
-        compareEnd: (mobileConfig.compareEnd ? mobileConfig.compareEnd : mobileConfig.compareStart)  || null,
+        compareEnd: (mobileConfig.compareEnd ? mobileConfig.compareEnd : mobileConfig.compareStart) || null,
         enableCompare: mobileConfig.enableCompareTo,
       }
 
@@ -402,7 +402,6 @@ export default {
         this.selectedSubtype[type].subType = subType
         this.selectedSubtype[type].compareType = compareType
         this.enableCompareTo = false
-
       }
     },
     updateCustomComparePeriod() {

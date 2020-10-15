@@ -12,24 +12,22 @@
     </v-list-item>
 
     <v-card v-if="opened">
-      <div v-if="!isMobile">
-        <date-range-picker-desktop
-          :savedDesktopConfig="savedDesktopConfig"
-          :showDashboardDateSetting="showDashboardDateSetting"
-          @hideModal="hideModal"
-          @saveDesktopConfig="saveDesktopConfig"
-        />
-      </div>
-      <div v-else>
-        <date-range-picker-mobile
-          :dark="dark"
-          :format="format"
-          :savedPeriodConfig="savedPeriodConfig"
-          :showDashboardDateSetting="showDashboardDateSetting"
-          @hideModal="hideModal"
-          @saveMobileConfig="saveMobileConfig"
-        />
-      </div>
+      <date-range-picker-mobile
+        v-if="isMobile"
+        :dark="dark"
+        :format="format"
+        :savedPeriodConfig="savedPeriodConfig"
+        :showDashboardDateSetting="showDashboardDateSetting"
+        @hideModal="hideModal"
+        @saveMobileConfig="saveMobileConfig"
+      />
+      <date-range-picker-desktop
+        v-else
+        :savedDesktopConfig="savedDesktopConfig"
+        :showDashboardDateSetting="showDashboardDateSetting"
+        @hideModal="hideModal"
+        @saveDesktopConfig="saveDesktopConfig"
+      />
     </v-card>
   </div>
 </template>
@@ -47,10 +45,6 @@ export default {
   },
 
   props: {
-    isMobile: {
-      type: Boolean,
-      default: false,
-    },
     savedDesktopConfig: {},
     savedPeriodConfig: {},
     showDashboardDateSetting: {
@@ -70,6 +64,13 @@ export default {
   data: () => ({
     opened: false,
   }),
+
+  computed: {
+    isMobile() {
+      // TODO replace with vuetify auto recognized device size to set this automatically
+      return true
+    },
+  },
 
   methods: {
     hideModal() {
