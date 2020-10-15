@@ -67,8 +67,7 @@ export default {
 
   computed: {
     isMobile() {
-      // TODO replace with vuetify auto recognized device size to set this automatically
-      return true
+      return this.$vuetify.breakpoint.name == "sm" ? true : false
     },
   },
 
