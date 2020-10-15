@@ -33,6 +33,7 @@
           <v-col cols="1">
             <v-icon class="pt-2">far fa-calendar-alt</v-icon>
           </v-col>
+
           <v-col cols="5">
             <v-text-field
               v-model="startDate"
@@ -41,21 +42,15 @@
               dense
               type="date"
               maxlength="10"
-            ></v-text-field>
+            />
           </v-col>
+
           <v-col cols="5">
-            <v-text-field
-              v-model="endDate"
-              label="End date(MM/DD/YYYY)"
-              outlined
-              dense
-              type="date"
-              maxlength="10"
-            ></v-text-field>
+            <v-text-field v-model="endDate" label="End date(MM/DD/YYYY)" outlined dense type="date" maxlength="10" />
           </v-col>
         </v-row>
 
-        <v-date-picker
+        <custom-date-picker
           v-model="range"
           mode="range"
           :isDark="dark"
@@ -64,7 +59,8 @@
           is-inline
           is-expanded
         />
-          <!--:attributes="enableCompare ? attributes : []"-->
+
+        <!--:attributes="enableCompare ? attributes : []"-->
         <v-row justify="end" class="mt-3 mr-3">
           <v-btn text @click="close">Cancel</v-btn>
           <v-btn color="primary" @click="applySetting">Apply</v-btn>
@@ -209,8 +205,8 @@ export default {
 
       // save desktop config
       // this.updateComparePeriod() // set compare period from preset if it is not custom mode
-      let compareStart = (this.range && this.range.start) ?  moment(this.range.start).format(INTERNAL_DATE_FORMAT_1) : ""
-      let compareEnd = (this.range && this.range.end) ? moment(this.range.end).format(INTERNAL_DATE_FORMAT_1) : ""
+      let compareStart = this.range && this.range.start ? moment(this.range.start).format(INTERNAL_DATE_FORMAT_1) : ""
+      let compareEnd = this.range && this.range.end ? moment(this.range.end).format(INTERNAL_DATE_FORMAT_1) : ""
       const desktopConfig = {
         type: this.currSelectedPreset,
         start: this.startDate && moment(this.startDate).format(INTERNAL_DATE_FORMAT_1),
@@ -278,7 +274,6 @@ export default {
         this.startDate = start
         this.endDate = end
       }
-
     },
   },
 }
