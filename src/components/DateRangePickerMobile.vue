@@ -5,7 +5,7 @@
         <v-row justify="space-between" align="center">
           <v-row>
             <v-btn text @click="back">
-              <v-icon>fas fa-arrow-left</v-icon>
+              <v-icon>mdi-close</v-icon>
             </v-btn>
             <div class="d-flex align-center">
               <span>Date settings</span>
@@ -162,7 +162,7 @@ export default {
       return Object.keys(PERIOD_TYPE).map(key => ({ key, label: PERIOD_TYPE[key].label }))
     },
     savedType() {
-      return this.savedPeriodConfig.type
+      return this.savedPeriodConfig && this.savedPeriodConfig.type
     },
     savedSubtype() {
       return this.savedPeriodConfig.subType
