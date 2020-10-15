@@ -8373,7 +8373,7 @@ var __vue_render__$4 = function() {
                         "v-list-item-content",
                         [
                           _c("v-list-item-title", [
-                            _vm._v("Compare to: Jun 1, 2002 - Mar 23, 2002")
+                            _vm._v("Jun 1, 2002 - Mar 23, 2002")
                           ]),
                           _vm._v(" "),
                           _c("v-list-item-subtitle", [

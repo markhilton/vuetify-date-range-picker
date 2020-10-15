@@ -8,7 +8,7 @@
           </v-list-item-icon>
 
           <v-list-item-content>
-            <v-list-item-title>Compare to: Jun 1, 2002 - Mar 23, 2002</v-list-item-title>
+            <v-list-item-title>Jun 1, 2002 - Mar 23, 2002</v-list-item-title>
             <v-list-item-subtitle>Compare to: Jun 1, 2002 - Mar 23, 2002</v-list-item-subtitle>
           </v-list-item-content>
         </v-list-item>
