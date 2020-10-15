@@ -22,9 +22,9 @@
 </template>
 
 <script>
+import moment from "moment"
 import DateRangePickerMobile from "./DateRangePickerMobile.vue"
 import DateRangePickerDesktop from "./DateRangePickerDesktop.vue"
-import moment from "moment"
 import { INTERNAL_DATE_FORMAT_1 } from "./presets/constant"
 
 export default {
