@@ -36,7 +36,7 @@
 import moment from "moment"
 import DateRangePickerMobile from "./DateRangePickerMobile.vue"
 import DateRangePickerDesktop from "./DateRangePickerDesktop.vue"
-import { INTERNAL_DATE_FORMAT_1 } from "./presets/constant"
+import { INTERNAL_DATE_FORMAT_1 } from "./presets/constants"
 
 export default {
   components: {

@@ -110,7 +110,7 @@ import {
   PERIOD_COMPARE_CONVERT_LIST_MOBILE,
   PRESETS_DESKTOP,
   DEFAULT_MOBILE_CONFIG,
-} from "./presets/constant"
+} from "./presets/constants"
 import Date from "./presets/date"
 import CustomRangeSelector from "./CustomRangeSelector.vue"
 

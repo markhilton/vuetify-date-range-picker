@@ -40,7 +40,7 @@
 <script>
 import moment from "moment"
 
-import { INTERNAL_DATE_FORMAT_1 } from "./presets/constant"
+import { INTERNAL_DATE_FORMAT_1 } from "./presets/constants"
 import CustomRangeEditor from "./CustomRangeEditor.vue"
 
 export default {

@@ -78,7 +78,7 @@ import {
   INTERNAL_DATE_FORMAT_1,
   PERIOD_CONVERT_LIST_DESKTOP,
   PERIOD_COMPARE_CONVERT_LIST_DESKTOP,
-} from "./presets/constant"
+} from "./presets/constants"
 
 export default {
   props: {
