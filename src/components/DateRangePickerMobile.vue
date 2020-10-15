@@ -1,99 +1,101 @@
 <template>
-  <v-col>
-    <v-row class="ml-3 mr-3">
-      <v-row justify="space-between" align="center">
-        <v-row>
-          <v-btn text @click="back">
-            <v-icon>fas fa-arrow-left</v-icon>
-          </v-btn>
-          <div class="d-flex align-center">
-            <span>Date settings</span>
-          </div>
+  <v-card>
+    <v-col>
+      <v-row class="ml-3 mr-3">
+        <v-row justify="space-between" align="center">
+          <v-row>
+            <v-btn text @click="back">
+              <v-icon>fas fa-arrow-left</v-icon>
+            </v-btn>
+            <div class="d-flex align-center">
+              <span>Date settings</span>
+            </div>
+          </v-row>
+
+          <v-btn text @click="saveSetting">Save</v-btn>
         </v-row>
-
-        <v-btn text @click="saveSetting">Save</v-btn>
       </v-row>
-    </v-row>
 
-    <v-row>
-      <v-tabs v-model="subtypeConverter" :dark="dark">
-        <v-tab v-for="type in periodTypes" :key="type.key">{{ type.label }}</v-tab>
+      <v-row>
+        <v-tabs v-model="subtypeConverter" :dark="dark">
+          <v-tab v-for="type in periodTypes" :key="type.key">{{ type.label }}</v-tab>
 
-        <v-tabs-items :dark="dark" v-model="subtypeConverter">
-          <v-tab-item v-for="type in periodTypes" :key="type.key">
-            <v-col>
-              <v-radio-group
-                v-if="periodSubtype[type.key] && periodSubtype[type.key].length > 0"
-                v-model="selectedSubtype[type.key].subType"
-              >
-                <v-radio v-for="subType in periodSubtype[type.key]" :key="subType.key" :value="subType.key">
-                  <template slot="label">
-                    <div class="d-flex flex-column" :class="dark ? 'white--text' : 'black--text'">
-                      <span class="primary-label">{{ subType.label }}</span>
-                      <span class="second-label">{{ subType.periodText }}</span>
-                    </div>
-                  </template>
-                </v-radio>
-              </v-radio-group>
+          <v-tabs-items :dark="dark" v-model="subtypeConverter">
+            <v-tab-item v-for="type in periodTypes" :key="type.key">
+              <v-col>
+                <v-radio-group
+                  v-if="periodSubtype[type.key] && periodSubtype[type.key].length > 0"
+                  v-model="selectedSubtype[type.key].subType"
+                >
+                  <v-radio v-for="subType in periodSubtype[type.key]" :key="subType.key" :value="subType.key">
+                    <template slot="label">
+                      <div class="d-flex flex-column" :class="dark ? 'white--text' : 'black--text'">
+                        <span class="primary-label">{{ subType.label }}</span>
+                        <span class="second-label">{{ subType.periodText }}</span>
+                      </div>
+                    </template>
+                  </v-radio>
+                </v-radio-group>
 
-              <v-col
-                v-if="type.key === 'CUSTOM'"
-                class="d-flex flex-column"
-                @click="showSelectionModal = !showSelectionModal"
-              >
-                <div class="pl-5 mb-3 d-flex flex-column">
-                  <span class="primary-label">Start date</span>
-                  <span class="second-label">{{ currCustomDate && currCustomDate.startText }}</span>
-                </div>
-                <div class="pl-5 d-flex flex-column">
-                  <span class="primary-label">End date</span>
-                  <span class="second-label">{{ currCustomDate && currCustomDate.endText }}</span>
-                </div>
+                <v-col
+                  v-if="type.key === 'CUSTOM'"
+                  class="d-flex flex-column"
+                  @click="showSelectionModal = !showSelectionModal"
+                >
+                  <div class="pl-5 mb-3 d-flex flex-column">
+                    <span class="primary-label">Start date</span>
+                    <span class="second-label">{{ currCustomDate && currCustomDate.startText }}</span>
+                  </div>
+                  <div class="pl-5 d-flex flex-column">
+                    <span class="primary-label">End date</span>
+                    <span class="second-label">{{ currCustomDate && currCustomDate.endText }}</span>
+                  </div>
+                </v-col>
+
+                <v-divider></v-divider>
+
+                <v-row class="pa-3" justify="space-between">
+                  <div>Compare to</div>
+                  <v-switch class="compare-to-switch" v-model="enableCompareTo"></v-switch>
+                </v-row>
+
+                <v-radio-group v-if="enableCompareTo" v-model="selectedSubtype[type.key].compareType">
+                  <v-radio v-for="compare in periodCompare[type.key]" :key="compare.key" :value="compare.key">
+                    <template slot="label">
+                      <div class="d-flex flex-column">
+                        <span class="primary-label">{{ compare.label }}</span>
+                        <span class="second-label" v-if="type.key !== 'CUSTOM'">
+                          {{
+                            selectedSubtype &&
+                              selectedSubtype[type.key] &&
+                              selectedSubtype[type.key].subType &&
+                              compare.period &&
+                              compare.period[selectedSubtype[type.key].subType].periodText
+                          }}
+                        </span>
+                        <span class="second-label" v-if="type.key === 'CUSTOM'">{{ compare.periodText }}</span>
+                      </div>
+                    </template>
+                  </v-radio>
+                </v-radio-group>
               </v-col>
+            </v-tab-item>
+          </v-tabs-items>
+        </v-tabs>
+      </v-row>
 
-              <v-divider></v-divider>
-
-              <v-row class="pa-3" justify="space-between">
-                <div>Compare to</div>
-                <v-switch class="compare-to-switch" v-model="enableCompareTo"></v-switch>
-              </v-row>
-
-              <v-radio-group v-if="enableCompareTo" v-model="selectedSubtype[type.key].compareType">
-                <v-radio v-for="compare in periodCompare[type.key]" :key="compare.key" :value="compare.key">
-                  <template slot="label">
-                    <div class="d-flex flex-column">
-                      <span class="primary-label">{{ compare.label }}</span>
-                      <span class="second-label" v-if="type.key !== 'CUSTOM'">
-                        {{
-                          selectedSubtype &&
-                            selectedSubtype[type.key] &&
-                            selectedSubtype[type.key].subType &&
-                            compare.period &&
-                            compare.period[selectedSubtype[type.key].subType].periodText
-                        }}
-                      </span>
-                      <span class="second-label" v-if="type.key === 'CUSTOM'">{{ compare.periodText }}</span>
-                    </div>
-                  </template>
-                </v-radio>
-              </v-radio-group>
-            </v-col>
-          </v-tab-item>
-        </v-tabs-items>
-      </v-tabs>
-    </v-row>
-
-    <!--date selection modal for custom dates-->
-    <v-dialog :dark="dark" v-model="showSelectionModal" fullscreen>
-      <custom-range-selector
-        :dark="dark"
-        :start="currCustomDate && currCustomDate.start"
-        :end="currCustomDate && currCustomDate.end"
-        @close="showSelectionModal = !showSelectionModal"
-        @apply="setCustomRange"
-      />
-    </v-dialog>
-  </v-col>
+      <!--date selection modal for custom dates-->
+      <v-dialog :dark="dark" v-model="showSelectionModal" fullscreen>
+        <custom-range-selector
+          :dark="dark"
+          :start="currCustomDate && currCustomDate.start"
+          :end="currCustomDate && currCustomDate.end"
+          @close="showSelectionModal = !showSelectionModal"
+          @apply="setCustomRange"
+        />
+      </v-dialog>
+    </v-col>
+  </v-card>
 </template>
 
 <script>

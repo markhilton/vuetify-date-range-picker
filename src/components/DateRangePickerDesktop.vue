@@ -1,73 +1,75 @@
 <template>
-  <v-container>
-    <v-row>
-      <!-- preset options and compare periods -->
-      <v-col cols="3">
-        <v-list>
-          <v-list-item-group v-model="currSelectedPreset">
-            <v-list-item v-for="item in presets" :key="item.id" :value="item.id">
-              <v-list-item-content>{{ item.label }}</v-list-item-content>
-            </v-list-item>
-          </v-list-item-group>
-        </v-list>
+  <v-card>
+    <v-container>
+      <v-row>
+        <!-- preset options and compare periods -->
+        <v-col cols="3">
+          <v-list>
+            <v-list-item-group v-model="currSelectedPreset">
+              <v-list-item v-for="item in presets" :key="item.id" :value="item.id">
+                <v-list-item-content>{{ item.label }}</v-list-item-content>
+              </v-list-item>
+            </v-list-item-group>
+          </v-list>
 
-        <v-row class="pl-5 mb-2">
-          <v-switch class="compare-to-switch" v-model="enableCompare"></v-switch>
-          <span class="pt-1">Compare to</span>
-        </v-row>
+          <v-row class="pl-5 mb-2">
+            <v-switch class="compare-to-switch" v-model="enableCompare"></v-switch>
+            <span class="pt-1">Compare to</span>
+          </v-row>
 
-        <v-select
-          v-model="currSelectedCompare"
-          :disabled="!enableCompare"
-          :items="presets[currSelectedPreset].compareArray"
-          item-text="label"
-          item-value="id"
-          return-object
-          solo
-        ></v-select>
-      </v-col>
+          <v-select
+            v-model="currSelectedCompare"
+            :disabled="!enableCompare"
+            :items="presets[currSelectedPreset].compareArray"
+            item-text="label"
+            item-value="id"
+            return-object
+            solo
+          ></v-select>
+        </v-col>
 
-      <!-- custom range edit and calendar -->
-      <v-col cols="9">
-        <v-row>
-          <v-col cols="1">
-            <v-icon class="pt-2">far fa-calendar-alt</v-icon>
-          </v-col>
+        <!-- custom range edit and calendar -->
+        <v-col cols="9">
+          <v-row>
+            <v-col cols="1">
+              <v-icon class="pt-2">far fa-calendar-alt</v-icon>
+            </v-col>
 
-          <v-col cols="5">
-            <v-text-field
-              v-model="startDate"
-              label="Start date(MM/DD/YYYY)"
-              outlined
-              dense
-              type="date"
-              maxlength="10"
-            />
-          </v-col>
+            <v-col cols="5">
+              <v-text-field
+                v-model="startDate"
+                label="Start date(MM/DD/YYYY)"
+                outlined
+                dense
+                type="date"
+                maxlength="10"
+              />
+            </v-col>
 
-          <v-col cols="5">
-            <v-text-field v-model="endDate" label="End date(MM/DD/YYYY)" outlined dense type="date" maxlength="10" />
-          </v-col>
-        </v-row>
+            <v-col cols="5">
+              <v-text-field v-model="endDate" label="End date(MM/DD/YYYY)" outlined dense type="date" maxlength="10" />
+            </v-col>
+          </v-row>
 
-        <custom-date-picker
-          v-model="range"
-          mode="range"
-          :isDark="dark"
-          :columns="2"
-          :attributes="attributes"
-          is-inline
-          is-expanded
-        />
+          <custom-date-picker
+            v-model="range"
+            mode="range"
+            :isDark="dark"
+            :columns="2"
+            :attributes="attributes"
+            is-inline
+            is-expanded
+          />
 
-        <!--:attributes="enableCompare ? attributes : []"-->
-        <v-row justify="end" class="mt-3 mr-3">
-          <v-btn text @click="close">Cancel</v-btn>
-          <v-btn color="primary" @click="applySetting">Apply</v-btn>
-        </v-row>
-      </v-col>
-    </v-row>
-  </v-container>
+          <!--:attributes="enableCompare ? attributes : []"-->
+          <v-row justify="end" class="mt-3 mr-3">
+            <v-btn text @click="close">Cancel</v-btn>
+            <v-btn color="primary" @click="applySetting">Apply</v-btn>
+          </v-row>
+        </v-col>
+      </v-row>
+    </v-container>
+  </v-card>
 </template>
 
 <script>

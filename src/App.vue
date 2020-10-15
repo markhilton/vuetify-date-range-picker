@@ -7,7 +7,10 @@
         <div>This is a demo implementation of Date Range Picker component.</div>
 
         <v-container class="pl-0">
-          <b>current component selection:</b>
+          <div>
+            Detected device: <b>{{ isMobile ? "MOBILE" : "DESKTOP" }}</b>
+          </div>
+          current component output:
         </v-container>
 
         <v-container style="background: #666; color: #FFF">
@@ -51,6 +54,12 @@ export default {
     // emited selection
     selection: {},
   }),
+
+  computed: {
+    isMobile() {
+      return ["xs", "sm"].includes(this.$vuetify.breakpoint.name) ? true : false
+    },
+  },
 
   methods: {
     setDateRange(update) {
