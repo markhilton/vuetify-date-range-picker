@@ -1,5 +1,5 @@
 <template>
-  <div>
+<div>
     <v-menu v-model="opened" :dark="dark" :close-on-content-click="!opened" :close-on-click="!opened">
       <template v-slot:activator="{ on, attrs }">
         <v-list-item v-bind="attrs" v-on="on">
@@ -8,44 +8,90 @@
           </v-list-item-icon>
 
           <v-list-item-content>
-            <v-list-item-title>Compare to: Jun 1, 2002 - Mar 23, 2002</v-list-item-title>
+            <v-list-item-title>Jun 1, 2002 - Mar 23, 2002</v-list-item-title>
             <v-list-item-subtitle>Compare to: Jun 1, 2002 - Mar 23, 2002</v-list-item-subtitle>
           </v-list-item-content>
         </v-list-item>
       </template>
 
       <v-dialog v-if="isMobile" :dark="dark" v-model="opened" fullscreen>
-        <date-range-picker-mobile
-          :dark="dark"
-          :format="format"
-          :savedPeriodConfig="savedPeriodConfig"
-          :showDashboardDateSetting="showDashboardDateSetting"
-          @hideModal="hideModal"
-          @saveMobileConfig="saveMobileConfig"
-        />
-      </v-dialog>
 
-      <date-range-picker-desktop
-        v-if="!isMobile"
-        :savedDesktopConfig="savedDesktopConfig"
-        :showDashboardDateSetting="showDashboardDateSetting"
-        @hideModal="hideModal"
-        @saveDesktopConfig="saveDesktopConfig"
-      />
+    <date-range-picker-desktop
+      v-if="!isMobile"
+      :dark="dark"
+      :dateRange="dateRange"
+      @hideModal="hideModal"
+      @update="setDateRange($event)"
+    />
+    <date-range-picker-mobile
+      v-else
+      :dark="dark"
+      :format="format"
+      :dateRange="dateRange"
+      @hideModal="hideModal"
+      @update="setDateRange($event)"
+    />
+    
+      </v-dialog>
     </v-menu>
   </div>
 </template>
 
 <script>
 import moment from "moment"
+import Common from "@/presets/utils/common"
 import DateRangePickerMobile from "./DateRangePickerMobile.vue"
 import DateRangePickerDesktop from "./DateRangePickerDesktop.vue"
 import { INTERNAL_DATE_FORMAT_1 } from "./presets/constants"
 
 export default {
   props: {
-    savedDesktopConfig: {},
-    savedPeriodConfig: {},
+    dateRange: {
+      dateStart: {
+        type: String,
+        default: () =>
+          moment()
+            .subtract(7, "days")
+            .format("YYYY-MM-DD"),
+      },
+      dateUntil: {
+        type: String,
+        default: () =>
+          moment()
+            .subtract(1, "days")
+            .format("YYYY-MM-DD"),
+      },
+      datePreset: {
+        type: String,
+        default: "LAST_7_DAYS",
+      },
+      compare: {
+        type: Boolean,
+        default: true,
+      },
+      compareStart: {
+        type: String,
+        default: () =>
+          moment()
+            .subtract(14, "days")
+            .format("YYYY-MM-DD"),
+      },
+      compareUntil: {
+        type: String,
+        default: () =>
+          moment()
+            .subtract(8, "days")
+            .format("YYYY-MM-DD"),
+      },
+      comparePreset: {
+        type: String,
+        default: "PREVIOUS_PERIOD",
+      },
+      dateFormat: {
+        type: String,
+        default: () => moment().format("MMM D, YYYY"),
+      },
+    },
     showDashboardDateSetting: {
       type: Boolean,
       default: false,
@@ -71,19 +117,16 @@ export default {
 
   computed: {
     isMobile() {
-      return ["xs", "sm"].includes(this.$vuetify.breakpoint.name) ? true : false
+      return ["xs", "sm"].includes(this.$vuetify.breakpoint.name)
     },
   },
 
   methods: {
     hideModal() {
-      this.opened = false
+      this.$emit("hideModal")
     },
-    saveMobileConfig(param) {
-      this.$emit("saveMobileConfig", param)
-    },
-    saveDesktopConfig(param) {
-      this.$emit("saveDesktopConfig", param)
+    setDateRange(param) {
+      this.$emit("update", param)
     },
   },
 }

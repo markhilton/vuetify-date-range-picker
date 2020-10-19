@@ -162,22 +162,22 @@ export default {
       return Object.keys(PERIOD_TYPE).map(key => ({ key, label: PERIOD_TYPE[key].label }))
     },
     savedType() {
-      return this.savedPeriodConfig && this.savedPeriodConfig.type
+      return this.dateRange.type
     },
     savedSubtype() {
-      return this.savedPeriodConfig.subType
+    return this.dateRange.subType
     },
     savedRange() {
       return {
-        start: this.savedPeriodConfig.start,
-        end: this.savedPeriodConfig.until,
+        start: this.dateRange.start,
+        end: this.dateRange.until,
       }
     },
     savedCompareType() {
-      return this.savedPeriodConfig.compareType
+     return this.dateRange.compareType
     },
     getEnableCompareTo() {
-      return this.savedPeriodConfig.enableCompareTo
+      return this.dateRange.enableCompareTo
     },
     getDashboardDateSetting() {
       return this.showDashboardDateSetting

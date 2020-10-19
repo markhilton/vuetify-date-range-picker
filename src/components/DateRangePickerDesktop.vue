@@ -5,7 +5,7 @@
         <!-- preset options and compare periods -->
         <v-col cols="3">
           <v-list>
-            <v-list-item-group v-model="currSelectedPreset">
+            <v-list-item-group v-model="datePreset">
               <v-list-item v-for="item in presets" :key="item.id" :value="item.id">
                 <v-list-item-content>{{ item.label }}</v-list-item-content>
               </v-list-item>
@@ -13,14 +13,14 @@
           </v-list>
 
           <v-row class="pl-5 mb-2">
-            <v-switch class="compare-to-switch" v-model="enableCompare"></v-switch>
+            <v-switch class="compare-to-switch" v-model="compare"></v-switch>
             <span class="pt-1">Compare to</span>
           </v-row>
 
           <v-select
             v-model="currSelectedCompare"
-            :disabled="!enableCompare"
-            :items="presets[currSelectedPreset].compareArray"
+            :disabled="!compare"
+            :items="presets[datePreset].compareArray"
             item-text="label"
             item-value="id"
             return-object
@@ -47,7 +47,14 @@
             </v-col>
 
             <v-col cols="5">
-              <v-text-field v-model="endDate" label="End date(MM/DD/YYYY)" outlined dense type="date" maxlength="10" />
+              <v-text-field
+                v-model="endDate"
+                label="End date(MM/DD/YYYY)"
+                outlined
+                dense
+                type="date"
+                maxlength="10"
+              />
             </v-col>
           </v-row>
 
@@ -78,8 +85,8 @@ import {
   PRESETS_DESKTOP,
   PRESETS_DEFAULT_DESKTOP,
   INTERNAL_DATE_FORMAT_1,
-  PERIOD_CONVERT_LIST_DESKTOP,
-  PERIOD_COMPARE_CONVERT_LIST_DESKTOP,
+  // PERIOD_CONVERT_LIST_DESKTOP,
+  // PERIOD_COMPARE_CONVERT_LIST_DESKTOP,
 } from "./presets/constants"
 
 export default {
@@ -93,7 +100,7 @@ export default {
       type: Boolean,
       default: false,
     },
-    savedDesktopConfig: {},
+    dateRange: {},
     showDashboardDateSetting: {
       type: Boolean,
       default: false,
@@ -101,12 +108,12 @@ export default {
   },
 
   watch: {
-    currSelectedPreset: function() {
-      this.updateCalendar(this.presets[this.currSelectedPreset])
+    datePreset: function() {
+      this.updateCalendar(this.presets[this.datePreset])
     },
-    enableCompare: function() {
+    compare: function() {
       this.updateComparePeriod()
-      if (!this.enableCompare) {
+      if (!this.compare) {
         this.range = {}
       }
     },
@@ -123,14 +130,18 @@ export default {
   data() {
     return {
       presets: PRESETS_DESKTOP,
-      currSelectedPreset: PRESETS_DEFAULT_DESKTOP.PRESET,
-      enableCompare: false,
-      currSelectedCompare: PRESETS_DEFAULT_DESKTOP.COMPARE,
+      datePreset: PRESETS_DEFAULT_DESKTOP.PRESET,
+      compare: false,
+      comparePreset: PRESETS_DEFAULT_DESKTOP.COMPARE,
       startDate: "",
       endDate: "",
       compareStartDate: "",
-      compareEndDate: "",
-      range: {},
+      compareUntilDate: "",
+       test: ["2020-01-01", "2020-02-01"],
+      range: {
+        start: new Date(2018, 0, 16), // Jan 16th, 2018
+        end: new Date(2018, 0, 19), // Jan 19th, 2018
+      },
     }
   },
 
@@ -157,8 +168,8 @@ export default {
           highlight: "red",
           dates: [
             {
-              start: new Date(this.startDate),
-              end: new Date(this.endDate),
+              start: new Date(this.start),
+              end: new Date(this.until),
             },
           ],
         },
@@ -181,21 +192,21 @@ export default {
     },
     updateComparePeriod() {
       if (
-        this.currSelectedPreset !== "CUSTOM" &&
-        this.enableCompare &&
-        this.currSelectedPreset &&
+        this.datePreset !== "CUSTOM" &&
+        this.compare &&
+        this.datePreset &&
         this.currSelectedCompare &&
         this.currSelectedCompare.id !== "CUSTOM_PERIOD"
       ) {
         const {
           period: { start, end },
-        } = this.presets[this.currSelectedPreset].compare[this.currSelectedCompare.id]
+        } = this.presets[this.datePreset].compare[this.currSelectedCompare.id]
         this.compareStartDate = moment(start).format(this.format)
-        this.compareEndDate = moment(end).format(this.format)
+        this.compareUntilDate = moment(end).format(this.format)
 
         this.range = {
           start: new Date(this.compareStartDate),
-          end: new Date(this.compareEndDate),
+          end: new Date(this.compareUntilDate),
         }
       }
     },
@@ -208,71 +219,62 @@ export default {
       // save desktop config
       // this.updateComparePeriod() // set compare period from preset if it is not custom mode
       let compareStart = this.range && this.range.start ? moment(this.range.start).format(INTERNAL_DATE_FORMAT_1) : ""
-      let compareEnd = this.range && this.range.end ? moment(this.range.end).format(INTERNAL_DATE_FORMAT_1) : ""
+      let compareUntil = this.range && this.range.end ? moment(this.range.end).format(INTERNAL_DATE_FORMAT_1) : ""
       const desktopConfig = {
-        type: this.currSelectedPreset,
+        type: this.datePreset,
         start: this.startDate && moment(this.startDate).format(INTERNAL_DATE_FORMAT_1),
         until: this.endDate && moment(this.endDate).format(INTERNAL_DATE_FORMAT_1),
-        compareType: this.currSelectedCompare,
+        comparePreset: this.currSelectedCompare,
         compareStart,
-        compareEnd,
-        enableCompare: !!this.enableCompare,
+        compareUntil,
+        compare: !!this.compare,
       }
 
-      // convert to mobile config & save
-      let newType
-      let newSubType
-      let newCompareType
-      if (this.currSelectedPreset) {
-        // new type and subtype
-        newType = PERIOD_COMPARE_CONVERT_LIST_DESKTOP[this.currSelectedPreset].MOBILE_TYPE
-        newSubType = PERIOD_CONVERT_LIST_DESKTOP[this.currSelectedPreset]
-      }
-      if (this.currSelectedCompare && desktopConfig.enableCompare && this.currSelectedPreset) {
-        // new compare type
-        newCompareType = PERIOD_COMPARE_CONVERT_LIST_DESKTOP[this.currSelectedPreset][this.currSelectedCompare.id]
-      }
+      // // convert to mobile config & save
+      // let newType
+      // let newSubType
+      // let newCompareType
+      // if (this.currSelectedPreset) {
+      //   // new type and subtype
+      //   newType = PERIOD_COMPARE_CONVERT_LIST_DESKTOP[this.currSelectedPreset].MOBILE_TYPE
+      //   newSubType = PERIOD_CONVERT_LIST_DESKTOP[this.currSelectedPreset]
+      // }
+      // if (this.currSelectedCompare && desktopConfig.enableCompare && this.currSelectedPreset) {
+      //   // new compare type
+      //   newCompareType = PERIOD_COMPARE_CONVERT_LIST_DESKTOP[this.currSelectedPreset][this.currSelectedCompare.id]
+      // }
 
-      const newMobileConfig = {
-        type: newType ? newType : null,
-        subType: newSubType ? newSubType : null,
-        start: desktopConfig.start,
-        until: newType !== "DAY" ? desktopConfig.until : null,
-        compareType: newCompareType ? newCompareType : null,
-        enableCompareTo: desktopConfig.enableCompare,
-        compareStart: desktopConfig.compareStart,
-        compareEnd: newType !== "DAY" ? desktopConfig.compareEnd : null,
-      }
+      // const newMobileConfig = {
+      //   type: newType ? newType : null,
+      //   subType: newSubType ? newSubType : null,
+      //   start: desktopConfig.start,
+      //   until: newType !== "DAY" ? desktopConfig.until : null,
+      //   compareType: newCompareType ? newCompareType : null,
+      //   enableCompareTo: desktopConfig.enableCompare,
+      //   compareStart: desktopConfig.compareStart,
+      //   compareEnd: newType !== "DAY" ? desktopConfig.compareEnd : null,
+      // }
 
-      // this.$emit("saveConvertedMobileConfig", newMobileConfig)
-      this.$emit("saveDesktopConfig", {
-        desktopConfig,
-        newMobileConfig,
-      })
+      // // this.$emit("saveConvertedMobileConfig", newMobileConfig)
+      this.$emit("saveConfig",desktopConfig)
+      this.$emit("update",desktopConfig)
     },
     reloadType() {
       // if saved config is valid, then init configuration
-      if (this.savedDesktopConfig) {
-        const { compareEnd, compareStart, compareType, start, type, until, enableCompare } = this.savedDesktopConfig
-        this.compareStartDate = compareStart
-        this.compareEndDate = compareEnd
-        this.currSelectedCompare = compareType
-        this.startDate = start
-        this.endDate = until
-        this.currSelectedPreset = type
-        this.enableCompare = enableCompare
+      if (this.dateRange) {
+        this.compare = this.dateRange.compare
 
-        if (this.enableCompare) {
-          this.range = {
-            start: new Date(this.compareStartDate),
-            end: new Date(this.compareEndDate),
-          }
-        } else {
-          this.range = {}
+        this.compareStart = this.dateRange.compareStart
+        this.compareUntil =  this.dateRange.compareUntil
+        this.comparePreset =  this.dateRange.comparePreset
+        this.dateStart =  this.dateRange.dateStart
+        this.dateUntil = this.dateRange.dateUntil
+        this.datePreset = this.dateRange.datePreset
+       this.datePreset = "LAST_7DAY" 
         }
-      } else {
+       else {
         // init configuration
-        const { start, end } = this.presets[this.currSelectedPreset].period
+        const { start, end } = this.presets[this.datePreset].period
         this.startDate = start
         this.endDate = end
       }

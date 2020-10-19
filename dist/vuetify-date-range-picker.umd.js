@@ -1,6 +1,6 @@
 (function (global, factory) {
-	typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports, require('vuetify/lib')) :
-	typeof define === 'function' && define.amd ? define(['exports', 'vuetify/lib'], factory) :
+	typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports, require('vuetify/lib'), require('@/presets/utils/common')) :
+	typeof define === 'function' && define.amd ? define(['exports', 'vuetify/lib', '@/presets/utils/common'], factory) :
 	(global = typeof globalThis !== 'undefined' ? globalThis : global || self, factory(global.VuetifyDateRangePicker = {}, global['vuetify/lib']));
 }(this, (function (exports, lib) { 'use strict';
 
@@ -7006,22 +7006,22 @@
 	      return Object.keys(PERIOD_TYPE).map(function (key) { return ({ key: key, label: PERIOD_TYPE[key].label }); })
 	    },
 	    savedType: function savedType() {
-	      return this.savedPeriodConfig && this.savedPeriodConfig.type
+	      return this.dateRange.type
 	    },
 	    savedSubtype: function savedSubtype() {
-	      return this.savedPeriodConfig.subType
+	    return this.dateRange.subType
 	    },
 	    savedRange: function savedRange() {
 	      return {
-	        start: this.savedPeriodConfig.start,
-	        end: this.savedPeriodConfig.until,
+	        start: this.dateRange.start,
+	        end: this.dateRange.until,
 	      }
 	    },
 	    savedCompareType: function savedCompareType() {
-	      return this.savedPeriodConfig.compareType
+	     return this.dateRange.compareType
 	    },
 	    getEnableCompareTo: function getEnableCompareTo() {
-	      return this.savedPeriodConfig.enableCompareTo
+	      return this.dateRange.enableCompareTo
 	    },
 	    getDashboardDateSetting: function getDashboardDateSetting() {
 	      return this.showDashboardDateSetting
@@ -7776,7 +7776,7 @@
 	  /* style */
 	  var __vue_inject_styles__$2 = function (inject) {
 	    if (!inject) { return }
-	    inject("data-v-f7e56238_0", { source: ".v-tabs-bar {\n  box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.2);\n  margin-bottom: 10px;\n}\n.v-tabs-items {\n  box-shadow: 0 3px 1px -2px rgba(0, 0, 0, 0.2), 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12);\n  margin: 12px;\n}\n.compare-to-switch {\n  height: 30px;\n  margin-top: 0px;\n}\n.v-input--radio-group.v-input--radio-group--column {\n  margin-top: 0px;\n}\n\n/*# sourceMappingURL=DateRangePickerMobile.vue.map */", map: {"version":3,"sources":["/Users/mark/Sites/npm-packages/vuetify-date-range-picker/src/components/DateRangePickerMobile.vue","DateRangePickerMobile.vue"],"names":[],"mappings":"AA6aA;EACA,0CAAA;EACA,mBAAA;AC5aA;AD+aA;EACA,+GAAA;EACA,YAAA;AC5aA;AD+aA;EACA,YAAA;EACA,eAAA;AC5aA;AD+aA;EACA,eAAA;AC5aA;;AAEA,oDAAoD","file":"DateRangePickerMobile.vue","sourcesContent":["<template>\n  <v-card>\n    <v-col>\n      <v-row class=\"ml-3 mr-3\">\n        <v-row justify=\"space-between\" align=\"center\">\n          <v-row>\n            <v-btn text @click=\"back\">\n              <v-icon>mdi-close</v-icon>\n            </v-btn>\n            <div class=\"d-flex align-center\">\n              <span>Date settings</span>\n            </div>\n          </v-row>\n\n          <v-btn text @click=\"saveSetting\">Save</v-btn>\n        </v-row>\n      </v-row>\n\n      <v-row>\n        <v-tabs v-model=\"subtypeConverter\" :dark=\"dark\">\n          <v-tab v-for=\"type in periodTypes\" :key=\"type.key\">{{ type.label }}</v-tab>\n\n          <v-tabs-items :dark=\"dark\" v-model=\"subtypeConverter\">\n            <v-tab-item v-for=\"type in periodTypes\" :key=\"type.key\">\n              <v-col>\n                <v-radio-group\n                  v-if=\"periodSubtype[type.key] && periodSubtype[type.key].length > 0\"\n                  v-model=\"selectedSubtype[type.key].subType\"\n                >\n                  <v-radio v-for=\"subType in periodSubtype[type.key]\" :key=\"subType.key\" :value=\"subType.key\">\n                    <template slot=\"label\">\n                      <div class=\"d-flex flex-column\" :class=\"dark ? 'white--text' : 'black--text'\">\n                        <span class=\"primary-label\">{{ subType.label }}</span>\n                        <span class=\"second-label\">{{ subType.periodText }}</span>\n                      </div>\n                    </template>\n                  </v-radio>\n                </v-radio-group>\n\n                <v-col\n                  v-if=\"type.key === 'CUSTOM'\"\n                  class=\"d-flex flex-column\"\n                  @click=\"showSelectionModal = !showSelectionModal\"\n                >\n                  <div class=\"pl-5 mb-3 d-flex flex-column\">\n                    <span class=\"primary-label\">Start date</span>\n                    <span class=\"second-label\">{{ currCustomDate && currCustomDate.startText }}</span>\n                  </div>\n                  <div class=\"pl-5 d-flex flex-column\">\n                    <span class=\"primary-label\">End date</span>\n                    <span class=\"second-label\">{{ currCustomDate && currCustomDate.endText }}</span>\n                  </div>\n                </v-col>\n\n                <v-divider></v-divider>\n\n                <v-row class=\"pa-3\" justify=\"space-between\">\n                  <div>Compare to</div>\n                  <v-switch class=\"compare-to-switch\" v-model=\"enableCompareTo\"></v-switch>\n                </v-row>\n\n                <v-radio-group v-if=\"enableCompareTo\" v-model=\"selectedSubtype[type.key].compareType\">\n                  <v-radio v-for=\"compare in periodCompare[type.key]\" :key=\"compare.key\" :value=\"compare.key\">\n                    <template slot=\"label\">\n                      <div class=\"d-flex flex-column\">\n                        <span class=\"primary-label\">{{ compare.label }}</span>\n                        <span class=\"second-label\" v-if=\"type.key !== 'CUSTOM'\">\n                          {{\n                            selectedSubtype &&\n                              selectedSubtype[type.key] &&\n                              selectedSubtype[type.key].subType &&\n                              compare.period &&\n                              compare.period[selectedSubtype[type.key].subType].periodText\n                          }}\n                        </span>\n                        <span class=\"second-label\" v-if=\"type.key === 'CUSTOM'\">{{ compare.periodText }}</span>\n                      </div>\n                    </template>\n                  </v-radio>\n                </v-radio-group>\n              </v-col>\n            </v-tab-item>\n          </v-tabs-items>\n        </v-tabs>\n      </v-row>\n\n      <!--date selection modal for custom dates-->\n      <v-dialog :dark=\"dark\" v-model=\"showSelectionModal\" fullscreen>\n        <custom-range-selector\n          :dark=\"dark\"\n          :start=\"currCustomDate && currCustomDate.start\"\n          :end=\"currCustomDate && currCustomDate.end\"\n          @close=\"showSelectionModal = !showSelectionModal\"\n          @apply=\"setCustomRange\"\n        />\n      </v-dialog>\n    </v-col>\n  </v-card>\n</template>\n\n<script>\nimport moment from \"moment\"\n\nimport {\n  PERIOD_TYPE,\n  DEFAULT_TYPE_SELECTION,\n  DISPLAY_DATE_FORMAT_1,\n  DISPLAY_DATE_FORMAT_2,\n  DEFAULT_CUSTOM_DATE,\n  INTERNAL_DATE_FORMAT_1,\n  PERIOD_CONVERT_LIST_MOBILE,\n  PERIOD_COMPARE_CONVERT_LIST_MOBILE,\n  PRESETS_DESKTOP,\n  DEFAULT_MOBILE_CONFIG,\n} from \"./presets/constants\"\nimport Date from \"./presets/date\"\nimport CustomRangeSelector from \"./CustomRangeSelector.vue\"\n\nexport default {\n  components: {\n    CustomRangeSelector,\n  },\n\n  props: {\n    savedPeriodConfig: {},\n    showDashboardDateSetting: {\n      type: Boolean,\n      default: false,\n    },\n    format: {\n      type: String,\n      default: \"YYYY-MM-DD\",\n    },\n    dark: {\n      type: Boolean,\n      default: false,\n    },\n  },\n\n  watch: {\n    getDashboardDateSetting(newValue) {\n      if (newValue) {\n        this.reloadType()\n      }\n    },\n  },\n\n  data() {\n    return {\n      periodSubtype: {},\n      periodCompare: {},\n      enableCompareTo: false,\n      showSelectionModal: false,\n      selectedType: null,\n      selectedSubtype: null,\n      currCustomDate: {},\n    }\n  },\n\n  computed: {\n    periodTypes() {\n      return Object.keys(PERIOD_TYPE).map(key => ({ key, label: PERIOD_TYPE[key].label }))\n    },\n    savedType() {\n      return this.savedPeriodConfig && this.savedPeriodConfig.type\n    },\n    savedSubtype() {\n      return this.savedPeriodConfig.subType\n    },\n    savedRange() {\n      return {\n        start: this.savedPeriodConfig.start,\n        end: this.savedPeriodConfig.until,\n      }\n    },\n    savedCompareType() {\n      return this.savedPeriodConfig.compareType\n    },\n    getEnableCompareTo() {\n      return this.savedPeriodConfig.enableCompareTo\n    },\n    getDashboardDateSetting() {\n      return this.showDashboardDateSetting\n    },\n    subtypeConverter: {\n      get: function() {\n        const index = this.periodTypes.findIndex(type => type.key === this.selectedType)\n        return index\n      },\n      set: function(index) {\n        this.selectedType = this.periodTypes[index].key\n      },\n    },\n  },\n\n  mounted() {\n    // convert constant PERIOD_TYPE into the type that can be displayed\n    Object.keys(PERIOD_TYPE).forEach(key => {\n      // convert subType\n      if (!PERIOD_TYPE[key].subType) {\n        this.$set(this.periodSubtype, key, [])\n      } else {\n        this.$set(\n          this.periodSubtype,\n          key,\n          Object.keys(PERIOD_TYPE[key].subType).map(item => {\n            const { start, end } = PERIOD_TYPE[key].subType[item].period\n            let periodText = \"\"\n            if (start && end) {\n              periodText =\n                moment(start).format(DISPLAY_DATE_FORMAT_1) + \" - \" + moment(end).format(DISPLAY_DATE_FORMAT_1)\n            } else if (start && !end) {\n              if (item === \"THIS_MONTH\" || item === \"LAST_MONTH\") {\n                periodText = moment(start).format(\"MMMM\")\n              } else if (key === \"DAY\") {\n                periodText = moment(start).format(DISPLAY_DATE_FORMAT_2)\n              }\n            }\n            return {\n              key: item,\n              label: PERIOD_TYPE[key].subType[item].label,\n              period: PERIOD_TYPE[key].subType[item].period,\n              periodText,\n            }\n          }),\n        )\n      }\n\n      // convert compare periods\n      if (!PERIOD_TYPE[key].compare) {\n        this.$set(this.periodCompare, key, [])\n      } else {\n        this.$set(\n          this.periodCompare,\n          key,\n          Object.keys(PERIOD_TYPE[key].compare).map(item => {\n            const period = PERIOD_TYPE[key].compare[item].period\n\n            if (period) {\n              Object.keys(period).forEach(periodKey => {\n                const { start, end } = period[periodKey]\n                let periodText = \"\"\n                if (start && end) {\n                  periodText =\n                    moment(start).format(DISPLAY_DATE_FORMAT_1) + \" - \" + moment(end).format(DISPLAY_DATE_FORMAT_1)\n                } else if (start && !end) {\n                  periodText = moment(start).format(DISPLAY_DATE_FORMAT_2)\n                }\n                period[periodKey].periodText = periodText\n              })\n            }\n\n            return {\n              key: item,\n              label: PERIOD_TYPE[key].compare[item].label,\n              period: PERIOD_TYPE[key].compare[item].period,\n            }\n          }),\n        )\n      }\n    })\n\n    // load custom selection date\n    const { start, end } = this.savedType === \"CUSTOM\" ? this.savedRange : DEFAULT_CUSTOM_DATE\n    this.currCustomDate = {\n      start,\n      end,\n      startText: moment(start).format(DISPLAY_DATE_FORMAT_2),\n      endText: moment(end).format(DISPLAY_DATE_FORMAT_2),\n    }\n\n    this.updateCustomComparePeriod()\n\n    this.reloadType()\n  },\n\n  methods: {\n    back() {\n      this.$emit(\"hideModal\")\n    },\n    saveSetting() {\n      let config\n      if (this.selectedType === \"CUSTOM\") {\n        // set compare start & compare end\n        const currentCompareType = this.selectedSubtype.CUSTOM.compareType\n        const currPeriodCompare = this.periodCompare.CUSTOM.find(item => item.key === currentCompareType)\n        let start\n        let end\n        if (currPeriodCompare && currPeriodCompare.period) {\n          start = currPeriodCompare.period.start\n          end = currPeriodCompare.period.end\n        }\n\n        config = {\n          type: \"CUSTOM\",\n          subType: \"\",\n          start: this.currCustomDate.start,\n          until: this.currCustomDate.end ? this.currCustomDate.end : null,\n          compareType: currentCompareType ? currentCompareType : null,\n          compareStart: start ? start : null,\n          compareEnd: end ? end : null,\n          enableCompareTo: !!this.enableCompareTo,\n        }\n      } else {\n        const currSelectedSubType = this.selectedSubtype[this.selectedType].subType\n        const currSelectedCompareType = this.selectedSubtype[this.selectedType].compareType\n\n        // set compare start & compare end\n        let compareStart\n        let compareEnd\n        const currComparePeriod = this.periodCompare[this.selectedType].find(\n          item => item.key === currSelectedCompareType,\n        )\n        if (currComparePeriod) {\n          const { start, end } = currComparePeriod.period[currSelectedSubType]\n          compareStart = start\n          compareEnd = end\n        }\n\n        const { start, end } = this.periodSubtype[this.selectedType].find(\n          type => type.key === currSelectedSubType,\n        ).period\n\n        config = {\n          type: this.selectedType || null,\n          subType: currSelectedSubType || null,\n          start: start || null,\n          until: end || null,\n          compareType: currSelectedCompareType || null,\n          enableCompareTo: !!this.enableCompareTo,\n          compareStart: compareStart || null,\n          compareEnd: compareEnd || null,\n        }\n      }\n\n      this.$emit(\"hideModal\")\n      this.reloadType()\n\n      this.convertDesktopAndSave(config)\n    },\n    convertDesktopAndSave(mobileConfig) {\n      // convert mobile config into desktop config\n      let newType = PERIOD_CONVERT_LIST_MOBILE[mobileConfig.subType] || \"CUSTOM\"\n      let newCompareType\n\n      if (mobileConfig.enableCompareTo) {\n        const mobileCompare = PERIOD_COMPARE_CONVERT_LIST_MOBILE[mobileConfig.subType]\n        if (mobileCompare) {\n          newCompareType = mobileCompare[mobileConfig.compareType] || \"CUSTOM_PERIOD\"\n        } else {\n          newCompareType = \"CUSTOM_PERIOD\"\n        }\n      } else {\n        newCompareType = null\n      }\n\n      // const isUntilNull = (newType === \"TODAY\")\n\n      let desktopComparePeriod = PRESETS_DESKTOP[newType].compare\n      if (desktopComparePeriod) {\n        desktopComparePeriod = desktopComparePeriod[newCompareType]\n      }\n\n      let newDesktopConfig = {\n        type: newType || null,\n        start: mobileConfig.start || null,\n        until: (mobileConfig.until ? mobileConfig.until : mobileConfig.start) || null,\n        compareType: desktopComparePeriod || null,\n        compareStart: mobileConfig.compareStart || null,\n        compareEnd: (mobileConfig.compareEnd ? mobileConfig.compareEnd : mobileConfig.compareStart) || null,\n        enableCompare: mobileConfig.enableCompareTo,\n      }\n\n      // save converted config to desktop\n      this.$emit(\"saveMobileConfig\", {\n        mobileConfig,\n        newDesktopConfig,\n      })\n    },\n    setCustomRange(range) {\n      this.showSelectionModal = !this.showSelectionModal\n      this.currCustomDate = {\n        start: moment(range.start).format(INTERNAL_DATE_FORMAT_1),\n        end: moment(range.end).format(INTERNAL_DATE_FORMAT_1),\n        startText: moment(range.start).format(INTERNAL_DATE_FORMAT_1),\n        endText: moment(range.end).format(INTERNAL_DATE_FORMAT_1),\n      }\n      this.updateCustomComparePeriod()\n    },\n    // get saved type or subtype from store\n    reloadType() {\n      if (this.savedType) {\n        // if there is saved config\n        this.selectedType = this.savedType\n        this.selectedSubtype = JSON.parse(JSON.stringify(DEFAULT_TYPE_SELECTION))\n        this.selectedSubtype[this.savedType].subType = this.savedSubtype\n        this.selectedSubtype[this.savedType].compareType = this.savedCompareType\n        this.enableCompareTo = this.getEnableCompareTo\n      } else {\n        // if no valid config\n        const { type, subType, compareType } = DEFAULT_MOBILE_CONFIG\n        this.selectedType = type\n        this.selectedSubtype = JSON.parse(JSON.stringify(DEFAULT_TYPE_SELECTION))\n        this.selectedSubtype[type].subType = subType\n        this.selectedSubtype[type].compareType = compareType\n        this.enableCompareTo = false\n      }\n    },\n    updateCustomComparePeriod() {\n      const { CUSTOM } = this.periodCompare\n      CUSTOM.forEach(item => {\n        if (item.key === \"PREVIOUS_PERIOD\") {\n          item.period = Date.previousPeriodCustom(this.currCustomDate)\n          item.periodText = item.period.start + \" - \" + item.period.end\n        }\n\n        if (item.key === \"PREVIOUS_YEAR\") {\n          item.period = Date.previousYearCustom(this.currCustomDate)\n          item.periodText = item.period.start + \" - \" + item.period.end\n        }\n      })\n    },\n  },\n}\n</script>\n\n<style lang=\"scss\">\n@import \"./presets/color\";\n\n.v-tabs-bar {\n  box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.2);\n  margin-bottom: 10px;\n}\n\n.v-tabs-items {\n  box-shadow: 0 3px 1px -2px rgba(0, 0, 0, 0.2), 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12);\n  margin: 12px;\n}\n\n.compare-to-switch {\n  height: 30px;\n  margin-top: 0px;\n}\n\n.v-input--radio-group.v-input--radio-group--column {\n  margin-top: 0px;\n}\n\n// .primary-label {\n//   color: $cop-color-black;\n//   font-size: 14px;\n// }\n\n// .second-label {\n//   color: $cop-color-grey;\n//   font-size: 13px;\n// }\n</style>\n",".v-tabs-bar {\n  box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.2);\n  margin-bottom: 10px;\n}\n\n.v-tabs-items {\n  box-shadow: 0 3px 1px -2px rgba(0, 0, 0, 0.2), 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12);\n  margin: 12px;\n}\n\n.compare-to-switch {\n  height: 30px;\n  margin-top: 0px;\n}\n\n.v-input--radio-group.v-input--radio-group--column {\n  margin-top: 0px;\n}\n\n/*# sourceMappingURL=DateRangePickerMobile.vue.map */"]}, media: undefined });
+	    inject("data-v-bfda328a_0", { source: ".v-tabs-bar {\n  box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.2);\n  margin-bottom: 10px;\n}\n.v-tabs-items {\n  box-shadow: 0 3px 1px -2px rgba(0, 0, 0, 0.2), 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12);\n  margin: 12px;\n}\n.compare-to-switch {\n  height: 30px;\n  margin-top: 0px;\n}\n.v-input--radio-group.v-input--radio-group--column {\n  margin-top: 0px;\n}\n\n/*# sourceMappingURL=DateRangePickerMobile.vue.map */", map: {"version":3,"sources":["F:\\Narola Vue Projects\\vuetify-date-range-picker\\src\\components\\DateRangePickerMobile.vue","DateRangePickerMobile.vue"],"names":[],"mappings":"AA6aA;EACA,0CAAA;EACA,mBAAA;AC5aA;AD+aA;EACA,+GAAA;EACA,YAAA;AC5aA;AD+aA;EACA,YAAA;EACA,eAAA;AC5aA;AD+aA;EACA,eAAA;AC5aA;;AAEA,oDAAoD","file":"DateRangePickerMobile.vue","sourcesContent":["<template>\r\n  <v-card>\r\n    <v-col>\r\n      <v-row class=\"ml-3 mr-3\">\r\n        <v-row justify=\"space-between\" align=\"center\">\r\n          <v-row>\r\n            <v-btn text @click=\"back\">\r\n              <v-icon>mdi-close</v-icon>\r\n            </v-btn>\r\n            <div class=\"d-flex align-center\">\r\n              <span>Date settings</span>\r\n            </div>\r\n          </v-row>\r\n\r\n          <v-btn text @click=\"saveSetting\">Save</v-btn>\r\n        </v-row>\r\n      </v-row>\r\n\r\n      <v-row>\r\n        <v-tabs v-model=\"subtypeConverter\" :dark=\"dark\">\r\n          <v-tab v-for=\"type in periodTypes\" :key=\"type.key\">{{ type.label }}</v-tab>\r\n\r\n          <v-tabs-items :dark=\"dark\" v-model=\"subtypeConverter\">\r\n            <v-tab-item v-for=\"type in periodTypes\" :key=\"type.key\">\r\n              <v-col>\r\n                <v-radio-group\r\n                  v-if=\"periodSubtype[type.key] && periodSubtype[type.key].length > 0\"\r\n                  v-model=\"selectedSubtype[type.key].subType\"\r\n                >\r\n                  <v-radio v-for=\"subType in periodSubtype[type.key]\" :key=\"subType.key\" :value=\"subType.key\">\r\n                    <template slot=\"label\">\r\n                      <div class=\"d-flex flex-column\" :class=\"dark ? 'white--text' : 'black--text'\">\r\n                        <span class=\"primary-label\">{{ subType.label }}</span>\r\n                        <span class=\"second-label\">{{ subType.periodText }}</span>\r\n                      </div>\r\n                    </template>\r\n                  </v-radio>\r\n                </v-radio-group>\r\n\r\n                <v-col\r\n                  v-if=\"type.key === 'CUSTOM'\"\r\n                  class=\"d-flex flex-column\"\r\n                  @click=\"showSelectionModal = !showSelectionModal\"\r\n                >\r\n                  <div class=\"pl-5 mb-3 d-flex flex-column\">\r\n                    <span class=\"primary-label\">Start date</span>\r\n                    <span class=\"second-label\">{{ currCustomDate && currCustomDate.startText }}</span>\r\n                  </div>\r\n                  <div class=\"pl-5 d-flex flex-column\">\r\n                    <span class=\"primary-label\">End date</span>\r\n                    <span class=\"second-label\">{{ currCustomDate && currCustomDate.endText }}</span>\r\n                  </div>\r\n                </v-col>\r\n\r\n                <v-divider></v-divider>\r\n\r\n                <v-row class=\"pa-3\" justify=\"space-between\">\r\n                  <div>Compare to</div>\r\n                  <v-switch class=\"compare-to-switch\" v-model=\"enableCompareTo\"></v-switch>\r\n                </v-row>\r\n\r\n                <v-radio-group v-if=\"enableCompareTo\" v-model=\"selectedSubtype[type.key].compareType\">\r\n                  <v-radio v-for=\"compare in periodCompare[type.key]\" :key=\"compare.key\" :value=\"compare.key\">\r\n                    <template slot=\"label\">\r\n                      <div class=\"d-flex flex-column\">\r\n                        <span class=\"primary-label\">{{ compare.label }}</span>\r\n                        <span class=\"second-label\" v-if=\"type.key !== 'CUSTOM'\">\r\n                          {{\r\n                            selectedSubtype &&\r\n                              selectedSubtype[type.key] &&\r\n                              selectedSubtype[type.key].subType &&\r\n                              compare.period &&\r\n                              compare.period[selectedSubtype[type.key].subType].periodText\r\n                          }}\r\n                        </span>\r\n                        <span class=\"second-label\" v-if=\"type.key === 'CUSTOM'\">{{ compare.periodText }}</span>\r\n                      </div>\r\n                    </template>\r\n                  </v-radio>\r\n                </v-radio-group>\r\n              </v-col>\r\n            </v-tab-item>\r\n          </v-tabs-items>\r\n        </v-tabs>\r\n      </v-row>\r\n\r\n      <!--date selection modal for custom dates-->\r\n      <v-dialog :dark=\"dark\" v-model=\"showSelectionModal\" fullscreen>\r\n        <custom-range-selector\r\n          :dark=\"dark\"\r\n          :start=\"currCustomDate && currCustomDate.start\"\r\n          :end=\"currCustomDate && currCustomDate.end\"\r\n          @close=\"showSelectionModal = !showSelectionModal\"\r\n          @apply=\"setCustomRange\"\r\n        />\r\n      </v-dialog>\r\n    </v-col>\r\n  </v-card>\r\n</template>\r\n\r\n<script>\r\nimport moment from \"moment\"\r\n\r\nimport {\r\n  PERIOD_TYPE,\r\n  DEFAULT_TYPE_SELECTION,\r\n  DISPLAY_DATE_FORMAT_1,\r\n  DISPLAY_DATE_FORMAT_2,\r\n  DEFAULT_CUSTOM_DATE,\r\n  INTERNAL_DATE_FORMAT_1,\r\n  PERIOD_CONVERT_LIST_MOBILE,\r\n  PERIOD_COMPARE_CONVERT_LIST_MOBILE,\r\n  PRESETS_DESKTOP,\r\n  DEFAULT_MOBILE_CONFIG,\r\n} from \"./presets/constants\"\r\nimport Date from \"./presets/date\"\r\nimport CustomRangeSelector from \"./CustomRangeSelector.vue\"\r\n\r\nexport default {\r\n  components: {\r\n    CustomRangeSelector,\r\n  },\r\n\r\n  props: {\r\n    savedPeriodConfig: {},\r\n    showDashboardDateSetting: {\r\n      type: Boolean,\r\n      default: false,\r\n    },\r\n    format: {\r\n      type: String,\r\n      default: \"YYYY-MM-DD\",\r\n    },\r\n    dark: {\r\n      type: Boolean,\r\n      default: false,\r\n    },\r\n  },\r\n\r\n  watch: {\r\n    getDashboardDateSetting(newValue) {\r\n      if (newValue) {\r\n        this.reloadType()\r\n      }\r\n    },\r\n  },\r\n\r\n  data() {\r\n    return {\r\n      periodSubtype: {},\r\n      periodCompare: {},\r\n      enableCompareTo: false,\r\n      showSelectionModal: false,\r\n      selectedType: null,\r\n      selectedSubtype: null,\r\n      currCustomDate: {},\r\n    }\r\n  },\r\n\r\n  computed: {\r\n    periodTypes() {\r\n      return Object.keys(PERIOD_TYPE).map(key => ({ key, label: PERIOD_TYPE[key].label }))\r\n    },\r\n    savedType() {\r\n      return this.dateRange.type\r\n    },\r\n    savedSubtype() {\r\n    return this.dateRange.subType\r\n    },\r\n    savedRange() {\r\n      return {\r\n        start: this.dateRange.start,\r\n        end: this.dateRange.until,\r\n      }\r\n    },\r\n    savedCompareType() {\r\n     return this.dateRange.compareType\r\n    },\r\n    getEnableCompareTo() {\r\n      return this.dateRange.enableCompareTo\r\n    },\r\n    getDashboardDateSetting() {\r\n      return this.showDashboardDateSetting\r\n    },\r\n    subtypeConverter: {\r\n      get: function() {\r\n        const index = this.periodTypes.findIndex(type => type.key === this.selectedType)\r\n        return index\r\n      },\r\n      set: function(index) {\r\n        this.selectedType = this.periodTypes[index].key\r\n      },\r\n    },\r\n  },\r\n\r\n  mounted() {\r\n    // convert constant PERIOD_TYPE into the type that can be displayed\r\n    Object.keys(PERIOD_TYPE).forEach(key => {\r\n      // convert subType\r\n      if (!PERIOD_TYPE[key].subType) {\r\n        this.$set(this.periodSubtype, key, [])\r\n      } else {\r\n        this.$set(\r\n          this.periodSubtype,\r\n          key,\r\n          Object.keys(PERIOD_TYPE[key].subType).map(item => {\r\n            const { start, end } = PERIOD_TYPE[key].subType[item].period\r\n            let periodText = \"\"\r\n            if (start && end) {\r\n              periodText =\r\n                moment(start).format(DISPLAY_DATE_FORMAT_1) + \" - \" + moment(end).format(DISPLAY_DATE_FORMAT_1)\r\n            } else if (start && !end) {\r\n              if (item === \"THIS_MONTH\" || item === \"LAST_MONTH\") {\r\n                periodText = moment(start).format(\"MMMM\")\r\n              } else if (key === \"DAY\") {\r\n                periodText = moment(start).format(DISPLAY_DATE_FORMAT_2)\r\n              }\r\n            }\r\n            return {\r\n              key: item,\r\n              label: PERIOD_TYPE[key].subType[item].label,\r\n              period: PERIOD_TYPE[key].subType[item].period,\r\n              periodText,\r\n            }\r\n          }),\r\n        )\r\n      }\r\n\r\n      // convert compare periods\r\n      if (!PERIOD_TYPE[key].compare) {\r\n        this.$set(this.periodCompare, key, [])\r\n      } else {\r\n        this.$set(\r\n          this.periodCompare,\r\n          key,\r\n          Object.keys(PERIOD_TYPE[key].compare).map(item => {\r\n            const period = PERIOD_TYPE[key].compare[item].period\r\n\r\n            if (period) {\r\n              Object.keys(period).forEach(periodKey => {\r\n                const { start, end } = period[periodKey]\r\n                let periodText = \"\"\r\n                if (start && end) {\r\n                  periodText =\r\n                    moment(start).format(DISPLAY_DATE_FORMAT_1) + \" - \" + moment(end).format(DISPLAY_DATE_FORMAT_1)\r\n                } else if (start && !end) {\r\n                  periodText = moment(start).format(DISPLAY_DATE_FORMAT_2)\r\n                }\r\n                period[periodKey].periodText = periodText\r\n              })\r\n            }\r\n\r\n            return {\r\n              key: item,\r\n              label: PERIOD_TYPE[key].compare[item].label,\r\n              period: PERIOD_TYPE[key].compare[item].period,\r\n            }\r\n          }),\r\n        )\r\n      }\r\n    })\r\n\r\n    // load custom selection date\r\n    const { start, end } = this.savedType === \"CUSTOM\" ? this.savedRange : DEFAULT_CUSTOM_DATE\r\n    this.currCustomDate = {\r\n      start,\r\n      end,\r\n      startText: moment(start).format(DISPLAY_DATE_FORMAT_2),\r\n      endText: moment(end).format(DISPLAY_DATE_FORMAT_2),\r\n    }\r\n\r\n    this.updateCustomComparePeriod()\r\n\r\n    this.reloadType()\r\n  },\r\n\r\n  methods: {\r\n    back() {\r\n      this.$emit(\"hideModal\")\r\n    },\r\n    saveSetting() {\r\n      let config\r\n      if (this.selectedType === \"CUSTOM\") {\r\n        // set compare start & compare end\r\n        const currentCompareType = this.selectedSubtype.CUSTOM.compareType\r\n        const currPeriodCompare = this.periodCompare.CUSTOM.find(item => item.key === currentCompareType)\r\n        let start\r\n        let end\r\n        if (currPeriodCompare && currPeriodCompare.period) {\r\n          start = currPeriodCompare.period.start\r\n          end = currPeriodCompare.period.end\r\n        }\r\n\r\n        config = {\r\n          type: \"CUSTOM\",\r\n          subType: \"\",\r\n          start: this.currCustomDate.start,\r\n          until: this.currCustomDate.end ? this.currCustomDate.end : null,\r\n          compareType: currentCompareType ? currentCompareType : null,\r\n          compareStart: start ? start : null,\r\n          compareEnd: end ? end : null,\r\n          enableCompareTo: !!this.enableCompareTo,\r\n        }\r\n      } else {\r\n        const currSelectedSubType = this.selectedSubtype[this.selectedType].subType\r\n        const currSelectedCompareType = this.selectedSubtype[this.selectedType].compareType\r\n\r\n        // set compare start & compare end\r\n        let compareStart\r\n        let compareEnd\r\n        const currComparePeriod = this.periodCompare[this.selectedType].find(\r\n          item => item.key === currSelectedCompareType,\r\n        )\r\n        if (currComparePeriod) {\r\n          const { start, end } = currComparePeriod.period[currSelectedSubType]\r\n          compareStart = start\r\n          compareEnd = end\r\n        }\r\n\r\n        const { start, end } = this.periodSubtype[this.selectedType].find(\r\n          type => type.key === currSelectedSubType,\r\n        ).period\r\n\r\n        config = {\r\n          type: this.selectedType || null,\r\n          subType: currSelectedSubType || null,\r\n          start: start || null,\r\n          until: end || null,\r\n          compareType: currSelectedCompareType || null,\r\n          enableCompareTo: !!this.enableCompareTo,\r\n          compareStart: compareStart || null,\r\n          compareEnd: compareEnd || null,\r\n        }\r\n      }\r\n\r\n      this.$emit(\"hideModal\")\r\n      this.reloadType()\r\n\r\n      this.convertDesktopAndSave(config)\r\n    },\r\n    convertDesktopAndSave(mobileConfig) {\r\n      // convert mobile config into desktop config\r\n      let newType = PERIOD_CONVERT_LIST_MOBILE[mobileConfig.subType] || \"CUSTOM\"\r\n      let newCompareType\r\n\r\n      if (mobileConfig.enableCompareTo) {\r\n        const mobileCompare = PERIOD_COMPARE_CONVERT_LIST_MOBILE[mobileConfig.subType]\r\n        if (mobileCompare) {\r\n          newCompareType = mobileCompare[mobileConfig.compareType] || \"CUSTOM_PERIOD\"\r\n        } else {\r\n          newCompareType = \"CUSTOM_PERIOD\"\r\n        }\r\n      } else {\r\n        newCompareType = null\r\n      }\r\n\r\n      // const isUntilNull = (newType === \"TODAY\")\r\n\r\n      let desktopComparePeriod = PRESETS_DESKTOP[newType].compare\r\n      if (desktopComparePeriod) {\r\n        desktopComparePeriod = desktopComparePeriod[newCompareType]\r\n      }\r\n\r\n      let newDesktopConfig = {\r\n        type: newType || null,\r\n        start: mobileConfig.start || null,\r\n        until: (mobileConfig.until ? mobileConfig.until : mobileConfig.start) || null,\r\n        compareType: desktopComparePeriod || null,\r\n        compareStart: mobileConfig.compareStart || null,\r\n        compareEnd: (mobileConfig.compareEnd ? mobileConfig.compareEnd : mobileConfig.compareStart) || null,\r\n        enableCompare: mobileConfig.enableCompareTo,\r\n      }\r\n\r\n      // save converted config to desktop\r\n      this.$emit(\"saveMobileConfig\", {\r\n        mobileConfig,\r\n        newDesktopConfig,\r\n      })\r\n    },\r\n    setCustomRange(range) {\r\n      this.showSelectionModal = !this.showSelectionModal\r\n      this.currCustomDate = {\r\n        start: moment(range.start).format(INTERNAL_DATE_FORMAT_1),\r\n        end: moment(range.end).format(INTERNAL_DATE_FORMAT_1),\r\n        startText: moment(range.start).format(INTERNAL_DATE_FORMAT_1),\r\n        endText: moment(range.end).format(INTERNAL_DATE_FORMAT_1),\r\n      }\r\n      this.updateCustomComparePeriod()\r\n    },\r\n    // get saved type or subtype from store\r\n    reloadType() {\r\n      if (this.savedType) {\r\n        // if there is saved config\r\n        this.selectedType = this.savedType\r\n        this.selectedSubtype = JSON.parse(JSON.stringify(DEFAULT_TYPE_SELECTION))\r\n        this.selectedSubtype[this.savedType].subType = this.savedSubtype\r\n        this.selectedSubtype[this.savedType].compareType = this.savedCompareType\r\n        this.enableCompareTo = this.getEnableCompareTo\r\n      } else {\r\n        // if no valid config\r\n        const { type, subType, compareType } = DEFAULT_MOBILE_CONFIG\r\n        this.selectedType = type\r\n        this.selectedSubtype = JSON.parse(JSON.stringify(DEFAULT_TYPE_SELECTION))\r\n        this.selectedSubtype[type].subType = subType\r\n        this.selectedSubtype[type].compareType = compareType\r\n        this.enableCompareTo = false\r\n      }\r\n    },\r\n    updateCustomComparePeriod() {\r\n      const { CUSTOM } = this.periodCompare\r\n      CUSTOM.forEach(item => {\r\n        if (item.key === \"PREVIOUS_PERIOD\") {\r\n          item.period = Date.previousPeriodCustom(this.currCustomDate)\r\n          item.periodText = item.period.start + \" - \" + item.period.end\r\n        }\r\n\r\n        if (item.key === \"PREVIOUS_YEAR\") {\r\n          item.period = Date.previousYearCustom(this.currCustomDate)\r\n          item.periodText = item.period.start + \" - \" + item.period.end\r\n        }\r\n      })\r\n    },\r\n  },\r\n}\r\n</script>\r\n\r\n<style lang=\"scss\">\r\n@import \"./presets/color\";\r\n\r\n.v-tabs-bar {\r\n  box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.2);\r\n  margin-bottom: 10px;\r\n}\r\n\r\n.v-tabs-items {\r\n  box-shadow: 0 3px 1px -2px rgba(0, 0, 0, 0.2), 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12);\r\n  margin: 12px;\r\n}\r\n\r\n.compare-to-switch {\r\n  height: 30px;\r\n  margin-top: 0px;\r\n}\r\n\r\n.v-input--radio-group.v-input--radio-group--column {\r\n  margin-top: 0px;\r\n}\r\n\r\n// .primary-label {\r\n//   color: $cop-color-black;\r\n//   font-size: 14px;\r\n// }\r\n\r\n// .second-label {\r\n//   color: $cop-color-grey;\r\n//   font-size: 13px;\r\n// }\r\n</style>\r\n",".v-tabs-bar {\n  box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.2);\n  margin-bottom: 10px;\n}\n\n.v-tabs-items {\n  box-shadow: 0 3px 1px -2px rgba(0, 0, 0, 0.2), 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12);\n  margin: 12px;\n}\n\n.compare-to-switch {\n  height: 30px;\n  margin-top: 0px;\n}\n\n.v-input--radio-group.v-input--radio-group--column {\n  margin-top: 0px;\n}\n\n/*# sourceMappingURL=DateRangePickerMobile.vue.map */"]}, media: undefined });
 
 	  };
 	  /* scoped */
@@ -7831,7 +7831,7 @@
 	      type: Boolean,
 	      default: false,
 	    },
-	    savedDesktopConfig: {},
+	    dateRange: {},
 	    showDashboardDateSetting: {
 	      type: Boolean,
 	      default: false,
@@ -7839,12 +7839,12 @@
 	  },
 
 	  watch: {
-	    currSelectedPreset: function() {
-	      this.updateCalendar(this.presets[this.currSelectedPreset]);
+	    datePreset: function() {
+	      this.updateCalendar(this.presets[this.datePreset]);
 	    },
-	    enableCompare: function() {
+	    compare: function() {
 	      this.updateComparePeriod();
-	      if (!this.enableCompare) {
+	      if (!this.compare) {
 	        this.range = {};
 	      }
 	    },
@@ -7861,14 +7861,18 @@
 	  data: function data() {
 	    return {
 	      presets: PRESETS_DESKTOP,
-	      currSelectedPreset: PRESETS_DEFAULT_DESKTOP.PRESET,
-	      enableCompare: false,
-	      currSelectedCompare: PRESETS_DEFAULT_DESKTOP.COMPARE,
+	      datePreset: PRESETS_DEFAULT_DESKTOP.PRESET,
+	      compare: false,
+	      comparePreset: PRESETS_DEFAULT_DESKTOP.COMPARE,
 	      startDate: "",
 	      endDate: "",
 	      compareStartDate: "",
-	      compareEndDate: "",
-	      range: {},
+	      compareUntilDate: "",
+	       test: ["2020-01-01", "2020-02-01"],
+	      range: {
+	        start: new Date(2018, 0, 16), // Jan 16th, 2018
+	        end: new Date(2018, 0, 19), // Jan 19th, 2018
+	      },
 	    }
 	  },
 
@@ -7898,8 +7902,8 @@
 	          highlight: "red",
 	          dates: [
 	            {
-	              start: new Date(this.startDate),
-	              end: new Date(this.endDate),
+	              start: new Date(this.start),
+	              end: new Date(this.until),
 	            } ],
 	        } ]
 	    },
@@ -7920,22 +7924,22 @@
 	    },
 	    updateComparePeriod: function updateComparePeriod() {
 	      if (
-	        this.currSelectedPreset !== "CUSTOM" &&
-	        this.enableCompare &&
-	        this.currSelectedPreset &&
+	        this.datePreset !== "CUSTOM" &&
+	        this.compare &&
+	        this.datePreset &&
 	        this.currSelectedCompare &&
 	        this.currSelectedCompare.id !== "CUSTOM_PERIOD"
 	      ) {
-	        var ref = this.presets[this.currSelectedPreset].compare[this.currSelectedCompare.id];
+	        var ref = this.presets[this.datePreset].compare[this.currSelectedCompare.id];
 	        var ref_period = ref.period;
 	        var start = ref_period.start;
 	        var end = ref_period.end;
 	        this.compareStartDate = moment(start).format(this.format);
-	        this.compareEndDate = moment(end).format(this.format);
+	        this.compareUntilDate = moment(end).format(this.format);
 
 	        this.range = {
 	          start: new Date(this.compareStartDate),
-	          end: new Date(this.compareEndDate),
+	          end: new Date(this.compareUntilDate),
 	        };
 	      }
 	    },
@@ -7948,81 +7952,65 @@
 	      // save desktop config
 	      // this.updateComparePeriod() // set compare period from preset if it is not custom mode
 	      var compareStart = this.range && this.range.start ? moment(this.range.start).format(INTERNAL_DATE_FORMAT_1$1) : "";
-	      var compareEnd = this.range && this.range.end ? moment(this.range.end).format(INTERNAL_DATE_FORMAT_1$1) : "";
+	      var compareUntil = this.range && this.range.end ? moment(this.range.end).format(INTERNAL_DATE_FORMAT_1$1) : "";
 	      var desktopConfig = {
-	        type: this.currSelectedPreset,
+	        type: this.datePreset,
 	        start: this.startDate && moment(this.startDate).format(INTERNAL_DATE_FORMAT_1$1),
 	        until: this.endDate && moment(this.endDate).format(INTERNAL_DATE_FORMAT_1$1),
-	        compareType: this.currSelectedCompare,
+	        comparePreset: this.currSelectedCompare,
 	        compareStart: compareStart,
-	        compareEnd: compareEnd,
-	        enableCompare: !!this.enableCompare,
+	        compareUntil: compareUntil,
+	        compare: !!this.compare,
 	      };
 
-	      // convert to mobile config & save
-	      var newType;
-	      var newSubType;
-	      var newCompareType;
-	      if (this.currSelectedPreset) {
-	        // new type and subtype
-	        newType = PERIOD_COMPARE_CONVERT_LIST_DESKTOP[this.currSelectedPreset].MOBILE_TYPE;
-	        newSubType = PERIOD_CONVERT_LIST_DESKTOP[this.currSelectedPreset];
-	      }
-	      if (this.currSelectedCompare && desktopConfig.enableCompare && this.currSelectedPreset) {
-	        // new compare type
-	        newCompareType = PERIOD_COMPARE_CONVERT_LIST_DESKTOP[this.currSelectedPreset][this.currSelectedCompare.id];
-	      }
+	      // // convert to mobile config & save
+	      // let newType
+	      // let newSubType
+	      // let newCompareType
+	      // if (this.currSelectedPreset) {
+	      //   // new type and subtype
+	      //   newType = PERIOD_COMPARE_CONVERT_LIST_DESKTOP[this.currSelectedPreset].MOBILE_TYPE
+	      //   newSubType = PERIOD_CONVERT_LIST_DESKTOP[this.currSelectedPreset]
+	      // }
+	      // if (this.currSelectedCompare && desktopConfig.enableCompare && this.currSelectedPreset) {
+	      //   // new compare type
+	      //   newCompareType = PERIOD_COMPARE_CONVERT_LIST_DESKTOP[this.currSelectedPreset][this.currSelectedCompare.id]
+	      // }
 
-	      var newMobileConfig = {
-	        type: newType ? newType : null,
-	        subType: newSubType ? newSubType : null,
-	        start: desktopConfig.start,
-	        until: newType !== "DAY" ? desktopConfig.until : null,
-	        compareType: newCompareType ? newCompareType : null,
-	        enableCompareTo: desktopConfig.enableCompare,
-	        compareStart: desktopConfig.compareStart,
-	        compareEnd: newType !== "DAY" ? desktopConfig.compareEnd : null,
-	      };
+	      // const newMobileConfig = {
+	      //   type: newType ? newType : null,
+	      //   subType: newSubType ? newSubType : null,
+	      //   start: desktopConfig.start,
+	      //   until: newType !== "DAY" ? desktopConfig.until : null,
+	      //   compareType: newCompareType ? newCompareType : null,
+	      //   enableCompareTo: desktopConfig.enableCompare,
+	      //   compareStart: desktopConfig.compareStart,
+	      //   compareEnd: newType !== "DAY" ? desktopConfig.compareEnd : null,
+	      // }
 
-	      // this.$emit("saveConvertedMobileConfig", newMobileConfig)
-	      this.$emit("saveDesktopConfig", {
-	        desktopConfig: desktopConfig,
-	        newMobileConfig: newMobileConfig,
-	      });
+	      // // this.$emit("saveConvertedMobileConfig", newMobileConfig)
+	      this.$emit("saveConfig",desktopConfig);
+	      this.$emit("update",desktopConfig);
 	    },
 	    reloadType: function reloadType() {
 	      // if saved config is valid, then init configuration
-	      if (this.savedDesktopConfig) {
-	        var ref = this.savedDesktopConfig;
-	        var compareEnd = ref.compareEnd;
-	        var compareStart = ref.compareStart;
-	        var compareType = ref.compareType;
-	        var start = ref.start;
-	        var type = ref.type;
-	        var until = ref.until;
-	        var enableCompare = ref.enableCompare;
-	        this.compareStartDate = compareStart;
-	        this.compareEndDate = compareEnd;
-	        this.currSelectedCompare = compareType;
-	        this.startDate = start;
-	        this.endDate = until;
-	        this.currSelectedPreset = type;
-	        this.enableCompare = enableCompare;
+	      if (this.dateRange) {
+	        this.compare = this.dateRange.compare;
 
-	        if (this.enableCompare) {
-	          this.range = {
-	            start: new Date(this.compareStartDate),
-	            end: new Date(this.compareEndDate),
-	          };
-	        } else {
-	          this.range = {};
+	        this.compareStart = this.dateRange.compareStart;
+	        this.compareUntil =  this.dateRange.compareUntil;
+	        this.comparePreset =  this.dateRange.comparePreset;
+	        this.dateStart =  this.dateRange.dateStart;
+	        this.dateUntil = this.dateRange.dateUntil;
+	        this.datePreset = this.dateRange.datePreset;
+	       this.datePreset = "LAST_7DAY"; 
 	        }
-	      } else {
+	       else {
 	        // init configuration
-	        var ref$1 = this.presets[this.currSelectedPreset].period;
-	        var start$1 = ref$1.start;
-	        var end = ref$1.end;
-	        this.startDate = start$1;
+	        var ref = this.presets[this.datePreset].period;
+	        var start = ref.start;
+	        var end = ref.end;
+	        this.startDate = start;
 	        this.endDate = end;
 	      }
 	    },
@@ -8057,11 +8045,11 @@
 	                        "v-list-item-group",
 	                        {
 	                          model: {
-	                            value: _vm.currSelectedPreset,
+	                            value: _vm.datePreset,
 	                            callback: function($$v) {
-	                              _vm.currSelectedPreset = $$v;
+	                              _vm.datePreset = $$v;
 	                            },
-	                            expression: "currSelectedPreset"
+	                            expression: "datePreset"
 	                          }
 	                        },
 	                        _vm._l(_vm.presets, function(item) {
@@ -8089,11 +8077,11 @@
 	                      _c("v-switch", {
 	                        staticClass: "compare-to-switch",
 	                        model: {
-	                          value: _vm.enableCompare,
+	                          value: _vm.compare,
 	                          callback: function($$v) {
-	                            _vm.enableCompare = $$v;
+	                            _vm.compare = $$v;
 	                          },
-	                          expression: "enableCompare"
+	                          expression: "compare"
 	                        }
 	                      }),
 	                      _vm._v(" "),
@@ -8106,8 +8094,8 @@
 	                  _vm._v(" "),
 	                  _c("v-select", {
 	                    attrs: {
-	                      disabled: !_vm.enableCompare,
-	                      items: _vm.presets[_vm.currSelectedPreset].compareArray,
+	                      disabled: !_vm.compare,
+	                      items: _vm.presets[_vm.datePreset].compareArray,
 	                      "item-text": "label",
 	                      "item-value": "id",
 	                      "return-object": "",
@@ -8280,8 +8268,48 @@
 
 	var script$4 = {
 	  props: {
-	    savedDesktopConfig: {},
-	    savedPeriodConfig: {},
+	    dateRange: {
+	      dateStart: {
+	        type: String,
+	        default: function () { return moment()
+	            .subtract(7, "days")
+	            .format("YYYY-MM-DD"); },
+	      },
+	      dateUntil: {
+	        type: String,
+	        default: function () { return moment()
+	            .subtract(1, "days")
+	            .format("YYYY-MM-DD"); },
+	      },
+	      datePreset: {
+	        type: String,
+	        default: "LAST_7_DAYS",
+	      },
+	      compare: {
+	        type: Boolean,
+	        default: true,
+	      },
+	      compareStart: {
+	        type: String,
+	        default: function () { return moment()
+	            .subtract(14, "days")
+	            .format("YYYY-MM-DD"); },
+	      },
+	      compareUntil: {
+	        type: String,
+	        default: function () { return moment()
+	            .subtract(8, "days")
+	            .format("YYYY-MM-DD"); },
+	      },
+	      comparePreset: {
+	        type: String,
+	        default: "PREVIOUS_PERIOD",
+	      },
+	      dateFormat: {
+	        type: String,
+	        default: function () { return moment().format("MMM D, YYYY"); },
+	      },
+	    },
 	    showDashboardDateSetting: {
 	      type: Boolean,
 	      default: false,
@@ -8315,19 +8343,16 @@
 
 	  computed: {
 	    isMobile: function isMobile() {
-	      return ["xs", "sm"].includes(this.$vuetify.breakpoint.name) ? true : false
+	      return ["xs", "sm"].includes(this.$vuetify.breakpoint.name)
 	    },
 	  },
 
 	  methods: {
 	    hideModal: function hideModal() {
-	      this.opened = false;
+	      this.$emit("hideModal");
 	    },
-	    saveMobileConfig: function saveMobileConfig(param) {
-	      this.$emit("saveMobileConfig", param);
-	    },
-	    saveDesktopConfig: function saveDesktopConfig(param) {
-	      this.$emit("saveDesktopConfig", param);
+	    setDateRange: function setDateRange(param) {
+	      this.$emit("update", param);
 	    },
 	  },
 	};
@@ -8377,7 +8402,7 @@
 	                        "v-list-item-content",
 	                        [
 	                          _c("v-list-item-title", [
-	                            _vm._v("Compare to: Jun 1, 2002 - Mar 23, 2002")
+	                            _vm._v("Jun 1, 2002 - Mar 23, 2002")
 	                          ]),
 	                          _vm._v(" "),
 	                          _c("v-list-item-subtitle", [
@@ -8417,34 +8442,32 @@
 	                  }
 	                },
 	                [
-	                  _c("date-range-picker-mobile", {
-	                    attrs: {
-	                      dark: _vm.dark,
-	                      format: _vm.format,
-	                      savedPeriodConfig: _vm.savedPeriodConfig,
-	                      showDashboardDateSetting: _vm.showDashboardDateSetting
-	                    },
-	                    on: {
-	                      hideModal: _vm.hideModal,
-	                      saveMobileConfig: _vm.saveMobileConfig
-	                    }
-	                  })
+	                  !_vm.isMobile
+	                    ? _c("date-range-picker-desktop", {
+	                        attrs: { dark: _vm.dark, dateRange: _vm.dateRange },
+	                        on: {
+	                          hideModal: _vm.hideModal,
+	                          update: function($event) {
+	                            return _vm.setDateRange($event)
+	                          }
+	                        }
+	                      })
+	                    : _c("date-range-picker-mobile", {
+	                        attrs: {
+	                          dark: _vm.dark,
+	                          format: _vm.format,
+	                          dateRange: _vm.dateRange
+	                        },
+	                        on: {
+	                          hideModal: _vm.hideModal,
+	                          update: function($event) {
+	                            return _vm.setDateRange($event)
+	                          }
+	                        }
+	                      })
 	                ],
 	                1
 	              )
-	            : _vm._e(),
-	          _vm._v(" "),
-	          !_vm.isMobile
-	            ? _c("date-range-picker-desktop", {
-	                attrs: {
-	                  savedDesktopConfig: _vm.savedDesktopConfig,
-	                  showDashboardDateSetting: _vm.showDashboardDateSetting
-	                },
-	                on: {
-	                  hideModal: _vm.hideModal,
-	                  saveDesktopConfig: _vm.saveDesktopConfig
-	                }
-	              })
 	            : _vm._e()
 	        ],
 	        1
