@@ -57,7 +57,7 @@ export default {
 
   computed: {
     isMobile() {
-      return ["xs", "sm"].includes(this.$vuetify.breakpoint.name) ? true : false
+      return ["xs"].includes(this.$vuetify.breakpoint.name) ? true : false
     },
   },
 

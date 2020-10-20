@@ -47,14 +47,7 @@
             </v-col>
 
             <v-col cols="5">
-              <v-text-field
-                v-model="endDate"
-                label="End date(MM/DD/YYYY)"
-                outlined
-                dense
-                type="date"
-                maxlength="10"
-              />
+              <v-text-field v-model="endDate" label="End date(MM/DD/YYYY)" outlined dense type="date" maxlength="10" />
             </v-col>
           </v-row>
 
@@ -129,6 +122,7 @@ export default {
 
   data() {
     return {
+      currSelectedCompare: null,
       presets: PRESETS_DESKTOP,
       datePreset: PRESETS_DEFAULT_DESKTOP.PRESET,
       compare: false,
@@ -137,7 +131,7 @@ export default {
       endDate: "",
       compareStartDate: "",
       compareUntilDate: "",
-       test: ["2020-01-01", "2020-02-01"],
+      test: ["2020-01-01", "2020-02-01"],
       range: {
         start: new Date(2018, 0, 16), // Jan 16th, 2018
         end: new Date(2018, 0, 19), // Jan 19th, 2018
@@ -256,8 +250,8 @@ export default {
       // }
 
       // // this.$emit("saveConvertedMobileConfig", newMobileConfig)
-      this.$emit("saveConfig",desktopConfig)
-      this.$emit("update",desktopConfig)
+      this.$emit("saveConfig", desktopConfig)
+      this.$emit("update", desktopConfig)
     },
     reloadType() {
       // if saved config is valid, then init configuration
@@ -265,14 +259,13 @@ export default {
         this.compare = this.dateRange.compare
 
         this.compareStart = this.dateRange.compareStart
-        this.compareUntil =  this.dateRange.compareUntil
-        this.comparePreset =  this.dateRange.comparePreset
-        this.dateStart =  this.dateRange.dateStart
+        this.compareUntil = this.dateRange.compareUntil
+        this.comparePreset = this.dateRange.comparePreset
+        this.dateStart = this.dateRange.dateStart
         this.dateUntil = this.dateRange.dateUntil
         this.datePreset = this.dateRange.datePreset
-       this.datePreset = "LAST_7DAY" 
-        }
-       else {
+        this.datePreset = "LAST_7DAY"
+      } else {
         // init configuration
         const { start, end } = this.presets[this.datePreset].period
         this.startDate = start
