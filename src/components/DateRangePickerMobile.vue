@@ -162,10 +162,10 @@ export default {
       return Object.keys(PERIOD_TYPE).map(key => ({ key, label: PERIOD_TYPE[key].label }))
     },
     savedType() {
-      return this.dateRange.type
+      return this.dateRange?.type
     },
     savedSubtype() {
-    return this.dateRange.subType
+      return this.dateRange.subType
     },
     savedRange() {
       return {
@@ -174,7 +174,7 @@ export default {
       }
     },
     savedCompareType() {
-     return this.dateRange.compareType
+      return this.dateRange.compareType
     },
     getEnableCompareTo() {
       return this.dateRange.enableCompareTo
