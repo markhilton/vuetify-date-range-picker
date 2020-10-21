@@ -27,7 +27,11 @@
                   v-if="periodSubtype[type.key] && periodSubtype[type.key].length > 0"
                   v-model="selectedSubtype[type.key].subType"
                 >
-                  <v-radio v-for="subType in periodSubtype[type.key]" :key="subType.key" :value="subType.key">
+                  <v-radio
+                    v-for="subType in periodSubtype[type.key]"
+                    :key="subType.key"
+                    :value="subType.key"
+                  >
                     <template slot="label">
                       <div class="d-flex flex-column" :class="dark ? 'white--text' : 'black--text'">
                         <span class="primary-label">{{ subType.label }}</span>
@@ -59,21 +63,31 @@
                   <v-switch class="compare-to-switch" v-model="enableCompareTo"></v-switch>
                 </v-row>
 
-                <v-radio-group v-if="enableCompareTo" v-model="selectedSubtype[type.key].compareType">
-                  <v-radio v-for="compare in periodCompare[type.key]" :key="compare.key" :value="compare.key">
+                <v-radio-group
+                  v-if="enableCompareTo"
+                  v-model="selectedSubtype[type.key].compareType"
+                >
+                  <v-radio
+                    v-for="compare in periodCompare[type.key]"
+                    :key="compare.key"
+                    :value="compare.key"
+                  >
                     <template slot="label">
                       <div class="d-flex flex-column">
                         <span class="primary-label">{{ compare.label }}</span>
                         <span class="second-label" v-if="type.key !== 'CUSTOM'">
                           {{
-                            selectedSubtype &&
-                              selectedSubtype[type.key] &&
-                              selectedSubtype[type.key].subType &&
-                              compare.period &&
-                              compare.period[selectedSubtype[type.key].subType].periodText
+                          selectedSubtype &&
+                          selectedSubtype[type.key] &&
+                          selectedSubtype[type.key].subType &&
+                          compare.period &&
+                          compare.period[selectedSubtype[type.key].subType].periodText
                           }}
                         </span>
-                        <span class="second-label" v-if="type.key === 'CUSTOM'">{{ compare.periodText }}</span>
+                        <span
+                          class="second-label"
+                          v-if="type.key === 'CUSTOM'"
+                        >{{ compare.periodText }}</span>
                       </div>
                     </template>
                   </v-radio>
@@ -335,6 +349,7 @@ export default {
 
       this.$emit("hideModal")
       this.reloadType()
+      this.$emit("update", config)
 
       this.convertDesktopAndSave(config)
     },
