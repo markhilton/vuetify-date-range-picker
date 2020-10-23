@@ -1,6 +1,11 @@
 <template>
   <div>
-    <v-menu v-model="opened" :dark="dark" :close-on-content-click="!opened" :close-on-click="!opened">
+    <v-menu
+      v-model="opened"
+      :dark="dark"
+      :close-on-content-click="!opened"
+      :close-on-click="!opened"
+    >
       <template v-slot:activator="{ on, attrs }">
         <v-list-item v-bind="attrs" v-on="on">
           <v-list-item-icon class="mr-3">
@@ -8,8 +13,8 @@
           </v-list-item-icon>
 
           <v-list-item-content>
-            <v-list-item-title>Jun 1, 2002 - Mar 23, 2002</v-list-item-title>
-            <v-list-item-subtitle>Compare to: Jun 1, 2002 - Mar 23, 2002</v-list-item-subtitle>
+            <v-list-item-title>{{ selectedDate }}</v-list-item-title>
+            <v-list-item-subtitle>Compare to: {{ displayDate }}</v-list-item-subtitle>
           </v-list-item-content>
         </v-list-item>
       </template>
@@ -110,11 +115,35 @@ export default {
 
   data: () => ({
     opened: false,
+    dateFormat: "MMM Do, YYYY",
+    selectedDate: "",
+    displayDate: "",
   }),
 
   computed: {
     isMobile() {
       return ["xs"].includes(this.$vuetify.breakpoint.name)
+    },
+    // dateFormat() {
+    //   return this.dateRange.dateFormat || this.defaultDateFormat
+    // },
+    dateRangeString() {
+      if (!this.dateRange) return ""
+
+      const { start, until } = this.dateRange
+
+      return moment(start).format(this.dateFormat) + " - " + moment(until).format(this.dateFormat)
+    },
+    compareDateRangeString() {
+      if (!this.dateRange || !this.dateRange.enableCompare) return ""
+
+      const { compareStart, compareUntil } = this.dateRange
+
+      return (
+        moment(compareStart).format(this.dateRange.dateFormat) +
+        " - " +
+        moment(compareUntil).format(this.dateRange.dateFormat)
+      )
     },
   },
 
@@ -123,6 +152,14 @@ export default {
       this.opened = false
     },
     setDateRange(param) {
+      const { start, until, compareStart, compareUntil } = param
+
+      this.selectedDate = moment(start).format(this.dateFormat) + " - " + moment(until).format(this.dateFormat)
+
+      this.displayDate =
+        moment(compareStart).format(this.dateFormat) + " - " + moment(compareUntil).format(this.dateFormat)
+
+      console.log(this.selectedDate)
       this.$emit("update", param)
     },
   },

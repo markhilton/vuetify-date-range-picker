@@ -8,18 +8,16 @@
 
         <v-container class="pl-0">
           <div>
-            Detected device: <b>{{ isMobile ? "MOBILE" : "DESKTOP" }}</b>
-          </div>
-          current component output:
+            Detected device:
+            <b>{{ isMobile ? "MOBILE" : "DESKTOP" }}</b>
+          </div>current component output:
         </v-container>
 
-        <v-container style="background: #666; color: #FFF">
-          {{ selection }}
-        </v-container>
+        <v-container style="background: #666; color: #FFF">{{ selection }}</v-container>
 
         <v-container class="pl-0">
           <!-- date-range-picker -->
-          <date-range-picker :config="configuration" @update="setDateRange" />
+          <date-range-picker :config="configuration" @update="setDateRange"></date-range-picker>
         </v-container>
       </v-container>
     </v-main>
@@ -32,7 +30,6 @@ import DateRangePicker from "./components/DateRangePicker"
 
 export default {
   name: "App",
-
   components: {
     DateRangePicker,
   },

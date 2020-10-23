@@ -22,7 +22,15 @@
 
       <v-divider />
 
-      <v-date-picker v-model="range" mode="range" :isDark="dark" :rows="2" is-inline is-expanded class="mt-3" />
+      <v-date-picker
+        v-model="range"
+        mode="range"
+        :dark="dark"
+        :rows="2"
+        is-inline
+        is-expanded
+        class="mt-3"
+      />
 
       <v-dialog :dark="dark" v-model="showRangeEditor">
         <custom-range-editor

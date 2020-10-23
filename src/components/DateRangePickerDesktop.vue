@@ -47,10 +47,16 @@
             </v-col>
 
             <v-col cols="5">
-              <v-text-field v-model="endDate" label="End date(MM/DD/YYYY)" outlined dense type="date" maxlength="10" />
+              <v-text-field
+                v-model="endDate"
+                label="End date(MM/DD/YYYY)"
+                outlined
+                dense
+                type="date"
+                maxlength="10"
+              />
             </v-col>
           </v-row>
-
           <custom-date-picker
             v-model="range"
             mode="range"
@@ -250,7 +256,7 @@ export default {
       // }
 
       // // this.$emit("saveConvertedMobileConfig", newMobileConfig)
-      this.$emit("saveConfig", desktopConfig)
+      // this.$emit("saveConfig", desktopConfig)
       this.$emit("update", desktopConfig)
     },
     reloadType() {
