@@ -18,7 +18,8 @@
           </v-row>
 
           <v-select
-            v-model="currSelectedCompare"
+            v-if="compare"
+            v-model="comparePreset"
             :disabled="!compare"
             :items="presets[datePreset].compareArray"
             item-text="label"
@@ -84,8 +85,8 @@ import {
   PRESETS_DESKTOP,
   PRESETS_DEFAULT_DESKTOP,
   INTERNAL_DATE_FORMAT_1,
-  // PERIOD_CONVERT_LIST_DESKTOP,
-  // PERIOD_COMPARE_CONVERT_LIST_DESKTOP,
+  PERIOD_CONVERT_LIST_DESKTOP,
+  PERIOD_COMPARE_CONVERT_LIST_DESKTOP,
 } from "./presets/constants"
 
 export default {
@@ -116,7 +117,7 @@ export default {
         this.range = {}
       }
     },
-    currSelectedCompare: function() {
+    comparePreset: function() {
       this.updateComparePeriod()
     },
     getDashboardDateSetting(newValue) {
@@ -138,10 +139,7 @@ export default {
       compareStartDate: "",
       compareUntilDate: "",
       test: ["2020-01-01", "2020-02-01"],
-      range: {
-        start: new Date(2018, 0, 16), // Jan 16th, 2018
-        end: new Date(2018, 0, 19), // Jan 19th, 2018
-      },
+      range: {},
     }
   },
 
@@ -168,8 +166,8 @@ export default {
           highlight: "red",
           dates: [
             {
-              start: new Date(this.start),
-              end: new Date(this.until),
+              start: new Date(this.startDate),
+              end: new Date(this.endDate),
             },
           ],
         },
@@ -195,12 +193,12 @@ export default {
         this.datePreset !== "CUSTOM" &&
         this.compare &&
         this.datePreset &&
-        this.currSelectedCompare &&
-        this.currSelectedCompare.id !== "CUSTOM_PERIOD"
+        this.comparePreset &&
+        this.comparePreset.id !== "CUSTOM_PERIOD"
       ) {
         const {
           period: { start, end },
-        } = this.presets[this.datePreset].compare[this.currSelectedCompare.id]
+        } = this.presets[this.datePreset].compare[this.comparePreset.id]
         this.compareStartDate = moment(start).format(this.format)
         this.compareUntilDate = moment(end).format(this.format)
 
@@ -222,55 +220,65 @@ export default {
       let compareUntil = this.range && this.range.end ? moment(this.range.end).format(INTERNAL_DATE_FORMAT_1) : ""
       const desktopConfig = {
         type: this.datePreset,
-        start: this.startDate && moment(this.startDate).format(INTERNAL_DATE_FORMAT_1),
-        until: this.endDate && moment(this.endDate).format(INTERNAL_DATE_FORMAT_1),
-        comparePreset: this.currSelectedCompare,
+        dateStart: this.startDate && moment(this.startDate).format(INTERNAL_DATE_FORMAT_1),
+        dateUntil: this.endDate && moment(this.endDate).format(INTERNAL_DATE_FORMAT_1),
+        compareType: this.comparePreset,
         compareStart,
         compareUntil,
         compare: !!this.compare,
       }
 
-      // // convert to mobile config & save
-      // let newType
-      // let newSubType
-      // let newCompareType
-      // if (this.currSelectedPreset) {
-      //   // new type and subtype
-      //   newType = PERIOD_COMPARE_CONVERT_LIST_DESKTOP[this.currSelectedPreset].MOBILE_TYPE
-      //   newSubType = PERIOD_CONVERT_LIST_DESKTOP[this.currSelectedPreset]
-      // }
-      // if (this.currSelectedCompare && desktopConfig.enableCompare && this.currSelectedPreset) {
-      //   // new compare type
-      //   newCompareType = PERIOD_COMPARE_CONVERT_LIST_DESKTOP[this.currSelectedPreset][this.currSelectedCompare.id]
-      // }
+     // convert to mobile config & save
+      let newType
+      let newSubType
+      let newCompareType
+      if (this.datePreset) {
+        // new type and subtype
+        newType = PERIOD_COMPARE_CONVERT_LIST_DESKTOP[this.datePreset].MOBILE_TYPE
+        newSubType = PERIOD_CONVERT_LIST_DESKTOP[this.datePreset]
+      }
+      if (this.comparePreset && desktopConfig.compare && this.datePreset) {
+        // new compare type
+        newCompareType = PERIOD_COMPARE_CONVERT_LIST_DESKTOP[this.datePreset][this.comparePreset.id]
+      }
 
-      // const newMobileConfig = {
-      //   type: newType ? newType : null,
-      //   subType: newSubType ? newSubType : null,
-      //   start: desktopConfig.start,
-      //   until: newType !== "DAY" ? desktopConfig.until : null,
-      //   compareType: newCompareType ? newCompareType : null,
-      //   enableCompareTo: desktopConfig.enableCompare,
-      //   compareStart: desktopConfig.compareStart,
-      //   compareEnd: newType !== "DAY" ? desktopConfig.compareEnd : null,
-      // }
+      const newMobileConfig = {
+        type: newType ? newType : null,
+        subType: newSubType ? newSubType : null,
+        dateStart: desktopConfig.dateStart,
+        dateUntil: newType !== "DAY" ? desktopConfig.dateUntil : null,
+        compareType: newCompareType ? newCompareType : null,
+        compare: desktopConfig.compare,
+        compareStart: desktopConfig.compareStart,
+        compareUntil: newType !== "DAY" ? desktopConfig.compareUntil : null,
+      }
 
-      // // this.$emit("saveConvertedMobileConfig", newMobileConfig)
-      // this.$emit("saveConfig", desktopConfig)
+      this.$emit("saveConvertedMobileConfig", newMobileConfig)
+      this.$emit("saveConfig", desktopConfig)
       this.$emit("update", desktopConfig)
     },
     reloadType() {
       // if saved config is valid, then init configuration
       if (this.dateRange) {
+        const { compareStart, compareUntil, compareType, dateStart, dateUntil, type, compare } = this.dateRange
         this.compare = this.dateRange.compare
 
-        this.compareStart = this.dateRange.compareStart
-        this.compareUntil = this.dateRange.compareUntil
-        this.comparePreset = this.dateRange.comparePreset
-        this.dateStart = this.dateRange.dateStart
-        this.dateUntil = this.dateRange.dateUntil
-        this.datePreset = this.dateRange.datePreset
-        this.datePreset = "LAST_7DAY"
+        this.compareStartDate = compareStart
+        this.compareUntilDate = compareUntil
+        this.comparePreset = compareType
+        this.dateStart = dateStart
+        this.dateUntil = dateUntil
+        this.datePreset = type
+        this.compare = compare
+
+        if (this.compare) {
+          this.range = {
+            start: new Date(this.compareStartDate),
+            end: new Date(this.compareEndDate),
+          }
+        } else {
+          this.range = {}
+        }
       } else {
         // init configuration
         const { start, end } = this.presets[this.datePreset].period

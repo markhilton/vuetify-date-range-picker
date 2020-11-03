@@ -25,7 +25,7 @@
           :format="format"
           :dateRange="dateRange"
           @hideModal="hideModal"
-          @update="setDateRange($event)"
+          @updated="setDateRange($event)"
         />
       </v-dialog>
 
@@ -130,9 +130,9 @@ export default {
     dateRangeString() {
       if (!this.dateRange) return ""
 
-      const { start, until } = this.dateRange
+      const { dateStart, dateUntil } = this.dateRange
 
-      return moment(start).format(this.dateFormat) + " - " + moment(until).format(this.dateFormat)
+      return moment(dateStart).format(this.dateFormat) + " - " + moment(dateUntil).format(this.dateFormat)
     },
     compareDateRangeString() {
       if (!this.dateRange || !this.dateRange.enableCompare) return ""
@@ -152,9 +152,9 @@ export default {
       this.opened = false
     },
     setDateRange(param) {
-      const { start, until, compareStart, compareUntil } = param
+      const { dateStart, dateUntil, compareStart, compareUntil } = param
 
-      this.selectedDate = moment(start).format(this.dateFormat) + " - " + moment(until).format(this.dateFormat)
+      this.selectedDate = moment(dateStart).format(this.dateFormat) + " - " + moment(dateUntil).format(this.dateFormat)
 
       this.displayDate =
         moment(compareStart).format(this.dateFormat) + " - " + moment(compareUntil).format(this.dateFormat)
