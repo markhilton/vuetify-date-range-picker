@@ -1,12 +1,12 @@
 import Vue from "vue"
-import App from "@/App"
-import vuetify from "@/plugins/vuetify"
-import VCalendar from "v-calendar"
+import App from "./App.vue"
+import vuetify from "@/plugins/vuetify.js"
 
 Vue.config.productionTip = false
-Vue.use(VCalendar, { componentPrefix: "custom" })
+
+Vue.use(require("vue-moment"))
 
 new Vue({
   vuetify,
-  render: h => h(App),
+  render: (h) => h(App),
 }).$mount("#app")

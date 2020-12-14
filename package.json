@@ -1,7 +1,7 @@
 {
   "private": false,
   "name": "@nerd305/vuetify-date-range-picker",
-  "version": "0.0.11",
+  "version": "0.0.13",
   "description": "Vuetify Date Range Picker optimized for best mobile and desktop user experience",
   "author": "Mark Hilton",
   "license": "MIT",
@@ -17,45 +17,45 @@
     "./sfc": "src/DateRangePicker.vue"
   },
   "scripts": {
-    "serve": "vue-cli-service serve",
+    "serve": "vue-cli-service serve --dist ./demo",
     "build": "npm run build:umd & npm run build:es & npm run build:unpkg",
-    "build:umd": "rollup --config build/rollup.config.js --format umd --file dist/vuetify-date-range-picker.umd.js",
-    "build:es": "rollup --config build/rollup.config.js --format es --file dist/vuetify-date-range-picker.esm.js",
-    "build:unpkg": "rollup --config build/rollup.config.js --format iife --file dist/vuetify-date-range-picker.min.js"
+    "build:umd": "rollup --config rollup.config.js --format umd --file dist/vuetify-date-range-picker.umd.js",
+    "build:es": "rollup --config rollup.config.js --format es --file dist/vuetify-date-range-picker.esm.js",
+    "build:unpkg": "rollup --config rollup.config.js --format iife --file dist/vuetify-date-range-picker.min.js",
+    "build:demo": "vue-cli-service build --modern --mode production --dist ./demo"
   },
   "dependencies": {
-    "moment": "^2.29.1",
-    "v-calendar": "^1.0.6",
-    "vuetify": "^2.3.14"
+    "vue-moment": "^4.1.0",
+    "vuetify": "^2.3.19"
   },
   "devDependencies": {
-    "@mdi/font": "^5.7.55",
+    "@mdi/font": "^5.8.55",
+    "@mdi/js": "^5.8.55",
     "@rollup/plugin-buble": "^0.21.3",
     "@rollup/plugin-commonjs": "^11.1.0",
     "@rollup/plugin-node-resolve": "^8.0.1",
-    "@vue/cli-plugin-babel": "^4.5.7",
-    "@vue/cli-plugin-eslint": "^4.5.7",
-    "@vue/cli-plugin-router": "^4.5.7",
-    "@vue/cli-plugin-vuex": "^4.5.7",
-    "@vue/cli-service": "^4.5.7",
-    "@vue/eslint-config-prettier": "^5.0.0",
+    "@vue/cli-plugin-babel": "~4.5.0",
+    "@vue/cli-plugin-eslint": "~4.5.0",
+    "@vue/cli-service": "~4.5.0",
+    "@vue/eslint-config-standard": "^5.1.2",
     "babel-eslint": "^10.1.0",
     "core-js": "^3.6.5",
-    "css-loader": "^3.6.0",
-    "eslint": "^5.16.0",
-    "eslint-plugin-prettier": "^3.1.4",
+    "eslint": "^6.7.2",
+    "eslint-plugin-import": "^2.20.2",
+    "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-promise": "^4.2.1",
-    "eslint-plugin-vue": "^5.0.0",
-    "prettier": "^1.18.2",
+    "eslint-plugin-standard": "^4.0.0",
+    "eslint-plugin-vue": "^6.2.2",
+    "moment": "^2.29.1",
     "rollup": "^2.30.0",
     "rollup-plugin-postcss": "^3.1.8",
     "rollup-plugin-vue": "^5.0.1",
     "rollup-plugin-vuetify": "^0.2.3",
-    "sass": "^1.27.0",
+    "sass": "^1.26.5",
     "sass-loader": "^8.0.2",
-    "vue": "^2.6.12",
-    "vue-cli-plugin-vuetify": "^2.0.7",
-    "vue-template-compiler": "^2.6.12",
-    "vuetify-loader": "^1.6.0"
+    "vue": "^2.6.11",
+    "vue-cli-plugin-vuetify": "~2.0.7",
+    "vue-template-compiler": "^2.6.11",
+    "vuetify-loader": "1.6.0"
   }
 }

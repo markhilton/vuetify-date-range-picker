@@ -1,36 +1,11 @@
 // Import vue component
-import {
-  PERIOD_TYPE,
-  PERIOD_DAY,
-  PERIOD_DAY_COMPARE,
-  PERIOD_WEEK,
-  PERIOD_WEEK_COMPARE,
-  PERIOD_MONTH,
-  PERIOD_MONTH_COMPARE,
-  CUSTOM_COMPARE,
-  DEFAULT_TYPE_SELECTION,
-  INTERNAL_DATE_FORMAT_1,
-  INTERNAL_DATE_FORMAT_2,
-  DISPLAY_DATE_FORMAT_1,
-  DISPLAY_DATE_FORMAT_2,
-  DISPLAY_DATE_FORMAT_3,
-  DEFAULT_CUSTOM_DATE,
-  PRESETS_DESKTOP,
-  COMPARE_PERIODS_DESKTOP,
-  PRESETS_DEFAULT_DESKTOP,
-  PERIOD_CONVERT_LIST_MOBILE,
-  PERIOD_CONVERT_LIST_DESKTOP,
-  PERIOD_COMPARE_CONVERT_LIST_MOBILE,
-  PERIOD_COMPARE_CONVERT_LIST_DESKTOP,
-  DEFAULT_MOBILE_CONFIG,
-} from "./components/presets/constants"
-import DateRangePicker from "./components/DateRangePicker.vue"
+import DateSelector from "./components/DateSelector.vue"
 
 // Declare install function executed by Vue.use()
 export function install(Vue) {
   if (install.installed) return
   install.installed = true
-  Vue.component("DateRangePicker", DateRangePicker)
+  Vue.component("DateSelector", DateSelector)
 }
 
 // Create module definition for Vue.use()
@@ -49,31 +24,5 @@ if (typeof window !== "undefined") {
 
 if (GlobalVue) GlobalVue.use(plugin)
 
-export {
-  PERIOD_TYPE,
-  PERIOD_DAY,
-  PERIOD_DAY_COMPARE,
-  PERIOD_WEEK,
-  PERIOD_WEEK_COMPARE,
-  PERIOD_MONTH,
-  PERIOD_MONTH_COMPARE,
-  CUSTOM_COMPARE,
-  DEFAULT_TYPE_SELECTION,
-  INTERNAL_DATE_FORMAT_1,
-  INTERNAL_DATE_FORMAT_2,
-  DISPLAY_DATE_FORMAT_1,
-  DISPLAY_DATE_FORMAT_2,
-  DISPLAY_DATE_FORMAT_3,
-  DEFAULT_CUSTOM_DATE,
-  PRESETS_DESKTOP,
-  COMPARE_PERIODS_DESKTOP,
-  PRESETS_DEFAULT_DESKTOP,
-  PERIOD_CONVERT_LIST_MOBILE,
-  PERIOD_CONVERT_LIST_DESKTOP,
-  PERIOD_COMPARE_CONVERT_LIST_MOBILE,
-  PERIOD_COMPARE_CONVERT_LIST_DESKTOP,
-  DEFAULT_MOBILE_CONFIG,
-}
-
 // To allow use as module (npm/webpack/etc.) export component
-export default DateRangePicker
+export default DateSelector
