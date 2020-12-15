@@ -29,6 +29,7 @@
               />
             </v-col>
           </v-row>
+
           <v-row justify="center" class="picker-compare" v-if="compare">
             <v-col cols="6">
               <v-date-picker
@@ -58,6 +59,7 @@
             </v-col>
           </v-row>
         </v-col>
+
         <v-col cols="5">
           <v-row>
             <v-col cols="6">
@@ -85,15 +87,18 @@
               />
             </v-col>
           </v-row>
+
           <v-row class="pl-2 pr-1">
             <v-btn text x-small @click="setMainLast7Days">Last 7 days</v-btn>
             <v-btn text x-small @click="setMainPrevWeek">Prev. week</v-btn>
             <v-btn text x-small @click="setMainLastMonth">Last month</v-btn>
             <v-btn text x-small @click="setMainPrevMonth">Prev. month</v-btn>
           </v-row>
+
           <v-row class="pl-2 pt-6">
             <v-checkbox v-model="compare" label="Compare to the following" class="compare-label" />
           </v-row>
+
           <v-row>
             <v-col cols="6">
               <v-text-field
@@ -122,6 +127,7 @@
               />
             </v-col>
           </v-row>
+
           <v-row class="pl-2">
             <v-btn text x-small :disabled="!compare" @click="setComparePreviousPeriod">
               Previous period
@@ -136,6 +142,7 @@
         </v-col>
       </v-row>
     </v-card-text>
+
     <v-card-actions>
       <v-spacer />
       <v-btn text class="px-4 mr-6" @click="close">Cancel</v-btn>
@@ -153,7 +160,7 @@ const MONTH_FORMAT = "YYYY-MM"
 export default {
   name: "DatePickerDesktop",
 
-  props: ["compare-ranges"],
+  props: ["config"],
 
   data: () => ({
     today: null,
@@ -173,6 +180,9 @@ export default {
     const moment = this.moment
     this.today = moment().format(DATE_FORMAT)
 
+    this.compare = this.config.compare || false
+
+    console.log("CONFIG", this.config, this.compare_)
     this.pickerMainLeft = moment()
       .subtract(1, "month")
       .format(MONTH_FORMAT)

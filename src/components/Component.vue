@@ -5,33 +5,24 @@
     <date-selector
       icon-color="grey darken-1"
       :class="`${this.inheritedClasses}`"
-      :date-start="dateStart"
-      :date-until="dateUntil"
-      :compare-start="compareStart"
-      :compare-until="compareUntil"
-      :compare="compare"
+      :config="config"
       @click.native="dateSelectorOpen = !dateSelectorOpen"
     />
 
     <div class="date-pickers-container" v-if="dateSelectorOpen">
       <date-picker-desktop
-        :compare-ranges="compare"
+        :config="config"
         @change="dateSelectorChanged"
         @close="dateSelectorOpen = false"
         v-if="this.$vuetify.breakpoint.mdAndUp"
       />
       <date-picker-tablet
-        :compare-ranges="compare"
+        :config="config"
         @change="dateSelectorChanged"
         @close="dateSelectorOpen = false"
         v-else-if="this.$vuetify.breakpoint.smAndUp"
       />
-      <date-picker-mobile
-        :compare-ranges="compare"
-        @change="dateSelectorChanged"
-        @close="dateSelectorOpen = false"
-        v-else
-      />
+      <date-picker-mobile :config="config" @change="dateSelectorChanged" @close="dateSelectorOpen = false" v-else />
     </div>
   </div>
 </template>
@@ -43,7 +34,10 @@ import DatePickerTablet from "./DatePickerTablet.vue"
 import DatePickerMobile from "./DatePickerMobile.vue"
 
 export default {
-  name: "SubComponent",
+  name: "MainComponent",
+
+  props: ["config"],
+
   components: {
     DateSelector,
     DatePickerDesktop,
@@ -73,6 +67,14 @@ export default {
       this.compareStart = v.compareStart
       this.compareUntil = v.compareUntil
       this.compare = v.compare
+
+      this.$emit("change", {
+        dateStart: this.dateStart,
+        dateUntil: this.dateUntil,
+        compareStart: this.compareStart,
+        compareUntil: this.compareUntil,
+        compare: this.compare,
+      })
     },
   }, // methods
 } // export
