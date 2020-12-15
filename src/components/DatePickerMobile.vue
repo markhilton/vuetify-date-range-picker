@@ -12,7 +12,7 @@
                   type="date"
                   outlined
                   dense
-                  :max="$moment().format('YYYY-MM-DD')"
+                  :max="moment().format('YYYY-MM-DD')"
                   class="picker-input"
                 />
               </v-col>
@@ -26,7 +26,7 @@
                   type="date"
                   outlined
                   dense
-                  :max="$moment().format('YYYY-MM-DD')"
+                  :max="moment().format('YYYY-MM-DD')"
                   class="picker-input"
                 />
               </v-col>
@@ -52,7 +52,7 @@
                   type="date"
                   outlined
                   dense
-                  :max="$moment().format('YYYY-MM-DD')"
+                  :max="moment().format('YYYY-MM-DD')"
                   class="picker-input"
                 />
               </v-col>
@@ -66,7 +66,7 @@
                   type="date"
                   outlined
                   dense
-                  :max="$moment().format('YYYY-MM-DD')"
+                  :max="moment().format('YYYY-MM-DD')"
                   class="picker-input"
                 />
               </v-col>

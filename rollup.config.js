@@ -11,11 +11,12 @@ export default {
     name: "VuetifyDateRangePicker",
     exports: "named",
     globals: {
+      moment: "moment",
       "vuetify/lib": "vuetify/lib",
       "@/middleware": "./src/middleware",
     },
   },
-  external: ["vue", "vuetify/lib", "firebase"],
+  external: ["vue", "vuetify/lib", "firebase", "moment"],
   plugins: [
     resolve(),
     commonjs({

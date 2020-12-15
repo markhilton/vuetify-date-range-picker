@@ -42,7 +42,7 @@
                 type="date"
                 outlined
                 dense
-                :max="$moment().format('YYYY-MM-DD')"
+                :max="moment().format('YYYY-MM-DD')"
                 class="picker-input"
                 @click="pickerMainIsActive = true"
               />
@@ -54,7 +54,7 @@
                 type="date"
                 outlined
                 dense
-                :max="$moment().format('YYYY-MM-DD')"
+                :max="moment().format('YYYY-MM-DD')"
                 class="picker-input"
                 @click="pickerMainIsActive = true"
               />
@@ -78,7 +78,7 @@
                 type="date"
                 outlined
                 dense
-                :max="$moment().format('YYYY-MM-DD')"
+                :max="moment().format('YYYY-MM-DD')"
                 class="picker-input"
                 @click="pickerMainIsActive = false"
               />
@@ -91,7 +91,7 @@
                 type="date"
                 outlined
                 dense
-                :max="$moment().format('YYYY-MM-DD')"
+                :max="moment().format('YYYY-MM-DD')"
                 class="picker-input"
                 @click="pickerMainIsActive = false"
               />
