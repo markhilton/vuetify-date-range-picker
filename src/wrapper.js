@@ -1,11 +1,11 @@
 // Import vue component
-import DateSelector from "./components/DateSelector.vue"
+import DateRangeSelector from "./components/Component.vue"
 
 // Declare install function executed by Vue.use()
 export function install(Vue) {
   if (install.installed) return
   install.installed = true
-  Vue.component("DateSelector", DateSelector)
+  Vue.component("DateRangeSelector", DateRangeSelector)
 }
 
 // Create module definition for Vue.use()
@@ -25,4 +25,4 @@ if (typeof window !== "undefined") {
 if (GlobalVue) GlobalVue.use(plugin)
 
 // To allow use as module (npm/webpack/etc.) export component
-export default DateSelector
+export default DateRangeSelector
