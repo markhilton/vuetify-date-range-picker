@@ -123,6 +123,7 @@
 import moment from "moment"
 
 const DATE_FORMAT = "YYYY-MM-DD"
+const MONTH_FORMAT = "YYYY-MM"
 
 export default {
   name: "DatePickerTablet",
@@ -187,6 +188,9 @@ export default {
       const moment = this.moment
 
       this.pickerMainIsActive = true
+      this.pickerMainLeft = moment()
+        .subtract(7, "days")
+        .format(MONTH_FORMAT)
 
       this.pickerMain = [
         moment()
@@ -203,6 +207,10 @@ export default {
       const moment = this.moment
 
       this.pickerMainIsActive = true
+      this.pickerMainLeft = moment()
+        .subtract(1, "week")
+        .day(1)
+        .format(MONTH_FORMAT)
 
       this.pickerMain = [
         moment()
@@ -224,6 +232,9 @@ export default {
       const moment = this.moment
 
       this.pickerMainIsActive = true
+      this.pickerMainLeft = moment()
+        .subtract(1, "month")
+        .format(DATE_FORMAT)
 
       this.pickerMain = [
         moment()
@@ -240,6 +251,10 @@ export default {
       const moment = this.moment
 
       this.pickerMainIsActive = true
+      this.pickerMainLeft = moment()
+        .subtract(1, "month")
+        .date(1)
+        .format(MONTH_FORMAT)
 
       this.pickerMain = [
         moment()
@@ -258,10 +273,15 @@ export default {
       const moment = this.moment
       const mainRangeStart = this.pickerMain[0]
       const mainRangeEnd = this.pickerMain[1]
+      const mainDuration = moment(mainRangeEnd).diff(moment(mainRangeStart), "days")
 
       this.pickerMainIsActive = false
-
-      const mainDuration = moment(mainRangeEnd).diff(moment(mainRangeStart), "days")
+      this.pickerMainLeft = moment(mainRangeStart)
+        .subtract(1 + mainDuration, "days")
+        .format(MONTH_FORMAT)
+      this.pickerCompareLeft = moment(mainRangeEnd)
+        .subtract(1 + mainDuration, "days")
+        .format(MONTH_FORMAT)
 
       this.pickerCompare = [
         moment(mainRangeStart)
@@ -279,6 +299,12 @@ export default {
       const moment = this.moment
 
       this.pickerMainIsActive = false
+      this.pickerMainLeft = moment(this.pickerMain[0])
+        .subtract(1, "month")
+        .format(MONTH_FORMAT)
+      this.pickerCompareLeft = moment(this.pickerMain[0])
+        .subtract(1, "month")
+        .format(MONTH_FORMAT)
 
       this.pickerCompare = [
         moment(this.pickerMain[0])
@@ -296,6 +322,12 @@ export default {
       const moment = this.moment
 
       this.pickerMainIsActive = false
+      this.pickerMainLeft = moment(this.pickerMain[0])
+        .subtract(1, "year")
+        .format(MONTH_FORMAT)
+      this.pickerCompareLeft = moment(this.pickerMain[0])
+        .subtract(1, "year")
+        .format(MONTH_FORMAT)
 
       this.pickerCompare = [
         moment(this.pickerMain[0])
@@ -334,6 +366,7 @@ export default {
 
 .date-picker-tablet::v-deep {
   max-width: 785px;
+  margin-top: 5vh;
 
   .pickers {
     max-height: 23em;
