@@ -46,6 +46,7 @@
 
 <script>
 import { mdiCalendarRangeOutline } from "@mdi/js"
+import moment from "moment"
 
 const DATE_FORMAT = "MMM D, YYYY"
 
@@ -67,9 +68,9 @@ export default {
       let result
 
       if (this.dateStart) {
-        result = this.$moment(this.dateStart).format(DATE_FORMAT)
+        result = moment(this.dateStart).format(DATE_FORMAT)
       } else {
-        result = this.$moment().subtract(7, "days").format(DATE_FORMAT)
+        result = moment().subtract(7, "days").format(DATE_FORMAT)
       }
 
       return result
@@ -79,9 +80,9 @@ export default {
       let result
 
       if (this.dateUntil) {
-        result = this.$moment(this.dateUntil).format(DATE_FORMAT)
+        result = moment(this.dateUntil).format(DATE_FORMAT)
       } else {
-        result = this.$moment().subtract(1, "day").format(DATE_FORMAT)
+        result = moment().subtract(1, "day").format(DATE_FORMAT)
       }
 
       return result
@@ -91,9 +92,9 @@ export default {
       let result
 
       if (this.compareStart) {
-        result = this.$moment(this.compareStart).format(DATE_FORMAT)
+        result = moment(this.compareStart).format(DATE_FORMAT)
       } else {
-        result = this.$moment().subtract(15, "days").format(DATE_FORMAT)
+        result = moment().subtract(15, "days").format(DATE_FORMAT)
       }
 
       return result
@@ -103,9 +104,9 @@ export default {
       let result
 
       if (this.compareUntil) {
-        result = this.$moment(this.compareUntil).format(DATE_FORMAT)
+        result = moment(this.compareUntil).format(DATE_FORMAT)
       } else {
-        result = this.$moment().subtract(8, "days").format(DATE_FORMAT)
+        result = moment().subtract(8, "days").format(DATE_FORMAT)
       }
 
       return result

@@ -19,21 +19,20 @@
     <div class="date-pickers-container" v-if="dateSelectorOpen">
       <date-picker-desktop
         :config="config"
-        :compare-ranges="compare"
+        class="mt-5 mx-2"
         @change="dateSelectorChanged"
         @close="dateSelectorOpen = false"
         v-if="this.$vuetify.breakpoint.mdAndUp"
       />
       <date-picker-tablet
         :config="config"
-        :compare-ranges="compare"
+        class="mt-5 mx-4 elevation-0 rounded-0"
         @change="dateSelectorChanged"
         @close="dateSelectorOpen = false"
         v-else-if="this.$vuetify.breakpoint.sm"
       />
       <date-picker-mobile
         :config="config"
-        :compare-ranges="compare"
         @change="dateSelectorChanged"
         @close="dateSelectorOpen = false"
         v-else
@@ -107,16 +106,18 @@ export default {
 <style lang="scss" scoped>
 .date-selector {
   padding: 0; margin: 0;
-  max-height: 60px;
+  // max-height: 60px;
 }
 
 .date-pickers-container {
   position: fixed;
+  justify-items: center;
   top: 0;
   left: 0;
   padding: 0;
   margin: 0;
   z-index: 100;
   width: 100vw;
+  max-width: 100%;
 } // .date-pickers-container
 </style>
