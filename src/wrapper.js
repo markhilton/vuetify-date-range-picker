@@ -1,5 +1,5 @@
 // Import vue component
-import DateRangeSelector from "./components/Component.vue"
+import DateRangeSelector from "./components/DatePicker.vue"
 
 // Declare install function executed by Vue.use()
 export function install(Vue) {

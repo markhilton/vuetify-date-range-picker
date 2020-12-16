@@ -1,9 +1,6 @@
 <template>
   <div class="date-selector">
-    <v-overlay
-      :value="dateSelectorOpen"
-      @click.native="dateSelectorOpen = false"
-    />
+    <v-overlay :value="dateSelectorOpen" @click.native="dateSelectorOpen = false" />
 
     <date-selector
       v-bind="$attrs"
@@ -42,7 +39,6 @@
   </div>
 </template>
 
-
 <script>
 import DateSelector from "./DatePicker/DateSelector.vue"
 import DatePickerDesktop from "./DatePicker/DatePickerDesktop.vue"
@@ -59,23 +55,22 @@ export default {
   },
 
   inheritAttrs: false,
+
   props: ["config"],
 
-  data () {
-    return {
-      dateSelectorOpen: false,
-      dateStart: null,
-      dateUntil: null,
-      compareStart: null,
-      compareUntil: null,
-      compare: false,
-      // The following takes care of the classes which should not go to the root element
-      // but to the <date-selector /> which actually represents the whole picker
-      inheritedClasses: "",
-    }
-  }, // data
+  data: () => ({
+    dateSelectorOpen: false,
+    dateStart: null,
+    dateUntil: null,
+    compareStart: null,
+    compareUntil: null,
+    compare: false,
+    // The following takes care of the classes which should not go to the root element
+    // but to the <date-selector /> which actually represents the whole picker
+    inheritedClasses: "",
+  }),
 
-  mounted () {
+  mounted() {
     console.log("[DatePicker -> mounted()] config:", JSON.stringify(this.config, null, 2))
 
     this.changeValues(this.config)
@@ -87,12 +82,12 @@ export default {
   },
 
   methods: {
-    dateSelectorChanged (newVals) {
+    dateSelectorChanged(newVals) {
       this.changeValues(newVals)
       this.$emit("change", newVals)
     },
 
-    changeValues (newVals) {
+    changeValues(newVals) {
       this.dateStart = newVals.dateStart
       this.dateUntil = newVals.dateUntil
       this.compareStart = newVals.compareStart
@@ -103,10 +98,10 @@ export default {
 } // export
 </script>
 
-
 <style lang="scss" scoped>
 .date-selector {
-  padding: 0; margin: 0;
+  padding: 0;
+  margin: 0;
   max-height: 60px;
 }
 
