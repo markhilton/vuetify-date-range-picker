@@ -42,7 +42,7 @@
                 type="date"
                 outlined
                 dense
-                :max="$moment().format('YYYY-MM-DD')"
+                :max="maxDate"
                 class="picker-input"
                 @click="pickerMainIsActive = true"
               />
@@ -54,7 +54,7 @@
                 type="date"
                 outlined
                 dense
-                :max="$moment().format('YYYY-MM-DD')"
+                :max="maxDate"
                 class="picker-input"
                 @click="pickerMainIsActive = true"
               />
@@ -78,7 +78,7 @@
                 type="date"
                 outlined
                 dense
-                :max="$moment().format('YYYY-MM-DD')"
+                :max="maxDate"
                 class="picker-input"
                 @click="pickerMainIsActive = false"
               />
@@ -91,7 +91,7 @@
                 type="date"
                 outlined
                 dense
-                :max="$moment().format('YYYY-MM-DD')"
+                :max="maxDate"
                 class="picker-input"
                 @click="pickerMainIsActive = false"
               />
@@ -137,6 +137,9 @@ export default {
   }), // mounted ()
 
   computed: {
+    maxDate() {
+      return moment().format("YYYY-MM-DD")
+    },
     compare: {
       get() {
         return this.compare_

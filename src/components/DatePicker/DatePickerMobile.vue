@@ -12,7 +12,7 @@
                   type="date"
                   outlined
                   dense
-                  :max="$moment().format('YYYY-MM-DD')"
+                  :max="maxDate"
                   class="picker-input"
                 />
               </v-col>
@@ -26,7 +26,7 @@
                   type="date"
                   outlined
                   dense
-                  :max="$moment().format('YYYY-MM-DD')"
+                  :max="maxDate"
                   class="picker-input"
                 />
               </v-col>
@@ -52,7 +52,7 @@
                   type="date"
                   outlined
                   dense
-                  :max="$moment().format('YYYY-MM-DD')"
+                  :max="maxDate"
                   class="picker-input"
                 />
               </v-col>
@@ -66,7 +66,7 @@
                   type="date"
                   outlined
                   dense
-                  :max="$moment().format('YYYY-MM-DD')"
+                  :max="maxDate"
                   class="picker-input"
                 />
               </v-col>
@@ -133,8 +133,14 @@ export default {
     pickerCompare: [], // to use moment.js this has to be set in mounted()
   }), // data ()
 
+  computed: {
+    maxDate() {
+      return moment().format("YYYY-MM-DD")
+    },
+  },
+
   mounted() {
-    this.today = $moment().format(DATE_FORMAT)
+    this.today = moment().format(DATE_FORMAT)
 
     if (this.config) {
       this.pickerMain = [this.config.dateStart, this.config.dateUntil]
