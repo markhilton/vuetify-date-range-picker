@@ -129,15 +129,9 @@
           </v-row>
 
           <v-row class="pl-2">
-            <v-btn text x-small :disabled="!compare" @click="setComparePreviousPeriod">
-              Previous period
-            </v-btn>
-            <v-btn text x-small :disabled="!compare" @click="setComparePreviousMonth">
-              Previous month
-            </v-btn>
-            <v-btn text x-small :disabled="!compare" @click="setComparePreviousYear">
-              Previous year
-            </v-btn>
+            <v-btn text x-small :disabled="!compare" @click="setComparePreviousPeriod"> Previous period </v-btn>
+            <v-btn text x-small :disabled="!compare" @click="setComparePreviousMonth"> Previous month </v-btn>
+            <v-btn text x-small :disabled="!compare" @click="setComparePreviousYear"> Previous year </v-btn>
           </v-row>
         </v-col>
       </v-row>
@@ -183,27 +177,17 @@ export default {
     this.compare = this.config.compare || false
 
     console.log("CONFIG", this.config, this.compare_)
-    this.pickerMainLeft = moment()
-      .subtract(1, "month")
-      .format(MONTH_FORMAT)
+    this.pickerMainLeft = moment().subtract(1, "month").format(MONTH_FORMAT)
     this.pickerMainRight = moment().format(MONTH_FORMAT)
 
     this.pickerMain = [
-      moment()
-        .subtract(7, "days")
-        .format(DATE_FORMAT),
-      moment()
-        .subtract(1, "day")
-        .format(DATE_FORMAT),
+      moment().subtract(7, "days").format(DATE_FORMAT),
+      moment().subtract(1, "day").format(DATE_FORMAT),
     ]
 
     this.pickerCompare = [
-      moment()
-        .subtract(15, "day")
-        .format(DATE_FORMAT),
-      moment()
-        .subtract(8, "days")
-        .format(DATE_FORMAT),
+      moment().subtract(15, "day").format(DATE_FORMAT),
+      moment().subtract(8, "days").format(DATE_FORMAT),
     ]
 
     this.compare = this.compareRanges
@@ -223,29 +207,21 @@ export default {
 
   watch: {
     // Left and right date pickers should move accordingly
-    pickerMainLeft: function(val) {
-      this.pickerMainRight = this.moment(val)
-        .add(1, "month")
-        .format(MONTH_FORMAT)
+    pickerMainLeft: function (val) {
+      this.pickerMainRight = this.moment(val).add(1, "month").format(MONTH_FORMAT)
     },
 
-    pickerMainRight: function(val) {
-      this.pickerMainLeft = this.moment(val)
-        .subtract(1, "month")
-        .format(MONTH_FORMAT)
+    pickerMainRight: function (val) {
+      this.pickerMainLeft = this.moment(val).subtract(1, "month").format(MONTH_FORMAT)
     },
 
     // The compare date picker should display the same month as the primary one
-    pickerCompareLeft: function(val) {
-      this.pickerCompareRight = this.moment(val)
-        .add(1, "month")
-        .format(MONTH_FORMAT)
+    pickerCompareLeft: function (val) {
+      this.pickerCompareRight = this.moment(val).add(1, "month").format(MONTH_FORMAT)
     },
 
-    pickerCompareRight: function(val) {
-      this.pickerCompareLeft = this.moment(val)
-        .subtract(1, "month")
-        .format(MONTH_FORMAT)
+    pickerCompareRight: function (val) {
+      this.pickerCompareLeft = this.moment(val).subtract(1, "month").format(MONTH_FORMAT)
     },
   }, // watch()
 
@@ -257,17 +233,11 @@ export default {
       const moment = this.moment
 
       this.pickerMainIsActive = true
-      this.pickerMainLeft = moment()
-        .subtract(7, "days")
-        .format(MONTH_FORMAT)
+      this.pickerMainLeft = moment().subtract(7, "days").format(MONTH_FORMAT)
 
       this.pickerMain = [
-        moment()
-          .subtract(7, "days")
-          .format(DATE_FORMAT),
-        moment()
-          .subtract(1, "day")
-          .format(DATE_FORMAT),
+        moment().subtract(7, "days").format(DATE_FORMAT),
+        moment().subtract(1, "day").format(DATE_FORMAT),
       ]
     }, // setMainLast7Days()
 
@@ -276,20 +246,11 @@ export default {
       const moment = this.moment
 
       this.pickerMainIsActive = true
-      this.pickerMainLeft = moment()
-        .subtract(1, "week")
-        .day(1)
-        .format(MONTH_FORMAT)
+      this.pickerMainLeft = moment().subtract(1, "week").day(1).format(MONTH_FORMAT)
 
       this.pickerMain = [
-        moment()
-          .subtract(1, "week")
-          .day(1)
-          .format(DATE_FORMAT),
-        moment()
-          .subtract(1, "week")
-          .day(7)
-          .format(DATE_FORMAT),
+        moment().subtract(1, "week").day(1).format(DATE_FORMAT),
+        moment().subtract(1, "week").day(7).format(DATE_FORMAT),
       ]
     }, // setMainPrevWeek()
 
@@ -301,17 +262,11 @@ export default {
       const moment = this.moment
 
       this.pickerMainIsActive = true
-      this.pickerMainLeft = moment()
-        .subtract(1, "month")
-        .format(DATE_FORMAT)
+      this.pickerMainLeft = moment().subtract(1, "month").format(DATE_FORMAT)
 
       this.pickerMain = [
-        moment()
-          .subtract(1, "month")
-          .format(DATE_FORMAT),
-        moment()
-          .subtract(1, "day")
-          .format(DATE_FORMAT),
+        moment().subtract(1, "month").format(DATE_FORMAT),
+        moment().subtract(1, "day").format(DATE_FORMAT),
       ]
     }, // setMainLastMonth()
 
@@ -320,19 +275,11 @@ export default {
       const moment = this.moment
 
       this.pickerMainIsActive = true
-      this.pickerMainLeft = moment()
-        .subtract(1, "month")
-        .date(1)
-        .format(MONTH_FORMAT)
+      this.pickerMainLeft = moment().subtract(1, "month").date(1).format(MONTH_FORMAT)
 
       this.pickerMain = [
-        moment()
-          .subtract(1, "month")
-          .date(1)
-          .format(DATE_FORMAT),
-        moment()
-          .date(0)
-          .format(DATE_FORMAT),
+        moment().subtract(1, "month").date(1).format(DATE_FORMAT),
+        moment().date(0).format(DATE_FORMAT),
       ]
     }, // setMainPrevMonth()
 
@@ -369,20 +316,12 @@ export default {
       const moment = this.moment
 
       this.pickerMainIsActive = false
-      this.pickerMainLeft = moment(this.pickerMain[0])
-        .subtract(1, "month")
-        .format(MONTH_FORMAT)
-      this.pickerCompareLeft = moment(this.pickerMain[0])
-        .subtract(1, "month")
-        .format(MONTH_FORMAT)
+      this.pickerMainLeft = moment(this.pickerMain[0]).subtract(1, "month").format(MONTH_FORMAT)
+      this.pickerCompareLeft = moment(this.pickerMain[0]).subtract(1, "month").format(MONTH_FORMAT)
 
       this.pickerCompare = [
-        moment(this.pickerMain[0])
-          .subtract(1, "month")
-          .format(DATE_FORMAT),
-        moment(this.pickerMain[1])
-          .subtract(1, "month")
-          .format(DATE_FORMAT),
+        moment(this.pickerMain[0]).subtract(1, "month").format(DATE_FORMAT),
+        moment(this.pickerMain[1]).subtract(1, "month").format(DATE_FORMAT),
       ]
     }, // setComparePreviousMonth()
 
@@ -392,20 +331,12 @@ export default {
       const moment = this.moment
 
       this.pickerMainIsActive = false
-      this.pickerMainLeft = moment(this.pickerMain[0])
-        .subtract(1, "year")
-        .format(MONTH_FORMAT)
-      this.pickerCompareLeft = moment(this.pickerMain[0])
-        .subtract(1, "year")
-        .format(MONTH_FORMAT)
+      this.pickerMainLeft = moment(this.pickerMain[0]).subtract(1, "year").format(MONTH_FORMAT)
+      this.pickerCompareLeft = moment(this.pickerMain[0]).subtract(1, "year").format(MONTH_FORMAT)
 
       this.pickerCompare = [
-        moment(this.pickerMain[0])
-          .subtract(1, "year")
-          .format(DATE_FORMAT),
-        moment(this.pickerMain[1])
-          .subtract(1, "year")
-          .format(DATE_FORMAT),
+        moment(this.pickerMain[0]).subtract(1, "year").format(DATE_FORMAT),
+        moment(this.pickerMain[1]).subtract(1, "year").format(DATE_FORMAT),
       ]
     }, // setComparePreviousYear()
 

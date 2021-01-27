@@ -6,7 +6,7 @@
       </v-col>
       <v-col style="line-height: 10px" class="date-selector__info d-flex align-center pa-1">
         {{ getDateStart }} &mdash; {{ getDateUntil }}
-        <small class="d-flex mt-n2" v-if="compare">
+        <small v-if="compare" class="d-flex mt-n2">
           Compare to: {{ getCompareStart }} &mdash; {{ getCompareUntil }}
         </small>
       </v-col>
@@ -36,20 +36,19 @@
 </style>
 
 <script>
-import moment from "moment"
 import { mdiCalendarRangeOutline } from "@mdi/js"
 
 const DATE_FORMAT = "MMM D, YYYY"
 
 export default {
   name: "DateSelector",
+
   props: ["iconColor", "dateStart", "dateUntil", "compareStart", "compareUntil", "compare"],
 
   data: () => ({
     icon: {
       mdiCalendarRangeOutline,
     },
-    moment: moment,
   }),
 
   computed: {
@@ -58,11 +57,9 @@ export default {
       let result
 
       if (this.dateStart) {
-        result = this.moment(this.dateStart).format(DATE_FORMAT)
+        result = this.$moment(this.dateStart).format(DATE_FORMAT)
       } else {
-        result = this.moment()
-          .subtract(7, "days")
-          .format(DATE_FORMAT)
+        result = this.$moment().subtract(7, "days").format(DATE_FORMAT)
       }
 
       return result
@@ -72,11 +69,9 @@ export default {
       let result
 
       if (this.dateUntil) {
-        result = this.moment(this.dateUntil).format(DATE_FORMAT)
+        result = this.$moment(this.dateUntil).format(DATE_FORMAT)
       } else {
-        result = this.moment()
-          .subtract(1, "day")
-          .format(DATE_FORMAT)
+        result = this.$moment().subtract(1, "day").format(DATE_FORMAT)
       }
 
       return result
@@ -86,11 +81,9 @@ export default {
       let result
 
       if (this.compareStart) {
-        result = this.moment(this.compareStart).format(DATE_FORMAT)
+        result = this.$moment(this.compareStart).format(DATE_FORMAT)
       } else {
-        result = this.moment()
-          .subtract(15, "days")
-          .format(DATE_FORMAT)
+        result = this.$moment().subtract(15, "days").format(DATE_FORMAT)
       }
 
       return result
@@ -100,11 +93,9 @@ export default {
       let result
 
       if (this.compareUntil) {
-        result = this.moment(this.compareUntil).format(DATE_FORMAT)
+        result = this.$moment(this.compareUntil).format(DATE_FORMAT)
       } else {
-        result = this.moment()
-          .subtract(8, "days")
-          .format(DATE_FORMAT)
+        result = this.$moment().subtract(8, "days").format(DATE_FORMAT)
       }
 
       return result

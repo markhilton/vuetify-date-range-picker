@@ -6,10 +6,7 @@
       </v-row>
 
       <v-row justify="center">
-        <date-picker
-          :config="config"
-          @change="datePickerChanged"
-        />
+        <date-picker :config="config" @change="datePickerChanged" />
       </v-row>
 
       <v-row justify="center" class="mt-7">
@@ -37,8 +34,9 @@
 import DatePicker from "./components/DatePicker.vue"
 
 export default {
-  components: { DatePicker },
   name: "App",
+
+  components: { DatePicker },
 
   data: () => ({
     config: {
@@ -65,12 +63,8 @@ export default {
   }),
 
   methods: {
-    datePickerChanged (val) {
+    datePickerChanged(val) {
       console.log("[App @datePickerChanged] val:", JSON.stringify(val, null, 2))
-    },
-
-    setDateRange(config) {
-      console.log("[ DateRangePicket change ]:", config)
     },
   },
 } // export

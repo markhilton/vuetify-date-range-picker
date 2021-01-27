@@ -47,6 +47,7 @@ import DatePickerMobile from "./DatePicker/DatePickerMobile.vue"
 
 export default {
   name: "DatePicker",
+
   components: {
     DateSelector,
     DatePickerDesktop,
@@ -68,7 +69,7 @@ export default {
     // The following takes care of the classes which should not go to the root element
     // but to the <date-selector /> which actually represents the whole picker
     inheritedClasses: "",
-  }),
+  }), // data
 
   mounted() {
     console.log("[DatePicker -> mounted()] config:", JSON.stringify(this.config, null, 2))

@@ -16,27 +16,6 @@
   </v-sheet>
 </template>
 
-<style lang="scss" scoped>
-// @import "~vuetify/src/styles/styles.sass";
-
-.date-selector::v-deep {
-  min-width: 250px;
-  max-width: 290px;
-  cursor: pointer;
-
-  .date-selector__icon {
-    max-width: 3rem;
-    min-height: 3rem;
-  }
-
-  .date-selector__info {
-    flex-wrap: wrap;
-    min-height: 3rem;
-    font-size: 0.9em;
-  }
-}
-</style>
-
 <script>
 import moment from "moment"
 import { mdiCalendarRangeOutline } from "@mdi/js"
@@ -63,34 +42,47 @@ export default {
     getDateStart() {
       return this.config.dateStart
         ? this.moment(this.config.dateStart).format(DATE_FORMAT)
-        : this.moment()
-            .subtract(7, "days")
-            .format(DATE_FORMAT)
+        : this.moment().subtract(7, "days").format(DATE_FORMAT)
     },
 
     getDateUntil() {
       return this.config.dateUntil
         ? this.moment(this.config.dateUntil).format(DATE_FORMAT)
-        : this.moment()
-            .subtract(1, "day")
-            .format(DATE_FORMAT)
+        : this.moment().subtract(1, "day").format(DATE_FORMAT)
     },
 
     getCompareStart() {
       return this.config.compareStart
         ? this.moment(this.config.compareStart).format(DATE_FORMAT)
-        : this.moment()
-            .subtract(15, "days")
-            .format(DATE_FORMAT)
+        : this.moment().subtract(15, "days").format(DATE_FORMAT)
     },
 
     getCompareUntil() {
       return this.config.compareUntil
         ? this.moment(this.config.compareUntil).format(DATE_FORMAT)
-        : this.moment()
-            .subtract(8, "days")
-            .format(DATE_FORMAT)
+        : this.moment().subtract(8, "days").format(DATE_FORMAT)
     },
   }, // computed
 } // export
 </script>
+
+<style lang="scss" scoped>
+// @import "~vuetify/src/styles/styles.sass";
+
+.date-selector::v-deep {
+  min-width: 250px;
+  max-width: 290px;
+  cursor: pointer;
+
+  .date-selector__icon {
+    max-width: 3rem;
+    min-height: 3rem;
+  }
+
+  .date-selector__info {
+    flex-wrap: wrap;
+    min-height: 3rem;
+    font-size: 0.9em;
+  }
+}
+</style>
