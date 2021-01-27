@@ -1,0 +1,46 @@
+steps:
+  # slack deployment status
+  - name: "gcr.io/cloud-builders/curl"
+    args:
+      [
+        "-X",
+        "POST",
+        "-H",
+        "Content-type: application/json",
+        "--data",
+        '{"text":"`$REPO_NAME:$BRANCH_NAME$TAG_NAME` build started!"}',
+        "${_WEBHOOK_URL}",
+      ]
+
+  # build docker image
+  - name: "gcr.io/cloud-builders/docker"
+    args:
+      [
+        "build",
+        "--build-arg",
+        "TAG_NAME=$TAG_NAME",
+        "--build-arg",
+        "NPM_TOKEN=$_NPM_TOKEN",
+        ".",
+      ]
+    timeout: 1500s
+
+  # slack deployment status
+  - name: "gcr.io/cloud-builders/curl"
+    args:
+      [
+        "-X",
+        "POST",
+        "-H",
+        "Content-type: application/json",
+        "--data",
+        '{"text":"`$REPO_NAME:$BRANCH_NAME$TAG_NAME` build completed!"}',
+        "${_WEBHOOK_URL}",
+      ]
+
+timeout: 1500s
+
+# env defaults
+substitutions:
+  _NPM_TOKEN: NPM registry private package
+  _WEBHOOK_URL: slack_notification_webhook_url
