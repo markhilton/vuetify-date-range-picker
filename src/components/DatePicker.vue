@@ -13,27 +13,27 @@
       @click.native="dateSelectorOpen = !dateSelectorOpen"
     />
 
-    <div class="date-pickers-container" v-if="dateSelectorOpen">
+    <div v-if="dateSelectorOpen" class="date-pickers-container">
       <date-picker-desktop
+        v-if="this.$vuetify.breakpoint.mdAndUp"
         :config="config"
         :compare-ranges="compare"
         @change="dateSelectorChanged"
         @close="dateSelectorOpen = false"
-        v-if="this.$vuetify.breakpoint.mdAndUp"
       />
       <date-picker-tablet
+        v-else-if="this.$vuetify.breakpoint.sm"
         :config="config"
         :compare-ranges="compare"
         @change="dateSelectorChanged"
         @close="dateSelectorOpen = false"
-        v-else-if="this.$vuetify.breakpoint.sm"
       />
       <date-picker-mobile
+        v-else
         :config="config"
         :compare-ranges="compare"
         @change="dateSelectorChanged"
         @close="dateSelectorOpen = false"
-        v-else
       />
     </div>
   </div>
@@ -69,7 +69,7 @@ export default {
     // The following takes care of the classes which should not go to the root element
     // but to the <date-selector /> which actually represents the whole picker
     inheritedClasses: "",
-  }), // data
+  }),
 
   mounted() {
     console.log("[DatePicker -> mounted()] config:", JSON.stringify(this.config, null, 2))
@@ -95,8 +95,8 @@ export default {
       this.compareUntil = newVals.compareUntil
       this.compare = newVals.compare
     },
-  }, // methods
-} // export
+  },
+}
 </script>
 
 <style lang="scss" scoped>
@@ -114,5 +114,5 @@ export default {
   margin: 0;
   z-index: 100;
   width: 100vw;
-} // .date-pickers-container
+}
 </style>

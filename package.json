@@ -1,7 +1,7 @@
 {
   "private": false,
   "name": "@nerd305/vuetify-date-range-picker",
-  "version": "0.0.27",
+  "version": "0.0.28",
   "description": "Vuetify Date Range Picker optimized for best mobile and desktop user experience",
   "author": "Mark Hilton",
   "license": "MIT",

@@ -1,28 +1,30 @@
 <template>
-  <div class="date-selector">
+  <div>
     <v-overlay :value="dateSelectorOpen" @click.native="dateSelectorOpen = false" />
 
     <date-selector
       icon-color="grey darken-1"
-      :class="`${this.inheritedClasses}`"
+      :class="inheritedClasses"
       :config="config"
       @click.native="dateSelectorOpen = !dateSelectorOpen"
     />
 
-    <div class="date-pickers-container" v-if="dateSelectorOpen">
+    <div v-if="dateSelectorOpen">
       <date-picker-desktop
+        v-if="$vuetify.breakpoint.mdAndUp"
         :config="config"
         @change="dateSelectorChanged"
         @close="dateSelectorOpen = false"
-        v-if="this.$vuetify.breakpoint.mdAndUp"
       />
+
       <date-picker-tablet
+        v-else-if="$vuetify.breakpoint.smAndUp"
         :config="config"
         @change="dateSelectorChanged"
         @close="dateSelectorOpen = false"
-        v-else-if="this.$vuetify.breakpoint.smAndUp"
       />
-      <date-picker-mobile :config="config" @change="dateSelectorChanged" @close="dateSelectorOpen = false" v-else />
+
+      <date-picker-mobile v-else :config="config" @change="dateSelectorChanged" @close="dateSelectorOpen = false" />
     </div>
   </div>
 </template>
@@ -36,14 +38,14 @@ import DatePickerMobile from "./DatePickerMobile.vue"
 export default {
   name: "MainComponent",
 
-  props: ["config"],
-
   components: {
     DateSelector,
     DatePickerDesktop,
     DatePickerTablet,
     DatePickerMobile,
   },
+
+  props: ["config"],
 
   data: () => ({
     dateSelectorOpen: false,
@@ -76,24 +78,6 @@ export default {
         compare: this.compare,
       })
     },
-  }, // methods
-} // export
-</script>
-
-<style lang="scss" scoped>
-.date-selector {
-  padding: 0;
-  margin: 0;
-  max-height: 60px;
+  },
 }
-
-.date-pickers-container {
-  position: fixed;
-  top: 0;
-  left: 0;
-  padding: 0;
-  margin: 0;
-  z-index: 100;
-  width: 100vw;
-} // .date-pickers-container
-</style>
+</script>

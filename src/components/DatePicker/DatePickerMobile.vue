@@ -1,6 +1,6 @@
 <template>
   <v-container class="ma-0 pa-0">
-    <v-card min-height="100vh" class="date-picker-mobile elevation-0 ma-0 d-flex flex-column">
+    <v-card min-height="100vh" class="date-picker-mobile elevation-0 ma-0 py-3 d-flex flex-column">
       <v-card-text class="flex-grow-1">
         <v-row>
           <v-col cols="12" class="pt-0">
@@ -106,6 +106,7 @@
           </v-col>
         </v-row>
       </v-card-text>
+
       <v-card-actions>
         <v-spacer />
         <v-btn text class="px-4 mr-3" @click="close">Cancel</v-btn>
@@ -131,7 +132,7 @@ export default {
     compare: false,
     pickerMain: [], // to use moment.js this has to be set in mounted()
     pickerCompare: [], // to use moment.js this has to be set in mounted()
-  }), // data ()
+  }),
 
   computed: {
     maxDate() {
@@ -165,7 +166,7 @@ export default {
         moment().subtract(8, "days").format(DATE_FORMAT),
       ]
     }
-  }, // mounted ()
+  },
 
   methods: {
     // Sets the main date picker to the last week,
@@ -176,7 +177,7 @@ export default {
         moment().subtract(7, "days").format(DATE_FORMAT),
         moment().subtract(1, "day").format(DATE_FORMAT),
       ]
-    }, // setMainLast7Days()
+    },
 
     // Sets the main date picker to the Monday to Sunday of the previous week
     setMainPrevWeek() {
@@ -184,7 +185,7 @@ export default {
         moment().subtract(1, "week").day(1).format(DATE_FORMAT),
         moment().subtract(1, "week").day(7).format(DATE_FORMAT),
       ]
-    }, // setMainPrevWeek()
+    },
 
     // Sets the main date picker to the last month,
     // meaning, if it's 20 March it starts the range
@@ -195,7 +196,7 @@ export default {
         moment().subtract(1, "month").format(DATE_FORMAT),
         moment().subtract(1, "day").format(DATE_FORMAT),
       ]
-    }, // setMainLastMonth()
+    },
 
     // Sets the range to 1st to last of the previous month.
     setMainPrevMonth() {
@@ -203,7 +204,7 @@ export default {
         moment().subtract(1, "month").date(1).format(DATE_FORMAT),
         moment().date(0).format(DATE_FORMAT),
       ]
-    }, // setMainPrevMonth()
+    },
 
     // Takes current duration of the main range and sets the same
     // duration to the compare picker, but this duration earlier
@@ -221,7 +222,7 @@ export default {
           .subtract(1 + mainDuration, "days")
           .format(DATE_FORMAT),
       ]
-    }, // setComparePreviousPeriod()
+    },
 
     // Takes current duration of the main range and sets the same
     // duration to the compare picker, but this duration earlier
@@ -230,7 +231,7 @@ export default {
         moment(this.pickerMain[0]).subtract(1, "month").format(DATE_FORMAT),
         moment(this.pickerMain[1]).subtract(1, "month").format(DATE_FORMAT),
       ]
-    }, // setComparePreviousMonth()
+    },
 
     // Takes current duration of the main range and sets the same
     // duration to the compare picker, but this duration earlier
@@ -239,11 +240,11 @@ export default {
         moment(this.pickerMain[0]).subtract(1, "year").format(DATE_FORMAT),
         moment(this.pickerMain[1]).subtract(1, "year").format(DATE_FORMAT),
       ]
-    }, // setComparePreviousYear()
+    },
 
     close() {
       this.$emit("close")
-    }, // close()
+    },
 
     applyDates() {
       this.pickerMain.sort()
@@ -258,9 +259,9 @@ export default {
       })
 
       this.close()
-    }, // applyDates()
-  }, // methods()
-} // export
+    },
+  },
+}
 </script>
 
 <style lang="scss" scoped>
@@ -273,13 +274,13 @@ export default {
     // unnecessary
     .v-text-field__details {
       display: none;
-    } // .v-text-field__details
-  } // .picker-input
+    }
+  }
 
   .compare-label {
     .v-messages {
       display: none;
     }
-  } // .compare-label
-} // .date-picker-mobile
+  }
+}
 </style>

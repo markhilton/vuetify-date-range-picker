@@ -1,6 +1,6 @@
 <template>
   <v-app>
-    <v-container fluid>
+    <v-container>
       <v-row justify="center">
         <h1 class="font-weight-light mb-10">Vuetify Date Picker</h1>
       </v-row>
@@ -58,7 +58,7 @@ export default {
       dateUntil: "2020-12-07",
       compareStart: "2020-11-26",
       compareUntil: "2020-11-27",
-      compare: true,
+      compare: false,
     },
   }),
 
@@ -67,5 +67,5 @@ export default {
       console.log("[App @datePickerChanged] val:", JSON.stringify(val, null, 2))
     },
   },
-} // export
+}
 </script>

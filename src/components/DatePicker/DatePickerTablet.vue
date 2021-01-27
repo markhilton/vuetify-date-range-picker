@@ -134,7 +134,7 @@ export default {
     pickerMainRight: null,
     pickerCompareLeft: null,
     pickerCompareRight: null,
-  }), // mounted ()
+  }),
 
   computed: {
     maxDate() {
@@ -148,8 +148,8 @@ export default {
         this.compare_ = val
         this.pickerMainIsActive = !this.compare_
       },
-    }, // compare
-  }, // data ()
+    },
+  },
 
   mounted() {
     this.today = moment().format(DATE_FORMAT)
@@ -176,8 +176,8 @@ export default {
         moment().subtract(15, "day").format(DATE_FORMAT),
         moment().subtract(8, "days").format(DATE_FORMAT),
       ]
-    } // if-else
-  }, // computed
+    }
+  },
 
   methods: {
     // Sets the main date picker to the last week,
@@ -191,7 +191,7 @@ export default {
         moment().subtract(7, "days").format(DATE_FORMAT),
         moment().subtract(1, "day").format(DATE_FORMAT),
       ]
-    }, // setMainLast7Days()
+    },
 
     // Sets the main date picker to the Monday to Sunday of the previous week
     setMainPrevWeek() {
@@ -202,7 +202,7 @@ export default {
         moment().subtract(1, "week").day(1).format(DATE_FORMAT),
         moment().subtract(1, "week").day(7).format(DATE_FORMAT),
       ]
-    }, // setMainPrevWeek()
+    },
 
     // Sets the main date picker to the last month,
     // meaning, if it's 20 March it starts the range
@@ -216,7 +216,7 @@ export default {
         moment().subtract(1, "month").format(DATE_FORMAT),
         moment().subtract(1, "day").format(DATE_FORMAT),
       ]
-    }, // setMainLastMonth()
+    },
 
     // Sets the range to 1st to last of the previous month.
     setMainPrevMonth() {
@@ -227,7 +227,7 @@ export default {
         moment().subtract(1, "month").date(1).format(DATE_FORMAT),
         moment().date(0).format(DATE_FORMAT),
       ]
-    }, // setMainPrevMonth()
+    },
 
     // Takes current duration of the main range and sets the same
     // duration to the compare picker, but this duration earlier
@@ -252,7 +252,7 @@ export default {
           .subtract(1 + mainDuration, "days")
           .format(DATE_FORMAT),
       ]
-    }, // setComparePreviousPeriod()
+    },
 
     // Takes current duration of the main range and sets the same
     // duration to the compare picker, but this duration earlier
@@ -265,7 +265,7 @@ export default {
         moment(this.pickerMain[0]).subtract(1, "month").format(DATE_FORMAT),
         moment(this.pickerMain[1]).subtract(1, "month").format(DATE_FORMAT),
       ]
-    }, // setComparePreviousMonth()
+    },
 
     // Takes current duration of the main range and sets the same
     // duration to the compare picker, but this duration earlier
@@ -278,11 +278,11 @@ export default {
         moment(this.pickerMain[0]).subtract(1, "year").format(DATE_FORMAT),
         moment(this.pickerMain[1]).subtract(1, "year").format(DATE_FORMAT),
       ]
-    }, // setComparePreviousYear()
+    },
 
     close() {
       this.$emit("close")
-    }, // close()
+    },
 
     applyDates() {
       this.pickerMain.sort()
@@ -297,9 +297,9 @@ export default {
       })
 
       this.close()
-    }, // applyDates()
-  }, // methods()
-} // export
+    },
+  },
+}
 </script>
 
 <style lang="scss" scoped>
@@ -307,17 +307,17 @@ export default {
 
 .date-picker-tablet::v-deep {
   max-width: 785px;
-  margin-top: 5vh;
+  margin-top: 15vh;
 
   .pickers {
     max-height: 23em;
-  } // .pickers
+  }
 
   .picker-input {
     .v-text-field__details {
       display: none;
     }
-  } // .picker-input
+  }
 
   .picker-main {
     position: relative;
@@ -325,37 +325,37 @@ export default {
 
     .v-picker {
       background-color: transparent;
-    } // .v-picker
+    }
 
     &.active {
       z-index: 1000;
-    } // .v-picker.active
+    }
 
     // Body should be rendered but not visible
     .v-picker__body {
       background-color: transparent;
-    } // .v-picker__body
+    }
 
     .v-date-picker-table {
       button:not(.picker-main-selected) {
         background-color: transparent;
       }
-    } // .v-date-picker-table
+    }
 
     &:not(.active) {
       .picker-main-selected {
         color: darkgrey;
       }
     }
-  } // .picker-main
+  }
 
   .picker-main-left .v-date-picker-header > button:nth-of-type(2) {
     display: none;
-  } // button[2]
+  }
 
   .picker-main-right .v-date-picker-header > button:nth-of-type(1) {
     display: none;
-  } // button[1]
+  }
 
   // The secondary date picker should be translated
   // over the primary and many of its elements should
@@ -379,20 +379,20 @@ export default {
       button:not(.picker-compare-selected) {
         color: transparent;
       }
-    } // .v-date-picker-table
+    }
 
     .v-picker {
       background-color: transparent !important;
       .v-picker__body {
         background-color: transparent !important;
       }
-    } // > .v-picker
-  } // .picker-compare
+    }
+  }
 
   .compare-label {
     .v-messages {
       display: none;
     }
-  } // .compare-label
-} // .date-picker-tablet
+  }
+}
 </style>
