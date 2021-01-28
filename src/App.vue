@@ -5,6 +5,13 @@
         <h1 class="font-weight-light mb-10">Vuetify Date Picker</h1>
       </v-row>
 
+      <div class="subtitle">Props:</div>
+      <v-text-field v-model="dateStart" label="From" type="date" outlined dense class="picker-input" />
+      <v-text-field v-model="dateUntil" label="To" type="date" outlined dense class="picker-input" />
+      <v-text-field v-model="compareStart" label="Compare From" type="date" outlined dense class="picker-input" />
+      <v-text-field v-model="compareUntil" label="Compare To" type="date" outlined dense class="picker-input" />
+      <v-checkbox v-model="compare" label="Compare to the following" class="compare-label" />
+
       <v-row justify="center">
         <date-picker :config="config" @change="datePickerChanged" />
       </v-row>
@@ -39,13 +46,12 @@ export default {
   components: { DatePicker },
 
   data: () => ({
-    config: {
-      dateStart: "2020-01-05",
-      dateUntil: "2020-01-07",
-      compareStart: "2019-01-01",
-      compareUntil: "2019-01-07",
-      compare: true,
-    },
+    compare: true,
+    dateStart: "2020-01-05",
+    dateUntil: "2020-01-07",
+    compareStart: "2019-01-01",
+    compareUntil: "2019-01-07",
+
     secondConfig: {
       dateStart: "2009-02-20",
       dateUntil: "2009-02-28",
@@ -61,6 +67,18 @@ export default {
       compare: false,
     },
   }),
+
+  computed: {
+    config() {
+      return {
+        dateStart: this.dateStart,
+        dateUntil: this.dateUntil,
+        compareStart: this.compareStart,
+        compareUntil: this.compareUntil,
+        compare: true,
+      }
+    },
+  },
 
   methods: {
     datePickerChanged(val) {

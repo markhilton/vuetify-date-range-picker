@@ -71,8 +71,15 @@ export default {
     inheritedClasses: "",
   }),
 
+  watch: {
+    config(dateRange) {
+      // console.log("dateRange prop change:", dateRange)
+      this.changeValues(dateRange)
+    },
+  },
+
   mounted() {
-    console.log("[DatePicker -> mounted()] config:", JSON.stringify(this.config, null, 2))
+    // console.log("[DatePicker -> mounted()] config:", JSON.stringify(this.config, null, 2))
 
     this.changeValues(this.config)
 
@@ -89,6 +96,8 @@ export default {
     },
 
     changeValues(newVals) {
+      // console.log("changeValues", newVals)
+
       this.dateStart = newVals.dateStart
       this.dateUntil = newVals.dateUntil
       this.compareStart = newVals.compareStart
