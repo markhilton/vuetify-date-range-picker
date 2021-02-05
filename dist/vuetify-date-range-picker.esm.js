@@ -2449,5 +2449,5 @@ if (typeof window !== "undefined") {
 
 if (GlobalVue) { GlobalVue.use(plugin); }
 
-export default plugin;
+export default __vue_component__$4;
 export { install };
