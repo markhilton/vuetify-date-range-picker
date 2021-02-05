@@ -5,11 +5,26 @@
         <h1 class="font-weight-light mb-10">Vuetify Date Picker</h1>
       </v-row>
 
-      <div class="subtitle">Props:</div>
-      <v-text-field v-model="dateStart" label="From" type="date" outlined dense class="picker-input" />
-      <v-text-field v-model="dateUntil" label="To" type="date" outlined dense class="picker-input" />
-      <v-text-field v-model="compareStart" label="Compare From" type="date" outlined dense class="picker-input" />
-      <v-text-field v-model="compareUntil" label="Compare To" type="date" outlined dense class="picker-input" />
+      <h4 class="mb-2">Props:</h4>
+
+      <v-row>
+        <v-col>
+          <v-text-field v-model="dateStart" label="From" type="date" outlined dense class="picker-input" />
+        </v-col>
+        <v-col>
+          <v-text-field v-model="dateUntil" label="To" type="date" outlined dense class="picker-input" />
+        </v-col>
+      </v-row>
+
+      <v-row>
+        <v-col>
+          <v-text-field v-model="compareStart" label="Compare From" type="date" outlined dense class="picker-input" />
+        </v-col>
+        <v-col>
+          <v-text-field v-model="compareUntil" label="Compare To" type="date" outlined dense class="picker-input" />
+        </v-col>
+      </v-row>
+
       <v-checkbox v-model="compare" label="Compare to the following" class="compare-label" />
 
       <v-row justify="center">
@@ -33,6 +48,11 @@
           @change="datePickerChanged"
         />
       </v-row>
+
+      <h4 class="mb-2">Emitted:</h4>
+      <div style="background: #333; color: #fff" class="pa-4">
+        <pre>{{ emitted }}</pre>
+      </div>
     </v-container>
   </v-app>
 </template>
@@ -46,7 +66,9 @@ export default {
   components: { DatePicker },
 
   data: () => ({
+    emitted: null,
     compare: true,
+
     dateStart: "2020-01-05",
     dateUntil: "2020-01-07",
     compareStart: "2019-01-01",
@@ -59,6 +81,7 @@ export default {
       compareUntil: "2009-02-07",
       compare: true,
     },
+
     thirdConfig: {
       dateStart: "2020-12-03",
       dateUntil: "2020-12-07",
@@ -82,7 +105,8 @@ export default {
 
   methods: {
     datePickerChanged(val) {
-      console.log("[App @datePickerChanged] val:", JSON.stringify(val, null, 2))
+      this.emitted = JSON.stringify(val, null, 2)
+      console.log("[App @datePickerChanged] val:", this.emitted)
     },
   },
 }

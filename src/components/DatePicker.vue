@@ -63,9 +63,11 @@ export default {
     dateSelectorOpen: false,
     dateStart: null,
     dateUntil: null,
+    selectedPeriod: null,
     compareStart: null,
     compareUntil: null,
     compare: false,
+    comparePeriod: null,
     // The following takes care of the classes which should not go to the root element
     // but to the <date-selector /> which actually represents the whole picker
     inheritedClasses: "",
@@ -90,19 +92,23 @@ export default {
   },
 
   methods: {
-    dateSelectorChanged(newVals) {
-      this.changeValues(newVals)
-      this.$emit("change", newVals)
+    dateSelectorChanged(values) {
+      this.changeValues(values)
+      this.$emit("change", values)
     },
 
-    changeValues(newVals) {
-      console.log("changeValues", newVals)
+    changeValues(values) {
+      console.log("changeValues", values)
 
-      this.dateStart = newVals.dateStart
-      this.dateUntil = newVals.dateUntil
-      this.compareStart = newVals.compareStart
-      this.compareUntil = newVals.compareUntil
-      this.compare = newVals.compare
+      this.dateStart = values.dateStart
+      this.dateUntil = values.dateUntil
+      this.compareStart = values.compareStart
+      this.compareUntil = values.compareUntil
+
+      this.compare = values.compare
+
+      this.selectedPeriod = values.selectedPeriod
+      this.comparePeriod = values.comparePeriod
     },
   },
 }
