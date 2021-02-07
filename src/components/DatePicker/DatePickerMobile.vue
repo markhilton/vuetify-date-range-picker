@@ -1,119 +1,121 @@
 <template>
-  <v-container class="ma-0 pa-0">
-    <v-card min-height="100vh" class="date-picker-mobile elevation-0 ma-0 py-3 d-flex flex-column">
-      <v-card-text class="flex-grow-1">
-        <v-row>
-          <v-col cols="12" class="pt-0">
-            <v-row>
-              <v-col cols="12">
-                <v-text-field
-                  v-model="pickerMain[0]"
-                  label="From"
-                  type="date"
-                  outlined
-                  dense
-                  :max="maxDate"
-                  class="picker-input"
-                />
-              </v-col>
-            </v-row>
+  <v-dialog :value="true" fullscreen hide-overlay transition="dialog-bottom-transition">
+    <v-card class="date-picker-mobile elevation-0 d-flex flex-column">
+      <v-container>
+        <v-card-text>
+          <v-row>
+            <v-col cols="12">
+              <v-row>
+                <v-col cols="12">
+                  <v-text-field
+                    v-model="pickerMain[0]"
+                    label="From"
+                    type="date"
+                    outlined
+                    dense
+                    :max="maxDate"
+                    class="picker-input"
+                  />
+                </v-col>
+              </v-row>
 
-            <v-row>
-              <v-col cols="12">
-                <v-text-field
-                  v-model="pickerMain[1]"
-                  label="To"
-                  type="date"
-                  outlined
-                  dense
-                  :max="maxDate"
-                  class="picker-input"
-                />
-              </v-col>
-            </v-row>
+              <v-row>
+                <v-col cols="12">
+                  <v-text-field
+                    v-model="pickerMain[1]"
+                    label="To"
+                    type="date"
+                    outlined
+                    dense
+                    :max="maxDate"
+                    class="picker-input"
+                  />
+                </v-col>
+              </v-row>
 
-            <v-row justify="start" class="pl-2 pr-1">
-              <v-btn depressed min-width="48%" class="mr-2 mb-3" small @click="setMainLast7Days">Last 7 days</v-btn>
-              <v-btn depressed min-width="48%" class="mb-2" small @click="setMainPrevWeek">Previous week</v-btn>
-              <v-btn depressed min-width="48%" class="mr-2 mb-3" small @click="setMainLastMonth">Last month</v-btn>
-              <v-btn depressed min-width="48%" class="mb-2" small @click="setMainPrevMonth">Previous month</v-btn>
-            </v-row>
+              <v-row justify="start" class="pl-2 pr-1">
+                <v-btn depressed min-width="48%" class="mr-2 mb-3" small @click="setMainLast7Days">Last 7 days</v-btn>
+                <v-btn depressed min-width="48%" class="mb-2" small @click="setMainPrevWeek">Previous week</v-btn>
+                <v-btn depressed min-width="48%" class="mr-2 mb-3" small @click="setMainLastMonth">Last month</v-btn>
+                <v-btn depressed min-width="48%" class="mb-2" small @click="setMainPrevMonth">Previous month</v-btn>
+              </v-row>
 
-            <v-row class="pl-2 pt-0">
-              <v-checkbox v-model="compare" label="Compare to the following" class="compare-label pt-0" />
-            </v-row>
+              <v-row class="pl-2 pt-0">
+                <v-checkbox v-model="compare" label="Compare to the following" class="compare-label pt-0" />
+              </v-row>
 
-            <v-row>
-              <v-col cols="12">
-                <v-text-field
-                  v-model="pickerCompare[0]"
+              <v-row>
+                <v-col cols="12">
+                  <v-text-field
+                    v-model="pickerCompare[0]"
+                    :disabled="!compare"
+                    label="From"
+                    type="date"
+                    outlined
+                    dense
+                    :max="maxDate"
+                    class="picker-input"
+                  />
+                </v-col>
+              </v-row>
+              <v-row>
+                <v-col cols="12">
+                  <v-text-field
+                    v-model="pickerCompare[1]"
+                    :disabled="!compare"
+                    label="To"
+                    type="date"
+                    outlined
+                    dense
+                    :max="maxDate"
+                    class="picker-input"
+                  />
+                </v-col>
+              </v-row>
+              <v-row justify="start" class="pl-2">
+                <v-btn
+                  depressed
+                  small
+                  min-width="47%"
+                  class="mr-2 mb-3"
                   :disabled="!compare"
-                  label="From"
-                  type="date"
-                  outlined
-                  dense
-                  :max="maxDate"
-                  class="picker-input"
-                />
-              </v-col>
-            </v-row>
-            <v-row>
-              <v-col cols="12">
-                <v-text-field
-                  v-model="pickerCompare[1]"
+                  @click="setComparePreviousPeriod"
+                >
+                  Previous period
+                </v-btn>
+                <v-btn
+                  depressed
+                  small
+                  min-width="47%"
+                  class="mr-2 mb-3"
                   :disabled="!compare"
-                  label="To"
-                  type="date"
-                  outlined
-                  dense
-                  :max="maxDate"
-                  class="picker-input"
-                />
-              </v-col>
-            </v-row>
-            <v-row justify="start" class="pl-2">
-              <v-btn
-                depressed
-                small
-                min-width="47%"
-                class="mr-2 mb-3"
-                :disabled="!compare"
-                @click="setComparePreviousPeriod"
-              >
-                Previous period
-              </v-btn>
-              <v-btn
-                depressed
-                small
-                min-width="47%"
-                class="mr-2 mb-3"
-                :disabled="!compare"
-                @click="setComparePreviousMonth"
-              >
-                Previous month
-              </v-btn>
-              <v-btn
-                depressed
-                small
-                min-width="47%"
-                class="mr-2 mb-3"
-                :disabled="!compare"
-                @click="setComparePreviousYear"
-              >
-                Previous year
-              </v-btn>
-            </v-row>
-          </v-col>
-        </v-row>
-      </v-card-text>
+                  @click="setComparePreviousMonth"
+                >
+                  Previous month
+                </v-btn>
+                <v-btn
+                  depressed
+                  small
+                  min-width="47%"
+                  class="mr-2 mb-3"
+                  :disabled="!compare"
+                  @click="setComparePreviousYear"
+                >
+                  Previous year
+                </v-btn>
+              </v-row>
+            </v-col>
+          </v-row>
+        </v-card-text>
 
-      <v-card-actions>
-        <v-spacer />
-        <v-btn text class="px-4 mr-3" @click="close">Cancel</v-btn>
-        <v-btn large class="primary px-7" @click="applyDates">Apply</v-btn>
-      </v-card-actions>
+        <v-card-actions>
+          <v-spacer />
+          <v-btn text class="px-4 mr-3" @click="close">Cancel</v-btn>
+          <v-btn large class="primary px-7" @click="applyDates">Apply</v-btn>
+        </v-card-actions>
+      </v-container>
     </v-card>
-  </v-container>
+  </v-dialog>
 </template>
 
 <script>

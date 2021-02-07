@@ -40,6 +40,7 @@
 </template>
 
 <script>
+import presets from "./DatePicker/presets"
 import DateSelector from "./DatePicker/DateSelector.vue"
 import DatePickerDesktop from "./DatePicker/DatePickerDesktop.vue"
 import DatePickerTablet from "./DatePicker/DatePickerTablet.vue"
@@ -61,13 +62,18 @@ export default {
 
   data: () => ({
     dateSelectorOpen: false,
+
+    compare: false,
+
     dateStart: null,
     dateUntil: null,
-    selectedPeriod: null,
+
     compareStart: null,
     compareUntil: null,
-    compare: false,
-    comparePeriod: null,
+
+    primaryPreset: null,
+    comparePreset: null,
+
     // The following takes care of the classes which should not go to the root element
     // but to the <date-selector /> which actually represents the whole picker
     inheritedClasses: "",
@@ -75,15 +81,14 @@ export default {
 
   watch: {
     config(dateRange) {
-      console.log("dateRange prop change:", dateRange)
-      this.changeValues(dateRange)
+      this.updateConfig(dateRange)
     },
   },
 
   mounted() {
     console.log("[DatePicker -> mounted()] config:", JSON.stringify(this.config, null, 2))
 
-    this.changeValues(this.config)
+    this.updateConfig(this.config)
 
     // The classes which are provided to the root element are passed to the <date-selector />
     this.inheritedClasses = this.$el.className
@@ -93,22 +98,37 @@ export default {
 
   methods: {
     dateSelectorChanged(values) {
-      this.changeValues(values)
+      this.updateConfig(values)
       this.$emit("change", values)
     },
 
-    changeValues(values) {
-      console.log("changeValues", values)
+    updateConfig(values) {
+      console.log("updateConfig", values)
+
+      this.compare = values.compare
 
       this.dateStart = values.dateStart
       this.dateUntil = values.dateUntil
       this.compareStart = values.compareStart
       this.compareUntil = values.compareUntil
 
-      this.compare = values.compare
+      // overwrite primary period if preset is passed
+      if (values.primaryPreset && presets[values.primaryPreset]) {
+        console.log("primaryPreset preset overwrite")
+        this.dateStart = presets[values.primaryPreset][0]
+        this.dateUntil = presets[values.primaryPreset][1]
+      }
 
-      this.selectedPeriod = values.selectedPeriod
-      this.comparePeriod = values.comparePeriod
+      // overwrite compare period if preset is passed based on primary period
+      if (values.comparePreset && presets[values.comparePreset]) {
+        console.log("comparePreset preset overwrite")
+        const comparePreset = presets[values.comparePreset]([this.dateStart, this.dateUntil])
+        this.compareStart = comparePreset[0]
+        this.compareUntil = comparePreset[1]
+      }
+
+      this.primaryPreset = values.primaryPreset
+      this.comparePreset = values.comparePreset
     },
   },
 }

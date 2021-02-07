@@ -8,7 +8,54 @@
 
   var moment__default = /*#__PURE__*/_interopDefaultLegacy(moment);
 
-  var DATE_FORMAT = "MMM D, YYYY";
+  var DATE_FORMAT = "YYYY-MM-DD";
+
+  var LAST_WEEK = [
+    moment__default['default']().subtract(1, "weeks").startOf("isoWeek").format(DATE_FORMAT),
+    moment__default['default']().subtract(1, "weeks").endOf("isoWeek").format(DATE_FORMAT) ];
+
+  var LAST_MONTH = [
+    moment__default['default']().subtract(1, "month").startOf("month").format(DATE_FORMAT),
+    moment__default['default']().subtract(1, "month").endOf("month").format(DATE_FORMAT) ];
+
+  var LAST_7_DAYS = [
+    moment__default['default']().subtract(7, "day").format(DATE_FORMAT),
+    moment__default['default']().subtract(1, "day").format(DATE_FORMAT) ];
+
+  var LAST_30_DAYS = [
+    moment__default['default']().subtract(30, "day").format(DATE_FORMAT),
+    moment__default['default']().subtract(1, "day").format(DATE_FORMAT) ];
+
+  var PREVIOUS_PERIOD = function (ref) {
+    var start = ref[0];
+    var until = ref[1];
+
+    var duration = moment__default['default'](until).diff(moment__default['default'](start), "days") + 1;
+
+    return [
+      moment__default['default'](start).subtract(duration, "days").format(DATE_FORMAT),
+      moment__default['default'](until).subtract(duration, "days").format(DATE_FORMAT) ]
+  };
+
+  var PREVIOUS_YEAR = function (ref) {
+    var start = ref[0];
+    var until = ref[1];
+
+    return [moment__default['default'](start).subtract(1, "year").format(DATE_FORMAT), moment__default['default'](until).subtract(1, "year").format(DATE_FORMAT)]
+  };
+
+  moment__default['default']().format(DATE_FORMAT);
+
+  var presets = {
+    LAST_WEEK: LAST_WEEK,
+    LAST_MONTH: LAST_MONTH,
+    LAST_7_DAYS: LAST_7_DAYS,
+    LAST_30_DAYS: LAST_30_DAYS,
+    PREVIOUS_PERIOD: PREVIOUS_PERIOD,
+    PREVIOUS_YEAR: PREVIOUS_YEAR,
+  };
+
+  var DATE_FORMAT$1 = "MMM D, YYYY";
 
   var script = {
     components: {
@@ -30,26 +77,26 @@
     computed: {
       getDateStart: function getDateStart() {
         return this.dateStart
-          ? moment__default['default'](this.dateStart).format(DATE_FORMAT)
-          : moment__default['default']().subtract(7, "days").format(DATE_FORMAT)
+          ? moment__default['default'](this.dateStart).format(DATE_FORMAT$1)
+          : moment__default['default']().subtract(7, "days").format(DATE_FORMAT$1)
       },
 
       getDateUntil: function getDateUntil() {
         return this.dateUntil
-          ? moment__default['default'](this.dateUntil).format(DATE_FORMAT)
-          : moment__default['default']().subtract(1, "day").format(DATE_FORMAT)
+          ? moment__default['default'](this.dateUntil).format(DATE_FORMAT$1)
+          : moment__default['default']().subtract(1, "day").format(DATE_FORMAT$1)
       },
 
       getCompareStart: function getCompareStart() {
         return this.compareStart
-          ? moment__default['default'](this.compareStart).format(DATE_FORMAT)
-          : moment__default['default']().subtract(15, "days").format(DATE_FORMAT)
+          ? moment__default['default'](this.compareStart).format(DATE_FORMAT$1)
+          : moment__default['default']().subtract(15, "days").format(DATE_FORMAT$1)
       },
 
       getCompareUntil: function getCompareUntil() {
         return this.compareUntil
-          ? moment__default['default'](this.compareUntil).format(DATE_FORMAT)
-          : moment__default['default']().subtract(8, "days").format(DATE_FORMAT)
+          ? moment__default['default'](this.compareUntil).format(DATE_FORMAT$1)
+          : moment__default['default']().subtract(8, "days").format(DATE_FORMAT$1)
       },
     }
   };
@@ -282,53 +329,6 @@
       undefined
     );
 
-  var DATE_FORMAT$1 = "YYYY-MM-DD";
-
-  var LAST_7_DAYS = [
-    moment__default['default']().subtract(7, "day").format(DATE_FORMAT$1),
-    moment__default['default']().subtract(1, "day").format(DATE_FORMAT$1) ];
-
-  var LAST_30_DAYS = [
-    moment__default['default']().subtract(1, "month").format(DATE_FORMAT$1),
-    moment__default['default']().subtract(1, "day").format(DATE_FORMAT$1) ];
-
-  var PREVIOUS_WEEK = [
-    moment__default['default']().subtract(1, "week").day(1).format(DATE_FORMAT$1),
-    moment__default['default']().subtract(1, "week").day(7).format(DATE_FORMAT$1) ];
-
-  var PREVIOUS_MONTH = [
-    moment__default['default']().subtract(1, "month").date(1).format(DATE_FORMAT$1),
-    moment__default['default']().date(0).format(DATE_FORMAT$1) ];
-
-  var PREVIOUS_PERIOD = function (ref) {
-    var start = ref[0];
-    var end = ref[1];
-
-    var duration = moment__default['default'](end).diff(moment__default['default'](start), "days");
-
-    return [
-      moment__default['default'](start)
-        .subtract(1 + duration, "days")
-        .format(DATE_FORMAT$1),
-      moment__default['default'](end)
-        .subtract(1 + duration, "days")
-        .format(DATE_FORMAT$1) ]
-  };
-
-  var PREVIOUS_YEAR = [
-    moment__default['default']().subtract(1, "year").startOf("year").format(DATE_FORMAT$1),
-    moment__default['default']().subtract(1, "year").endOf("year").format(DATE_FORMAT$1) ];
-
-  var presets = {
-    LAST_7_DAYS: LAST_7_DAYS,
-    LAST_30_DAYS: LAST_30_DAYS,
-    PREVIOUS_WEEK: PREVIOUS_WEEK,
-    PREVIOUS_MONTH: PREVIOUS_MONTH,
-    PREVIOUS_PERIOD: PREVIOUS_PERIOD,
-    PREVIOUS_YEAR: PREVIOUS_YEAR,
-  };
-
-  var DATE_FORMAT$2 = "YYYY-MM-DD";
   var MONTH_FORMAT = "YYYY-MM";
 
   var script$1 = {
@@ -349,7 +349,6 @@
     props: ["config"],
 
     data: function () { return ({
-      today: null,
       presetMain: false,
       presetCompare: false,
       compare_: false,
@@ -362,13 +361,16 @@
       pickerCompareLeft: null,
       pickerCompareRight: null,
 
-      selectedPeriod: null,
-      comparePeriod: null,
+      primaryDefault: "LAST_7_DAYS",
+      compareDefault: "PREVIOUS_PERIOD",
+
+      primaryPreset: null,
+      comparePreset: null,
     }); },
 
     computed: {
       maxDate: function maxDate() {
-        return moment__default['default']().format("YYYY-MM-DD")
+        return presets.today
       },
       compare: {
         get: function get() {
@@ -379,25 +381,38 @@
           this.pickerMainIsActive = !this.compare_;
         },
       },
-      selectedPeriodHash: function selectedPeriodHash() {
+      primaryPresetHash: function primaryPresetHash() {
         return JSON.stringify(this.pickerMain)
       },
-      comparePeriodHash: function comparePeriodHash() {
+      comparePresetHash: function comparePresetHash() {
         return JSON.stringify(this.pickerCompare)
       },
     },
 
     watch: {
-      // monitor main period selection changes to reset presets if needed
-      selectedPeriodHash: function selectedPeriodHash() {
-        if (!this.presetMain) { this.selectedPeriod = null; }
-        this.presetMain = false;
+      // monitor props config to update component
+      config: function config() {
+        this.primaryPreset = this.config.primaryPreset;
+        this.comparePreset = this.config.comparePreset;
+        console.log("config change!");
       },
+
+      // monitor primary period selection changes to reset presets if needed
+      primaryPresetHash: function primaryPresetHash() {
+        if (!this.presetMain) { this.primaryPreset = null; }
+        this.presetMain = false;
+
+        // adjust compare date range if compare preset is set on
+        if (this.comparePreset === "PREVIOUS_PERIOD") { this.setComparePreviousPeriod(); }
+        if (this.comparePreset === "PREVIOUS_YEAR") { this.setComparePreviousYear(); }
+      },
+
       // monitor main period selection changes to reset presets if needed
-      comparePeriodHash: function comparePeriodHash() {
-        if (!this.presetCompare) { this.comparePeriod = null; }
+      comparePresetHash: function comparePresetHash() {
+        if (!this.presetCompare) { this.comparePreset = null; }
         this.presetCompare = false;
       },
+
       // Left and right date pickers should move accordingly
       pickerMainLeft: function pickerMainLeft(val) {
         this.pickerMainRight = moment__default['default'](val).add(1, "month").format(MONTH_FORMAT);
@@ -418,95 +433,80 @@
     },
 
     mounted: function mounted() {
-      this.today = moment__default['default']().format(DATE_FORMAT$2);
+      var config = this.config;
 
-      if (this.config) {
-        this.pickerMain = [this.config.dateStart, this.config.dateUntil];
-        this.pickerCompare = [this.config.compareStart, this.config.compareUntil];
-
-        this.pickerMainLeft = moment__default['default'](this.config.dateStart).subtract(1, "month").format(MONTH_FORMAT);
-        this.pickerMainRight = moment__default['default'](this.config.dateStart).format(MONTH_FORMAT);
-
+      if (config) {
         this.compare = this.config.compare;
-      } else {
-        // in case something weird happens and some defaults are needed
+
+        this.pickerMain = [config.dateStart, config.dateUntil];
+        this.pickerCompare = [config.compareStart, config.compareUntil];
+
+        // adjust primary date range if primary preset is set on
+        if (config.primaryPreset === "LAST_7_DAYS") { this.setMainLast7Days(); }
+        if (config.primaryPreset === "LAST_30_DAYS") { this.setMainLast30Days(); }
+        if (config.primaryPreset === "LAST_WEEK") { this.setMainLastWeek(); }
+        if (config.primaryPreset === "LAST_MONTH") { this.setMainLastMonth(); }
+
+        // adjust compare date range if compare preset is set on
+        if (config.comparePreset === "PREVIOUS_PERIOD") { this.setComparePreviousPeriod(); }
+        if (config.comparePreset === "PREVIOUS_YEAR") { this.setComparePreviousYear(); }
+
+        this.pickerMainLeft = moment__default['default'](config.dateStart).subtract(1, "month").format(MONTH_FORMAT);
+        this.pickerMainRight = moment__default['default'](config.dateStart).format(MONTH_FORMAT);
+      }
+
+      // TO DO: set default to default preset instead hard coded
+      // in case something weird happens and some defaults are needed
+      else {
         this.pickerMainLeft = moment__default['default']().subtract(1, "month").format(MONTH_FORMAT);
         this.pickerMainRight = moment__default['default']().format(MONTH_FORMAT);
 
-        this.pickerMain = [
-          moment__default['default']().subtract(7, "days").format(DATE_FORMAT$2),
-          moment__default['default']().subtract(1, "day").format(DATE_FORMAT$2) ];
-
-        this.pickerCompare = [
-          moment__default['default']().subtract(15, "day").format(DATE_FORMAT$2),
-          moment__default['default']().subtract(8, "days").format(DATE_FORMAT$2) ];
+        this.pickerMain = presets.LAST_7_DAYS;
+        this.pickerCompare = presets.PREVIOUS_PERIOD(this.pickerMain);
       }
     },
 
     methods: {
-      // Sets the main date picker to the last week,
-      // meaning if it's Friday it sets the range from last
-      // Friday to yesterday
       setMainLast7Days: function setMainLast7Days() {
         this.presetMain = true;
         this.pickerMainIsActive = true;
         this.pickerMain = presets.LAST_7_DAYS;
         this.pickerMainLeft = presets.LAST_7_DAYS[0];
-        this.selectedPeriod = "LAST_7_DAYS";
+        this.primaryPreset = "LAST_7_DAYS";
       },
 
-      // Sets the main date picker to the Monday to Sunday of the previous week
-      setMainPrevWeek: function setMainPrevWeek() {
-        this.presetMain = true;
-        this.pickerMainIsActive = true;
-        this.pickerMain = presets.PREVIOUS_WEEK;
-        this.pickerMainLeft = presets.PREVIOUS_WEEK[0];
-        this.selectedPeriod = "PREVIOUS_WEEK";
-      },
-
-      // Sets the main date picker to the last month,
-      // meaning, if it's 20 March it starts the range
-      // from 20 Feb. to yesterday.
-      // If it's 31 March, the range begins at 28 or 29 Feb.
-      setMainLast30Dys: function setMainLast30Dys() {
+      setMainLast30Days: function setMainLast30Days() {
         this.presetMain = true;
         this.pickerMainIsActive = true;
         this.pickerMain = presets.LAST_30_DAYS;
         this.pickerMainLeft = presets.LAST_30_DAYS[0];
-        this.selectedPeriod = "LAST_30_DAYS";
+        this.primaryPreset = "LAST_30_DAYS";
       },
 
-      // Sets the range to 1st to last of the previous month.
-      setMainPrevMonth: function setMainPrevMonth() {
+      setMainLastWeek: function setMainLastWeek() {
         this.presetMain = true;
         this.pickerMainIsActive = true;
-        this.pickerMain = presets.PREVIOUS_MONTH;
-        this.pickerMainLeft = presets.PREVIOUS_MONTH[0];
-        this.selectedPeriod = "PREVIOUS_MONTH";
+        this.pickerMain = presets.LAST_WEEK;
+        this.pickerMainLeft = presets.LAST_WEEK[0];
+        this.primaryPreset = "LAST_WEEK";
+      },
+
+      setMainLastMonth: function setMainLastMonth() {
+        this.presetMain = true;
+        this.pickerMainIsActive = true;
+        this.pickerMain = presets.LAST_MONTH;
+        this.pickerMainLeft = presets.LAST_MONTH[0];
+        this.primaryPreset = "LAST_MONTH";
       },
 
       // Takes current duration of the main range and sets the same
       // duration to the compare picker, but this duration earlier
       setComparePreviousPeriod: function setComparePreviousPeriod() {
         this.presetCompare = true;
-        var mainRangeStart = this.pickerMain[0];
-        var mainRangeEnd = this.pickerMain[1];
-
         this.pickerMainIsActive = false;
-        this.pickerCompare = presets.PREVIOUS_PERIOD([mainRangeStart, mainRangeEnd]);
-        this.pickerMainLeft = presets.PREVIOUS_MONTH[0];
-        this.comparePeriod = "PREVIOUS_PERIOD";
-      },
-
-      // Takes current duration of the main range and sets the same
-      // duration to the compare picker, but this duration earlier
-      setComparePreviousMonth: function setComparePreviousMonth() {
-        this.presetCompare = true;
-        this.pickerMainIsActive = false;
-        this.pickerCompare = presets.PREVIOUS_MONTH;
-        this.pickerMainLeft = presets.PREVIOUS_MONTH[0];
-        this.pickerCompareLeft = moment__default['default'](this.pickerMain[0]).subtract(1, "month").format(MONTH_FORMAT);
-        this.comparePeriod = "PREVIOUS_MONTH";
+        this.pickerCompare = presets.PREVIOUS_PERIOD(this.pickerMain);
+        this.pickerMainLeft = this.pickerCompare[0];
+        this.comparePreset = "PREVIOUS_PERIOD";
       },
 
       // Takes current duration of the main range and sets the same
@@ -514,10 +514,10 @@
       setComparePreviousYear: function setComparePreviousYear() {
         this.presetCompare = true;
         this.pickerMainIsActive = false;
-        this.pickerCompare = presets.PREVIOUS_YEAR;
-        this.pickerMainLeft = presets.PREVIOUS_YEAR[0];
+        this.pickerCompare = presets.PREVIOUS_YEAR(this.pickerMain);
+        this.pickerMainLeft = this.pickerCompare[0];
         this.pickerCompareLeft = moment__default['default'](this.pickerMain[0]).subtract(1, "year").format(MONTH_FORMAT);
-        this.comparePeriod = "PREVIOUS_YEAR";
+        this.comparePreset = "PREVIOUS_YEAR";
       },
 
       close: function close() {
@@ -534,8 +534,8 @@
           dateUntil: this.pickerMain[1],
           compareStart: this.pickerCompare[0],
           compareUntil: this.pickerCompare[1],
-          selectedPeriod: this.selectedPeriod,
-          comparePeriod: this.comparePeriod,
+          primaryPreset: this.primaryPreset,
+          comparePreset: this.comparePreset,
         });
 
         this.close();
@@ -582,12 +582,12 @@
                             _c("v-date-picker", {
                               staticClass: "picker-main-left pr-1",
                               attrs: {
+                                range: "",
                                 "no-title": "",
                                 "first-day-of-week": "1",
-                                range: "",
-                                color: "blue darken-2 picker-main-selected",
-                                max: _vm.today,
-                                "picker-date": _vm.pickerMainLeft
+                                max: _vm.maxDate,
+                                "picker-date": _vm.pickerMainLeft,
+                                color: "blue darken-2 picker-main-selected"
                               },
                               on: {
                                 "update:pickerDate": function($event) {
@@ -616,12 +616,12 @@
                             _c("v-date-picker", {
                               staticClass: "picker-main-right",
                               attrs: {
+                                range: "",
                                 "no-title": "",
                                 "first-day-of-week": "1",
-                                range: "",
-                                color: "blue darken-2 picker-main-selected",
-                                max: _vm.today,
-                                "picker-date": _vm.pickerMainRight
+                                max: _vm.maxDate,
+                                "picker-date": _vm.pickerMainRight,
+                                color: "blue darken-2 picker-main-selected"
                               },
                               on: {
                                 "update:pickerDate": function($event) {
@@ -661,14 +661,14 @@
                                 _c("v-date-picker", {
                                   staticClass: "picker-compare-left pr-1",
                                   attrs: {
+                                    range: "",
                                     "no-title": "",
                                     "show-current": "false",
                                     "first-day-of-week": "1",
-                                    range: "",
+                                    max: _vm.maxDate,
+                                    "picker-date": _vm.pickerMainLeft,
                                     color:
-                                      "orange darken-4 picker-compare-selected",
-                                    max: _vm.today,
-                                    "picker-date": _vm.pickerMainLeft
+                                      "orange darken-4 picker-compare-selected"
                                   },
                                   on: {
                                     "update:pickerDate": function($event) {
@@ -697,14 +697,14 @@
                                 _c("v-date-picker", {
                                   staticClass: "picker-compare-right",
                                   attrs: {
+                                    range: "",
                                     "no-title": "",
                                     "show-current": "false",
                                     "first-day-of-week": "1",
-                                    range: "",
+                                    max: _vm.maxDate,
+                                    "picker-date": _vm.pickerMainRight,
                                     color:
-                                      "orange darken-4 picker-compare-selected",
-                                    max: _vm.today,
-                                    "picker-date": _vm.pickerMainRight
+                                      "orange darken-4 picker-compare-selected"
                                   },
                                   on: {
                                     "update:pickerDate": function($event) {
@@ -749,8 +749,8 @@
                               attrs: {
                                 label: "From",
                                 type: "date",
-                                outlined: "",
                                 dense: "",
+                                outlined: "",
                                 max: _vm.maxDate
                               },
                               on: {
@@ -779,8 +779,8 @@
                               attrs: {
                                 label: "To",
                                 type: "date",
-                                outlined: "",
                                 dense: "",
+                                outlined: "",
                                 max: _vm.maxDate
                               },
                               on: {
@@ -813,7 +813,33 @@
                             attrs: {
                               text: "",
                               "x-small": "",
-                              outlined: _vm.selectedPeriod === "LAST_7_DAYS"
+                              outlined: _vm.primaryPreset === "LAST_WEEK"
+                            },
+                            on: { click: _vm.setMainLastWeek }
+                          },
+                          [_vm._v(" Last week ")]
+                        ),
+                        _vm._v(" "),
+                        _c(
+                          "v-btn",
+                          {
+                            attrs: {
+                              text: "",
+                              "x-small": "",
+                              outlined: _vm.primaryPreset === "LAST_MONTH"
+                            },
+                            on: { click: _vm.setMainLastMonth }
+                          },
+                          [_vm._v("\n            Last month\n          ")]
+                        ),
+                        _vm._v(" "),
+                        _c(
+                          "v-btn",
+                          {
+                            attrs: {
+                              text: "",
+                              "x-small": "",
+                              outlined: _vm.primaryPreset === "LAST_7_DAYS"
                             },
                             on: { click: _vm.setMainLast7Days }
                           },
@@ -826,37 +852,11 @@
                             attrs: {
                               text: "",
                               "x-small": "",
-                              outlined: _vm.selectedPeriod === "PREVIOUS_WEEK"
+                              outlined: _vm.primaryPreset === "LAST_30_DAYS"
                             },
-                            on: { click: _vm.setMainPrevWeek }
+                            on: { click: _vm.setMainLast30Days }
                           },
-                          [_vm._v("\n            Prev. week\n          ")]
-                        ),
-                        _vm._v(" "),
-                        _c(
-                          "v-btn",
-                          {
-                            attrs: {
-                              text: "",
-                              "x-small": "",
-                              outlined: _vm.selectedPeriod === "LAST_MONTH"
-                            },
-                            on: { click: _vm.setMainLast30Dys }
-                          },
-                          [_vm._v("\n            Last month\n          ")]
-                        ),
-                        _vm._v(" "),
-                        _c(
-                          "v-btn",
-                          {
-                            attrs: {
-                              text: "",
-                              "x-small": "",
-                              outlined: _vm.selectedPeriod === "PREVIOUS_MONTH"
-                            },
-                            on: { click: _vm.setMainPrevMonth }
-                          },
-                          [_vm._v("\n            Prev. month\n          ")]
+                          [_vm._v("\n            Last 30 days\n          ")]
                         )
                       ],
                       1
@@ -960,7 +960,7 @@
                               text: "",
                               "x-small": "",
                               disabled: !_vm.compare,
-                              outlined: _vm.comparePeriod === "PREVIOUS_PERIOD"
+                              outlined: _vm.comparePreset === "PREVIOUS_PERIOD"
                             },
                             on: { click: _vm.setComparePreviousPeriod }
                           },
@@ -974,21 +974,7 @@
                               text: "",
                               "x-small": "",
                               disabled: !_vm.compare,
-                              outlined: _vm.comparePeriod === "PREVIOUS_MONTH"
-                            },
-                            on: { click: _vm.setComparePreviousMonth }
-                          },
-                          [_vm._v("\n            Previous month\n          ")]
-                        ),
-                        _vm._v(" "),
-                        _c(
-                          "v-btn",
-                          {
-                            attrs: {
-                              text: "",
-                              "x-small": "",
-                              disabled: !_vm.compare,
-                              outlined: _vm.comparePeriod === "PREVIOUS_YEAR"
+                              outlined: _vm.comparePreset === "PREVIOUS_YEAR"
                             },
                             on: { click: _vm.setComparePreviousYear }
                           },
@@ -1044,11 +1030,11 @@
     /* style */
     var __vue_inject_styles__$1 = function (inject) {
       if (!inject) { return }
-      inject("data-v-4e907b31_0", { source: ".date-picker-desktop[data-v-4e907b31] {\n  max-width: 1040px;\n  margin-top: 15vh;\n}\n.date-picker-desktop[data-v-4e907b31] .pickers {\n  max-height: 23em;\n}\n.date-picker-desktop[data-v-4e907b31] .pickers .v-text-field__details {\n  display: none;\n}\n.date-picker-desktop[data-v-4e907b31] .picker-main {\n  position: relative;\n  z-index: 1;\n}\n.date-picker-desktop[data-v-4e907b31] .picker-main .v-picker {\n  background-color: transparent;\n}\n.date-picker-desktop[data-v-4e907b31] .picker-main.active {\n  z-index: 1000;\n}\n.date-picker-desktop[data-v-4e907b31] .picker-main .v-picker__body {\n  background-color: transparent;\n}\n.date-picker-desktop[data-v-4e907b31] .picker-main .v-date-picker-table button:not(.picker-main-selected) {\n  background-color: transparent;\n}\n.date-picker-desktop[data-v-4e907b31] .picker-main:not(.active) .picker-main-selected {\n  color: darkgrey;\n}\n.date-picker-desktop[data-v-4e907b31] .picker-compare {\n  transform: translateY(-100%);\n  position: relative;\n  z-index: 2;\n}\n.date-picker-desktop[data-v-4e907b31] .picker-compare .v-date-picker-header {\n  opacity: 0;\n}\n.date-picker-desktop[data-v-4e907b31] .picker-compare .v-date-picker-table thead {\n  opacity: 0;\n}\n.date-picker-desktop[data-v-4e907b31] .picker-compare .v-date-picker-table button:not(.picker-compare-selected) {\n  color: transparent;\n}\n.date-picker-desktop[data-v-4e907b31] .picker-compare .v-picker {\n  background-color: transparent !important;\n}\n.date-picker-desktop[data-v-4e907b31] .picker-compare .v-picker .v-picker__body {\n  background-color: transparent !important;\n}\n.date-picker-desktop[data-v-4e907b31] .compare-label .v-messages {\n  display: none;\n}\n.date-picker-desktop[data-v-4e907b31] .picker-main-left .v-date-picker-header > button:nth-of-type(2) {\n  display: none;\n}\n.date-picker-desktop[data-v-4e907b31] .picker-main-right .v-date-picker-header > button:nth-of-type(1) {\n  display: none;\n}\n\n/*# sourceMappingURL=DatePickerDesktop.vue.map */", map: {"version":3,"sources":["/Users/mark/Sites/npm-packages/vuetify-date-range-picker/src/components/DatePicker/DatePickerDesktop.vue","DatePickerDesktop.vue"],"names":[],"mappings":"AAsYA;EACA,iBAAA;EACA,gBAAA;ACrYA;ADuYA;EACA,gBAAA;ACrYA;ADuYA;EACA,aAAA;ACrYA;ADyYA;EACA,kBAAA;EACA,UAAA;ACvYA;ADyYA;EACA,6BAAA;ACvYA;AD0YA;EACA,aAAA;ACxYA;AD4YA;EACA,6BAAA;AC1YA;AD8YA;EACA,6BAAA;AC5YA;ADiZA;EACA,eAAA;AC/YA;ADuZA;EACA,4BAAA;EAEA,kBAAA;EACA,UAAA;ACtZA;ADyZA;EACA,UAAA;ACvZA;AD2ZA;EACA,UAAA;ACzZA;AD4ZA;EACA,kBAAA;AC1ZA;AD8ZA;EACA,wCAAA;AC5ZA;AD6ZA;EACA,wCAAA;AC3ZA;ADiaA;EACA,aAAA;AC/ZA;ADmaA;EACA,aAAA;ACjaA;ADoaA;EACA,aAAA;AClaA;;AAEA,gDAAgD","file":"DatePickerDesktop.vue","sourcesContent":["<template>\n  <v-card class=\"date-picker-desktop elevation-4 mx-auto\">\n    <v-card-text class=\"pickers\">\n      <v-row>\n        <v-col cols=\"7\">\n          <v-row :class=\"['picker-main', pickerMainIsActive ? 'active' : '']\">\n            <v-col cols=\"6\">\n              <v-date-picker\n                v-model=\"pickerMain\"\n                no-title\n                first-day-of-week=\"1\"\n                range\n                color=\"blue darken-2 picker-main-selected\"\n                :max=\"today\"\n                :picker-date.sync=\"pickerMainLeft\"\n                class=\"picker-main-left pr-1\"\n              />\n            </v-col>\n            <v-col cols=\"6\">\n              <v-date-picker\n                v-model=\"pickerMain\"\n                no-title\n                first-day-of-week=\"1\"\n                range\n                color=\"blue darken-2 picker-main-selected\"\n                :max=\"today\"\n                :picker-date.sync=\"pickerMainRight\"\n                class=\"picker-main-right\"\n              />\n            </v-col>\n          </v-row>\n          <v-row v-if=\"compare\" justify=\"center\" class=\"picker-compare\">\n            <v-col cols=\"6\">\n              <v-date-picker\n                v-model=\"pickerCompare\"\n                no-title\n                show-current=\"false\"\n                first-day-of-week=\"1\"\n                range\n                color=\"orange darken-4 picker-compare-selected\"\n                :max=\"today\"\n                :picker-date.sync=\"pickerMainLeft\"\n                class=\"picker-compare-left pr-1\"\n              />\n            </v-col>\n            <v-col cols=\"6\">\n              <v-date-picker\n                v-model=\"pickerCompare\"\n                no-title\n                show-current=\"false\"\n                first-day-of-week=\"1\"\n                range\n                color=\"orange darken-4 picker-compare-selected\"\n                :max=\"today\"\n                :picker-date.sync=\"pickerMainRight\"\n                class=\"picker-compare-right\"\n              />\n            </v-col>\n          </v-row>\n        </v-col>\n        <v-col cols=\"5\">\n          <v-row>\n            <v-col cols=\"6\">\n              <v-text-field\n                v-model=\"pickerMain[0]\"\n                label=\"From\"\n                type=\"date\"\n                outlined\n                dense\n                :max=\"maxDate\"\n                class=\"picker-input\"\n                @click=\"pickerMainIsActive = true\"\n              />\n            </v-col>\n            <v-col cols=\"6\">\n              <v-text-field\n                v-model=\"pickerMain[1]\"\n                label=\"To\"\n                type=\"date\"\n                outlined\n                dense\n                :max=\"maxDate\"\n                class=\"picker-input\"\n                @click=\"pickerMainIsActive = true\"\n              />\n            </v-col>\n          </v-row>\n\n          <!-- presets for main period -->\n          <v-row class=\"pl-2 pr-1\">\n            <v-btn text x-small :outlined=\"selectedPeriod === 'LAST_7_DAYS'\" @click=\"setMainLast7Days\">\n              Last 7 days\n            </v-btn>\n            <v-btn text x-small :outlined=\"selectedPeriod === 'PREVIOUS_WEEK'\" @click=\"setMainPrevWeek\">\n              Prev. week\n            </v-btn>\n            <v-btn text x-small :outlined=\"selectedPeriod === 'LAST_MONTH'\" @click=\"setMainLast30Dys\">\n              Last month\n            </v-btn>\n            <v-btn text x-small :outlined=\"selectedPeriod === 'PREVIOUS_MONTH'\" @click=\"setMainPrevMonth\">\n              Prev. month\n            </v-btn>\n          </v-row>\n\n          <v-row class=\"pl-2 pt-6\">\n            <v-checkbox v-model=\"compare\" label=\"Compare to the following\" class=\"compare-label\" />\n          </v-row>\n\n          <v-row>\n            <v-col cols=\"6\">\n              <v-text-field\n                v-model=\"pickerCompare[0]\"\n                :disabled=\"!compare\"\n                label=\"From\"\n                type=\"date\"\n                outlined\n                dense\n                :max=\"maxDate\"\n                class=\"picker-input\"\n                @click=\"pickerMainIsActive = false\"\n              />\n            </v-col>\n            <v-col cols=\"6\">\n              <v-text-field\n                v-model=\"pickerCompare[1]\"\n                :disabled=\"!compare\"\n                label=\"To\"\n                type=\"date\"\n                outlined\n                dense\n                :max=\"maxDate\"\n                class=\"picker-input\"\n                @click=\"pickerMainIsActive = false\"\n              />\n            </v-col>\n          </v-row>\n\n          <!-- presets for compare period -->\n          <v-row class=\"pl-2\">\n            <v-btn\n              text\n              x-small\n              :disabled=\"!compare\"\n              :outlined=\"comparePeriod === 'PREVIOUS_PERIOD'\"\n              @click=\"setComparePreviousPeriod\"\n            >\n              Previous period\n            </v-btn>\n            <v-btn\n              text\n              x-small\n              :disabled=\"!compare\"\n              :outlined=\"comparePeriod === 'PREVIOUS_MONTH'\"\n              @click=\"setComparePreviousMonth\"\n            >\n              Previous month\n            </v-btn>\n            <v-btn\n              text\n              x-small\n              :disabled=\"!compare\"\n              :outlined=\"comparePeriod === 'PREVIOUS_YEAR'\"\n              @click=\"setComparePreviousYear\"\n            >\n              Previous year\n            </v-btn>\n          </v-row>\n        </v-col>\n      </v-row>\n    </v-card-text>\n\n    <v-card-actions>\n      <v-spacer />\n      <v-btn text class=\"px-4 mr-6\" @click=\"close\">Cancel</v-btn>\n      <v-btn large class=\"primary px-7\" @click=\"applyDates\">Apply</v-btn>\n    </v-card-actions>\n  </v-card>\n</template>\n\n<script>\nimport moment from \"moment\"\nimport presets from \"./presets\"\n\nconst DATE_FORMAT = \"YYYY-MM-DD\"\nconst MONTH_FORMAT = \"YYYY-MM\"\n\nexport default {\n  name: \"DatePickerDesktop\",\n\n  props: [\"config\"],\n\n  data: () => ({\n    today: null,\n    presetMain: false,\n    presetCompare: false,\n    compare_: false,\n\n    pickerMain: [], // to use moment.js this has to be set in mounted()\n    pickerCompare: [], // to use moment.js this has to be set in mounted()\n    pickerMainIsActive: true,\n    pickerMainLeft: null,\n    pickerMainRight: null,\n    pickerCompareLeft: null,\n    pickerCompareRight: null,\n\n    selectedPeriod: null,\n    comparePeriod: null,\n  }),\n\n  computed: {\n    maxDate() {\n      return moment().format(\"YYYY-MM-DD\")\n    },\n    compare: {\n      get() {\n        return this.compare_\n      },\n      set(val) {\n        this.compare_ = val\n        this.pickerMainIsActive = !this.compare_\n      },\n    },\n    selectedPeriodHash() {\n      return JSON.stringify(this.pickerMain)\n    },\n    comparePeriodHash() {\n      return JSON.stringify(this.pickerCompare)\n    },\n  },\n\n  watch: {\n    // monitor main period selection changes to reset presets if needed\n    selectedPeriodHash() {\n      if (!this.presetMain) this.selectedPeriod = null\n      this.presetMain = false\n    },\n    // monitor main period selection changes to reset presets if needed\n    comparePeriodHash() {\n      if (!this.presetCompare) this.comparePeriod = null\n      this.presetCompare = false\n    },\n    // Left and right date pickers should move accordingly\n    pickerMainLeft(val) {\n      this.pickerMainRight = moment(val).add(1, \"month\").format(MONTH_FORMAT)\n    },\n\n    pickerMainRight(val) {\n      this.pickerMainLeft = moment(val).subtract(1, \"month\").format(MONTH_FORMAT)\n    },\n\n    // The compare date picker should display the same month as the primary one\n    pickerCompareLeft(val) {\n      this.pickerCompareRight = moment(val).add(1, \"month\").format(MONTH_FORMAT)\n    },\n\n    pickerCompareRight(val) {\n      this.pickerCompareLeft = moment(val).subtract(1, \"month\").format(MONTH_FORMAT)\n    },\n  },\n\n  mounted() {\n    this.today = moment().format(DATE_FORMAT)\n\n    if (this.config) {\n      this.pickerMain = [this.config.dateStart, this.config.dateUntil]\n      this.pickerCompare = [this.config.compareStart, this.config.compareUntil]\n\n      this.pickerMainLeft = moment(this.config.dateStart).subtract(1, \"month\").format(MONTH_FORMAT)\n      this.pickerMainRight = moment(this.config.dateStart).format(MONTH_FORMAT)\n\n      this.compare = this.config.compare\n    } else {\n      // in case something weird happens and some defaults are needed\n      this.pickerMainLeft = moment().subtract(1, \"month\").format(MONTH_FORMAT)\n      this.pickerMainRight = moment().format(MONTH_FORMAT)\n\n      this.pickerMain = [\n        moment().subtract(7, \"days\").format(DATE_FORMAT),\n        moment().subtract(1, \"day\").format(DATE_FORMAT),\n      ]\n\n      this.pickerCompare = [\n        moment().subtract(15, \"day\").format(DATE_FORMAT),\n        moment().subtract(8, \"days\").format(DATE_FORMAT),\n      ]\n    }\n  },\n\n  methods: {\n    // Sets the main date picker to the last week,\n    // meaning if it's Friday it sets the range from last\n    // Friday to yesterday\n    setMainLast7Days() {\n      this.presetMain = true\n      this.pickerMainIsActive = true\n      this.pickerMain = presets.LAST_7_DAYS\n      this.pickerMainLeft = presets.LAST_7_DAYS[0]\n      this.selectedPeriod = \"LAST_7_DAYS\"\n    },\n\n    // Sets the main date picker to the Monday to Sunday of the previous week\n    setMainPrevWeek() {\n      this.presetMain = true\n      this.pickerMainIsActive = true\n      this.pickerMain = presets.PREVIOUS_WEEK\n      this.pickerMainLeft = presets.PREVIOUS_WEEK[0]\n      this.selectedPeriod = \"PREVIOUS_WEEK\"\n    },\n\n    // Sets the main date picker to the last month,\n    // meaning, if it's 20 March it starts the range\n    // from 20 Feb. to yesterday.\n    // If it's 31 March, the range begins at 28 or 29 Feb.\n    setMainLast30Dys() {\n      this.presetMain = true\n      this.pickerMainIsActive = true\n      this.pickerMain = presets.LAST_30_DAYS\n      this.pickerMainLeft = presets.LAST_30_DAYS[0]\n      this.selectedPeriod = \"LAST_30_DAYS\"\n    },\n\n    // Sets the range to 1st to last of the previous month.\n    setMainPrevMonth() {\n      this.presetMain = true\n      this.pickerMainIsActive = true\n      this.pickerMain = presets.PREVIOUS_MONTH\n      this.pickerMainLeft = presets.PREVIOUS_MONTH[0]\n      this.selectedPeriod = \"PREVIOUS_MONTH\"\n    },\n\n    // Takes current duration of the main range and sets the same\n    // duration to the compare picker, but this duration earlier\n    setComparePreviousPeriod() {\n      this.presetCompare = true\n      const mainRangeStart = this.pickerMain[0]\n      const mainRangeEnd = this.pickerMain[1]\n\n      this.pickerMainIsActive = false\n      this.pickerCompare = presets.PREVIOUS_PERIOD([mainRangeStart, mainRangeEnd])\n      this.pickerMainLeft = presets.PREVIOUS_MONTH[0]\n      this.comparePeriod = \"PREVIOUS_PERIOD\"\n    },\n\n    // Takes current duration of the main range and sets the same\n    // duration to the compare picker, but this duration earlier\n    setComparePreviousMonth() {\n      this.presetCompare = true\n      this.pickerMainIsActive = false\n      this.pickerCompare = presets.PREVIOUS_MONTH\n      this.pickerMainLeft = presets.PREVIOUS_MONTH[0]\n      this.pickerCompareLeft = moment(this.pickerMain[0]).subtract(1, \"month\").format(MONTH_FORMAT)\n      this.comparePeriod = \"PREVIOUS_MONTH\"\n    },\n\n    // Takes current duration of the main range and sets the same\n    // duration to the compare picker, but this duration earlier\n    setComparePreviousYear() {\n      this.presetCompare = true\n      this.pickerMainIsActive = false\n      this.pickerCompare = presets.PREVIOUS_YEAR\n      this.pickerMainLeft = presets.PREVIOUS_YEAR[0]\n      this.pickerCompareLeft = moment(this.pickerMain[0]).subtract(1, \"year\").format(MONTH_FORMAT)\n      this.comparePeriod = \"PREVIOUS_YEAR\"\n    },\n\n    close() {\n      this.$emit(\"close\")\n    },\n\n    applyDates() {\n      this.pickerMain.sort()\n      this.pickerCompare.sort()\n\n      this.$emit(\"change\", {\n        compare: this.compare,\n        dateStart: this.pickerMain[0],\n        dateUntil: this.pickerMain[1],\n        compareStart: this.pickerCompare[0],\n        compareUntil: this.pickerCompare[1],\n        selectedPeriod: this.selectedPeriod,\n        comparePeriod: this.comparePeriod,\n      })\n\n      this.close()\n    },\n  },\n}\n</script>\n\n<style lang=\"scss\" scoped>\n.date-picker-desktop::v-deep {\n  max-width: 1040px;\n  margin-top: 15vh;\n\n  .pickers {\n    max-height: 23em;\n\n    .v-text-field__details {\n      display: none;\n    }\n  }\n\n  .picker-main {\n    position: relative;\n    z-index: 1;\n\n    .v-picker {\n      background-color: transparent;\n    }\n\n    &.active {\n      z-index: 1000;\n    }\n\n    // Body should be rendered but not visible\n    .v-picker__body {\n      background-color: transparent;\n    }\n\n    .v-date-picker-table {\n      button:not(.picker-main-selected) {\n        background-color: transparent;\n      }\n    }\n\n    &:not(.active) {\n      .picker-main-selected {\n        color: darkgrey;\n      }\n    }\n  }\n\n  // The secondary date picker should be translated\n  // over the primary and many of its elements should\n  // become invisible.\n  .picker-compare {\n    transform: translateY(-100%);\n\n    position: relative;\n    z-index: 2;\n\n    // Header should be rendered but not visible\n    .v-date-picker-header {\n      opacity: 0;\n    }\n\n    .v-date-picker-table {\n      thead {\n        opacity: 0;\n      }\n\n      button:not(.picker-compare-selected) {\n        color: transparent;\n      }\n    }\n\n    .v-picker {\n      background-color: transparent !important;\n      .v-picker__body {\n        background-color: transparent !important;\n      }\n    }\n  }\n\n  .compare-label {\n    .v-messages {\n      display: none;\n    }\n  }\n\n  .picker-main-left .v-date-picker-header > button:nth-of-type(2) {\n    display: none;\n  }\n\n  .picker-main-right .v-date-picker-header > button:nth-of-type(1) {\n    display: none;\n  }\n}\n</style>\n",".date-picker-desktop::v-deep {\n  max-width: 1040px;\n  margin-top: 15vh;\n}\n.date-picker-desktop::v-deep .pickers {\n  max-height: 23em;\n}\n.date-picker-desktop::v-deep .pickers .v-text-field__details {\n  display: none;\n}\n.date-picker-desktop::v-deep .picker-main {\n  position: relative;\n  z-index: 1;\n}\n.date-picker-desktop::v-deep .picker-main .v-picker {\n  background-color: transparent;\n}\n.date-picker-desktop::v-deep .picker-main.active {\n  z-index: 1000;\n}\n.date-picker-desktop::v-deep .picker-main .v-picker__body {\n  background-color: transparent;\n}\n.date-picker-desktop::v-deep .picker-main .v-date-picker-table button:not(.picker-main-selected) {\n  background-color: transparent;\n}\n.date-picker-desktop::v-deep .picker-main:not(.active) .picker-main-selected {\n  color: darkgrey;\n}\n.date-picker-desktop::v-deep .picker-compare {\n  transform: translateY(-100%);\n  position: relative;\n  z-index: 2;\n}\n.date-picker-desktop::v-deep .picker-compare .v-date-picker-header {\n  opacity: 0;\n}\n.date-picker-desktop::v-deep .picker-compare .v-date-picker-table thead {\n  opacity: 0;\n}\n.date-picker-desktop::v-deep .picker-compare .v-date-picker-table button:not(.picker-compare-selected) {\n  color: transparent;\n}\n.date-picker-desktop::v-deep .picker-compare .v-picker {\n  background-color: transparent !important;\n}\n.date-picker-desktop::v-deep .picker-compare .v-picker .v-picker__body {\n  background-color: transparent !important;\n}\n.date-picker-desktop::v-deep .compare-label .v-messages {\n  display: none;\n}\n.date-picker-desktop::v-deep .picker-main-left .v-date-picker-header > button:nth-of-type(2) {\n  display: none;\n}\n.date-picker-desktop::v-deep .picker-main-right .v-date-picker-header > button:nth-of-type(1) {\n  display: none;\n}\n\n/*# sourceMappingURL=DatePickerDesktop.vue.map */"]}, media: undefined });
+      inject("data-v-cb99ddd2_0", { source: ".date-picker-desktop[data-v-cb99ddd2] {\n  max-width: 1040px;\n  margin-top: 15vh;\n}\n.date-picker-desktop[data-v-cb99ddd2] .pickers {\n  max-height: 23em;\n}\n.date-picker-desktop[data-v-cb99ddd2] .pickers .v-text-field__details {\n  display: none;\n}\n.date-picker-desktop[data-v-cb99ddd2] .picker-main {\n  position: relative;\n  z-index: 1;\n}\n.date-picker-desktop[data-v-cb99ddd2] .picker-main .v-picker {\n  background-color: transparent;\n}\n.date-picker-desktop[data-v-cb99ddd2] .picker-main.active {\n  z-index: 1000;\n}\n.date-picker-desktop[data-v-cb99ddd2] .picker-main .v-picker__body {\n  background-color: transparent;\n}\n.date-picker-desktop[data-v-cb99ddd2] .picker-main .v-date-picker-table button:not(.picker-main-selected) {\n  background-color: transparent;\n}\n.date-picker-desktop[data-v-cb99ddd2] .picker-main:not(.active) .picker-main-selected {\n  color: darkgrey;\n}\n.date-picker-desktop[data-v-cb99ddd2] .picker-compare {\n  transform: translateY(-100%);\n  position: relative;\n  z-index: 2;\n}\n.date-picker-desktop[data-v-cb99ddd2] .picker-compare .v-date-picker-header {\n  opacity: 0;\n}\n.date-picker-desktop[data-v-cb99ddd2] .picker-compare .v-date-picker-table thead {\n  opacity: 0;\n}\n.date-picker-desktop[data-v-cb99ddd2] .picker-compare .v-date-picker-table button:not(.picker-compare-selected) {\n  color: transparent;\n}\n.date-picker-desktop[data-v-cb99ddd2] .picker-compare .v-picker {\n  background-color: transparent !important;\n}\n.date-picker-desktop[data-v-cb99ddd2] .picker-compare .v-picker .v-picker__body {\n  background-color: transparent !important;\n}\n.date-picker-desktop[data-v-cb99ddd2] .compare-label .v-messages {\n  display: none;\n}\n.date-picker-desktop[data-v-cb99ddd2] .picker-main-left .v-date-picker-header > button:nth-of-type(2) {\n  display: none;\n}\n.date-picker-desktop[data-v-cb99ddd2] .picker-main-right .v-date-picker-header > button:nth-of-type(1) {\n  display: none;\n}\n\n/*# sourceMappingURL=DatePickerDesktop.vue.map */", map: {"version":3,"sources":["/Users/mark/Sites/npm-packages/vuetify-date-range-picker/src/components/DatePicker/DatePickerDesktop.vue","DatePickerDesktop.vue"],"names":[],"mappings":"AA2XA;EACA,iBAAA;EACA,gBAAA;AC1XA;AD4XA;EACA,gBAAA;AC1XA;AD4XA;EACA,aAAA;AC1XA;AD8XA;EACA,kBAAA;EACA,UAAA;AC5XA;AD8XA;EACA,6BAAA;AC5XA;AD+XA;EACA,aAAA;AC7XA;ADiYA;EACA,6BAAA;AC/XA;ADmYA;EACA,6BAAA;ACjYA;ADsYA;EACA,eAAA;ACpYA;AD4YA;EACA,4BAAA;EAEA,kBAAA;EACA,UAAA;AC3YA;AD8YA;EACA,UAAA;AC5YA;ADgZA;EACA,UAAA;AC9YA;ADiZA;EACA,kBAAA;AC/YA;ADmZA;EACA,wCAAA;ACjZA;ADkZA;EACA,wCAAA;AChZA;ADsZA;EACA,aAAA;ACpZA;ADwZA;EACA,aAAA;ACtZA;ADyZA;EACA,aAAA;ACvZA;;AAEA,gDAAgD","file":"DatePickerDesktop.vue","sourcesContent":["<template>\n  <v-card class=\"date-picker-desktop elevation-4 mx-auto\">\n    <v-card-text class=\"pickers\">\n      <v-row>\n        <v-col cols=\"7\">\n          <v-row :class=\"['picker-main', pickerMainIsActive ? 'active' : '']\">\n            <v-col cols=\"6\">\n              <v-date-picker\n                v-model=\"pickerMain\"\n                range\n                no-title\n                first-day-of-week=\"1\"\n                :max=\"maxDate\"\n                :picker-date.sync=\"pickerMainLeft\"\n                class=\"picker-main-left pr-1\"\n                color=\"blue darken-2 picker-main-selected\"\n              />\n            </v-col>\n            <v-col cols=\"6\">\n              <v-date-picker\n                v-model=\"pickerMain\"\n                range\n                no-title\n                first-day-of-week=\"1\"\n                :max=\"maxDate\"\n                :picker-date.sync=\"pickerMainRight\"\n                class=\"picker-main-right\"\n                color=\"blue darken-2 picker-main-selected\"\n              />\n            </v-col>\n          </v-row>\n\n          <v-row v-if=\"compare\" justify=\"center\" class=\"picker-compare\">\n            <v-col cols=\"6\">\n              <v-date-picker\n                v-model=\"pickerCompare\"\n                range\n                no-title\n                show-current=\"false\"\n                first-day-of-week=\"1\"\n                :max=\"maxDate\"\n                :picker-date.sync=\"pickerMainLeft\"\n                class=\"picker-compare-left pr-1\"\n                color=\"orange darken-4 picker-compare-selected\"\n              />\n            </v-col>\n            <v-col cols=\"6\">\n              <v-date-picker\n                v-model=\"pickerCompare\"\n                range\n                no-title\n                show-current=\"false\"\n                first-day-of-week=\"1\"\n                :max=\"maxDate\"\n                :picker-date.sync=\"pickerMainRight\"\n                class=\"picker-compare-right\"\n                color=\"orange darken-4 picker-compare-selected\"\n              />\n            </v-col>\n          </v-row>\n        </v-col>\n\n        <v-col cols=\"5\">\n          <v-row>\n            <v-col cols=\"6\">\n              <v-text-field\n                v-model=\"pickerMain[0]\"\n                label=\"From\"\n                type=\"date\"\n                dense\n                outlined\n                :max=\"maxDate\"\n                class=\"picker-input\"\n                @click=\"pickerMainIsActive = true\"\n              />\n            </v-col>\n            <v-col cols=\"6\">\n              <v-text-field\n                v-model=\"pickerMain[1]\"\n                label=\"To\"\n                type=\"date\"\n                dense\n                outlined\n                :max=\"maxDate\"\n                class=\"picker-input\"\n                @click=\"pickerMainIsActive = true\"\n              />\n            </v-col>\n          </v-row>\n\n          <!-- presets for main period -->\n          <v-row class=\"pl-2 pr-1\">\n            <v-btn text x-small :outlined=\"primaryPreset === 'LAST_WEEK'\" @click=\"setMainLastWeek\"> Last week </v-btn>\n            <v-btn text x-small :outlined=\"primaryPreset === 'LAST_MONTH'\" @click=\"setMainLastMonth\">\n              Last month\n            </v-btn>\n            <v-btn text x-small :outlined=\"primaryPreset === 'LAST_7_DAYS'\" @click=\"setMainLast7Days\">\n              Last 7 days\n            </v-btn>\n            <v-btn text x-small :outlined=\"primaryPreset === 'LAST_30_DAYS'\" @click=\"setMainLast30Days\">\n              Last 30 days\n            </v-btn>\n          </v-row>\n\n          <v-row class=\"pl-2 pt-6\">\n            <v-checkbox v-model=\"compare\" label=\"Compare to the following\" class=\"compare-label\" />\n          </v-row>\n\n          <v-row>\n            <v-col cols=\"6\">\n              <v-text-field\n                v-model=\"pickerCompare[0]\"\n                :disabled=\"!compare\"\n                label=\"From\"\n                type=\"date\"\n                outlined\n                dense\n                :max=\"maxDate\"\n                class=\"picker-input\"\n                @click=\"pickerMainIsActive = false\"\n              />\n            </v-col>\n\n            <v-col cols=\"6\">\n              <v-text-field\n                v-model=\"pickerCompare[1]\"\n                :disabled=\"!compare\"\n                label=\"To\"\n                type=\"date\"\n                outlined\n                dense\n                :max=\"maxDate\"\n                class=\"picker-input\"\n                @click=\"pickerMainIsActive = false\"\n              />\n            </v-col>\n          </v-row>\n\n          <!-- presets for compare period -->\n          <v-row class=\"pl-2\">\n            <v-btn\n              text\n              x-small\n              :disabled=\"!compare\"\n              :outlined=\"comparePreset === 'PREVIOUS_PERIOD'\"\n              @click=\"setComparePreviousPeriod\"\n            >\n              Previous period\n            </v-btn>\n            <v-btn\n              text\n              x-small\n              :disabled=\"!compare\"\n              :outlined=\"comparePreset === 'PREVIOUS_YEAR'\"\n              @click=\"setComparePreviousYear\"\n            >\n              Previous year\n            </v-btn>\n          </v-row>\n        </v-col>\n      </v-row>\n    </v-card-text>\n\n    <v-card-actions>\n      <v-spacer />\n      <v-btn text class=\"px-4 mr-6\" @click=\"close\">Cancel</v-btn>\n      <v-btn large class=\"primary px-7\" @click=\"applyDates\">Apply</v-btn>\n    </v-card-actions>\n  </v-card>\n</template>\n\n<script>\nimport moment from \"moment\"\nimport presets from \"./presets\"\n\nconst MONTH_FORMAT = \"YYYY-MM\"\n\nexport default {\n  name: \"DatePickerDesktop\",\n\n  props: [\"config\"],\n\n  data: () => ({\n    presetMain: false,\n    presetCompare: false,\n    compare_: false,\n\n    pickerMain: [], // to use moment.js this has to be set in mounted()\n    pickerCompare: [], // to use moment.js this has to be set in mounted()\n    pickerMainIsActive: true,\n    pickerMainLeft: null,\n    pickerMainRight: null,\n    pickerCompareLeft: null,\n    pickerCompareRight: null,\n\n    primaryDefault: \"LAST_7_DAYS\",\n    compareDefault: \"PREVIOUS_PERIOD\",\n\n    primaryPreset: null,\n    comparePreset: null,\n  }),\n\n  computed: {\n    maxDate() {\n      return presets.today\n    },\n    compare: {\n      get() {\n        return this.compare_\n      },\n      set(val) {\n        this.compare_ = val\n        this.pickerMainIsActive = !this.compare_\n      },\n    },\n    primaryPresetHash() {\n      return JSON.stringify(this.pickerMain)\n    },\n    comparePresetHash() {\n      return JSON.stringify(this.pickerCompare)\n    },\n  },\n\n  watch: {\n    // monitor props config to update component\n    config() {\n      this.primaryPreset = this.config.primaryPreset\n      this.comparePreset = this.config.comparePreset\n      console.log(\"config change!\")\n    },\n\n    // monitor primary period selection changes to reset presets if needed\n    primaryPresetHash() {\n      if (!this.presetMain) this.primaryPreset = null\n      this.presetMain = false\n\n      // adjust compare date range if compare preset is set on\n      if (this.comparePreset === \"PREVIOUS_PERIOD\") this.setComparePreviousPeriod()\n      if (this.comparePreset === \"PREVIOUS_YEAR\") this.setComparePreviousYear()\n    },\n\n    // monitor main period selection changes to reset presets if needed\n    comparePresetHash() {\n      if (!this.presetCompare) this.comparePreset = null\n      this.presetCompare = false\n    },\n\n    // Left and right date pickers should move accordingly\n    pickerMainLeft(val) {\n      this.pickerMainRight = moment(val).add(1, \"month\").format(MONTH_FORMAT)\n    },\n\n    pickerMainRight(val) {\n      this.pickerMainLeft = moment(val).subtract(1, \"month\").format(MONTH_FORMAT)\n    },\n\n    // The compare date picker should display the same month as the primary one\n    pickerCompareLeft(val) {\n      this.pickerCompareRight = moment(val).add(1, \"month\").format(MONTH_FORMAT)\n    },\n\n    pickerCompareRight(val) {\n      this.pickerCompareLeft = moment(val).subtract(1, \"month\").format(MONTH_FORMAT)\n    },\n  },\n\n  mounted() {\n    const config = this.config\n\n    if (config) {\n      this.compare = this.config.compare\n\n      this.pickerMain = [config.dateStart, config.dateUntil]\n      this.pickerCompare = [config.compareStart, config.compareUntil]\n\n      // adjust primary date range if primary preset is set on\n      if (config.primaryPreset === \"LAST_7_DAYS\") this.setMainLast7Days()\n      if (config.primaryPreset === \"LAST_30_DAYS\") this.setMainLast30Days()\n      if (config.primaryPreset === \"LAST_WEEK\") this.setMainLastWeek()\n      if (config.primaryPreset === \"LAST_MONTH\") this.setMainLastMonth()\n\n      // adjust compare date range if compare preset is set on\n      if (config.comparePreset === \"PREVIOUS_PERIOD\") this.setComparePreviousPeriod()\n      if (config.comparePreset === \"PREVIOUS_YEAR\") this.setComparePreviousYear()\n\n      this.pickerMainLeft = moment(config.dateStart).subtract(1, \"month\").format(MONTH_FORMAT)\n      this.pickerMainRight = moment(config.dateStart).format(MONTH_FORMAT)\n    }\n\n    // TO DO: set default to default preset instead hard coded\n    // in case something weird happens and some defaults are needed\n    else {\n      this.pickerMainLeft = moment().subtract(1, \"month\").format(MONTH_FORMAT)\n      this.pickerMainRight = moment().format(MONTH_FORMAT)\n\n      this.pickerMain = presets.LAST_7_DAYS\n      this.pickerCompare = presets.PREVIOUS_PERIOD(this.pickerMain)\n    }\n  },\n\n  methods: {\n    setMainLast7Days() {\n      this.presetMain = true\n      this.pickerMainIsActive = true\n      this.pickerMain = presets.LAST_7_DAYS\n      this.pickerMainLeft = presets.LAST_7_DAYS[0]\n      this.primaryPreset = \"LAST_7_DAYS\"\n    },\n\n    setMainLast30Days() {\n      this.presetMain = true\n      this.pickerMainIsActive = true\n      this.pickerMain = presets.LAST_30_DAYS\n      this.pickerMainLeft = presets.LAST_30_DAYS[0]\n      this.primaryPreset = \"LAST_30_DAYS\"\n    },\n\n    setMainLastWeek() {\n      this.presetMain = true\n      this.pickerMainIsActive = true\n      this.pickerMain = presets.LAST_WEEK\n      this.pickerMainLeft = presets.LAST_WEEK[0]\n      this.primaryPreset = \"LAST_WEEK\"\n    },\n\n    setMainLastMonth() {\n      this.presetMain = true\n      this.pickerMainIsActive = true\n      this.pickerMain = presets.LAST_MONTH\n      this.pickerMainLeft = presets.LAST_MONTH[0]\n      this.primaryPreset = \"LAST_MONTH\"\n    },\n\n    // Takes current duration of the main range and sets the same\n    // duration to the compare picker, but this duration earlier\n    setComparePreviousPeriod() {\n      this.presetCompare = true\n      this.pickerMainIsActive = false\n      this.pickerCompare = presets.PREVIOUS_PERIOD(this.pickerMain)\n      this.pickerMainLeft = this.pickerCompare[0]\n      this.comparePreset = \"PREVIOUS_PERIOD\"\n    },\n\n    // Takes current duration of the main range and sets the same\n    // duration to the compare picker, but this duration earlier\n    setComparePreviousYear() {\n      this.presetCompare = true\n      this.pickerMainIsActive = false\n      this.pickerCompare = presets.PREVIOUS_YEAR(this.pickerMain)\n      this.pickerMainLeft = this.pickerCompare[0]\n      this.pickerCompareLeft = moment(this.pickerMain[0]).subtract(1, \"year\").format(MONTH_FORMAT)\n      this.comparePreset = \"PREVIOUS_YEAR\"\n    },\n\n    close() {\n      this.$emit(\"close\")\n    },\n\n    applyDates() {\n      this.pickerMain.sort()\n      this.pickerCompare.sort()\n\n      this.$emit(\"change\", {\n        compare: this.compare,\n        dateStart: this.pickerMain[0],\n        dateUntil: this.pickerMain[1],\n        compareStart: this.pickerCompare[0],\n        compareUntil: this.pickerCompare[1],\n        primaryPreset: this.primaryPreset,\n        comparePreset: this.comparePreset,\n      })\n\n      this.close()\n    },\n  },\n}\n</script>\n\n<style lang=\"scss\" scoped>\n.date-picker-desktop::v-deep {\n  max-width: 1040px;\n  margin-top: 15vh;\n\n  .pickers {\n    max-height: 23em;\n\n    .v-text-field__details {\n      display: none;\n    }\n  }\n\n  .picker-main {\n    position: relative;\n    z-index: 1;\n\n    .v-picker {\n      background-color: transparent;\n    }\n\n    &.active {\n      z-index: 1000;\n    }\n\n    // Body should be rendered but not visible\n    .v-picker__body {\n      background-color: transparent;\n    }\n\n    .v-date-picker-table {\n      button:not(.picker-main-selected) {\n        background-color: transparent;\n      }\n    }\n\n    &:not(.active) {\n      .picker-main-selected {\n        color: darkgrey;\n      }\n    }\n  }\n\n  // The secondary date picker should be translated\n  // over the primary and many of its elements should\n  // become invisible.\n  .picker-compare {\n    transform: translateY(-100%);\n\n    position: relative;\n    z-index: 2;\n\n    // Header should be rendered but not visible\n    .v-date-picker-header {\n      opacity: 0;\n    }\n\n    .v-date-picker-table {\n      thead {\n        opacity: 0;\n      }\n\n      button:not(.picker-compare-selected) {\n        color: transparent;\n      }\n    }\n\n    .v-picker {\n      background-color: transparent !important;\n      .v-picker__body {\n        background-color: transparent !important;\n      }\n    }\n  }\n\n  .compare-label {\n    .v-messages {\n      display: none;\n    }\n  }\n\n  .picker-main-left .v-date-picker-header > button:nth-of-type(2) {\n    display: none;\n  }\n\n  .picker-main-right .v-date-picker-header > button:nth-of-type(1) {\n    display: none;\n  }\n}\n</style>\n",".date-picker-desktop::v-deep {\n  max-width: 1040px;\n  margin-top: 15vh;\n}\n.date-picker-desktop::v-deep .pickers {\n  max-height: 23em;\n}\n.date-picker-desktop::v-deep .pickers .v-text-field__details {\n  display: none;\n}\n.date-picker-desktop::v-deep .picker-main {\n  position: relative;\n  z-index: 1;\n}\n.date-picker-desktop::v-deep .picker-main .v-picker {\n  background-color: transparent;\n}\n.date-picker-desktop::v-deep .picker-main.active {\n  z-index: 1000;\n}\n.date-picker-desktop::v-deep .picker-main .v-picker__body {\n  background-color: transparent;\n}\n.date-picker-desktop::v-deep .picker-main .v-date-picker-table button:not(.picker-main-selected) {\n  background-color: transparent;\n}\n.date-picker-desktop::v-deep .picker-main:not(.active) .picker-main-selected {\n  color: darkgrey;\n}\n.date-picker-desktop::v-deep .picker-compare {\n  transform: translateY(-100%);\n  position: relative;\n  z-index: 2;\n}\n.date-picker-desktop::v-deep .picker-compare .v-date-picker-header {\n  opacity: 0;\n}\n.date-picker-desktop::v-deep .picker-compare .v-date-picker-table thead {\n  opacity: 0;\n}\n.date-picker-desktop::v-deep .picker-compare .v-date-picker-table button:not(.picker-compare-selected) {\n  color: transparent;\n}\n.date-picker-desktop::v-deep .picker-compare .v-picker {\n  background-color: transparent !important;\n}\n.date-picker-desktop::v-deep .picker-compare .v-picker .v-picker__body {\n  background-color: transparent !important;\n}\n.date-picker-desktop::v-deep .compare-label .v-messages {\n  display: none;\n}\n.date-picker-desktop::v-deep .picker-main-left .v-date-picker-header > button:nth-of-type(2) {\n  display: none;\n}\n.date-picker-desktop::v-deep .picker-main-right .v-date-picker-header > button:nth-of-type(1) {\n  display: none;\n}\n\n/*# sourceMappingURL=DatePickerDesktop.vue.map */"]}, media: undefined });
 
     };
     /* scoped */
-    var __vue_scope_id__$1 = "data-v-4e907b31";
+    var __vue_scope_id__$1 = "data-v-cb99ddd2";
     /* module identifier */
     var __vue_module_identifier__$1 = undefined;
     /* functional template */
@@ -1072,7 +1058,7 @@
       undefined
     );
 
-  var DATE_FORMAT$3 = "YYYY-MM-DD";
+  var DATE_FORMAT$2 = "YYYY-MM-DD";
   var MONTH_FORMAT$1 = "YYYY-MM";
 
   var script$2 = {
@@ -1120,7 +1106,7 @@
     },
 
     mounted: function mounted() {
-      this.today = moment__default['default']().format(DATE_FORMAT$3);
+      this.today = moment__default['default']().format(DATE_FORMAT$2);
 
       if (this.config) {
         this.pickerMain = [this.config.dateStart, this.config.dateUntil];
@@ -1136,12 +1122,12 @@
         this.pickerMainRight = moment__default['default']().format(MONTH_FORMAT$1);
 
         this.pickerMain = [
-          moment__default['default']().subtract(7, "days").format(DATE_FORMAT$3),
-          moment__default['default']().subtract(1, "day").format(DATE_FORMAT$3) ];
+          moment__default['default']().subtract(7, "days").format(DATE_FORMAT$2),
+          moment__default['default']().subtract(1, "day").format(DATE_FORMAT$2) ];
 
         this.pickerCompare = [
-          moment__default['default']().subtract(15, "day").format(DATE_FORMAT$3),
-          moment__default['default']().subtract(8, "days").format(DATE_FORMAT$3) ];
+          moment__default['default']().subtract(15, "day").format(DATE_FORMAT$2),
+          moment__default['default']().subtract(8, "days").format(DATE_FORMAT$2) ];
       }
     },
 
@@ -1154,8 +1140,8 @@
         this.pickerMainLeft = moment__default['default']().subtract(7, "days").format(MONTH_FORMAT$1);
 
         this.pickerMain = [
-          moment__default['default']().subtract(7, "days").format(DATE_FORMAT$3),
-          moment__default['default']().subtract(1, "day").format(DATE_FORMAT$3) ];
+          moment__default['default']().subtract(7, "days").format(DATE_FORMAT$2),
+          moment__default['default']().subtract(1, "day").format(DATE_FORMAT$2) ];
       },
 
       // Sets the main date picker to the Monday to Sunday of the previous week
@@ -1164,8 +1150,8 @@
         this.pickerMainLeft = moment__default['default']().subtract(1, "week").day(1).format(MONTH_FORMAT$1);
 
         this.pickerMain = [
-          moment__default['default']().subtract(1, "week").day(1).format(DATE_FORMAT$3),
-          moment__default['default']().subtract(1, "week").day(7).format(DATE_FORMAT$3) ];
+          moment__default['default']().subtract(1, "week").day(1).format(DATE_FORMAT$2),
+          moment__default['default']().subtract(1, "week").day(7).format(DATE_FORMAT$2) ];
       },
 
       // Sets the main date picker to the last month,
@@ -1174,11 +1160,11 @@
       // If it's 31 March, the range begins at 28 or 29 Feb.
       setMainLastMonth: function setMainLastMonth() {
         this.pickerMainIsActive = true;
-        this.pickerMainLeft = moment__default['default']().subtract(1, "month").format(DATE_FORMAT$3);
+        this.pickerMainLeft = moment__default['default']().subtract(1, "month").format(DATE_FORMAT$2);
 
         this.pickerMain = [
-          moment__default['default']().subtract(1, "month").format(DATE_FORMAT$3),
-          moment__default['default']().subtract(1, "day").format(DATE_FORMAT$3) ];
+          moment__default['default']().subtract(1, "month").format(DATE_FORMAT$2),
+          moment__default['default']().subtract(1, "day").format(DATE_FORMAT$2) ];
       },
 
       // Sets the range to 1st to last of the previous month.
@@ -1187,8 +1173,8 @@
         this.pickerMainLeft = moment__default['default']().subtract(1, "month").date(1).format(MONTH_FORMAT$1);
 
         this.pickerMain = [
-          moment__default['default']().subtract(1, "month").date(1).format(DATE_FORMAT$3),
-          moment__default['default']().date(0).format(DATE_FORMAT$3) ];
+          moment__default['default']().subtract(1, "month").date(1).format(DATE_FORMAT$2),
+          moment__default['default']().date(0).format(DATE_FORMAT$2) ];
       },
 
       // Takes current duration of the main range and sets the same
@@ -1209,10 +1195,10 @@
         this.pickerCompare = [
           moment__default['default'](mainRangeStart)
             .subtract(1 + mainDuration, "days")
-            .format(DATE_FORMAT$3),
+            .format(DATE_FORMAT$2),
           moment__default['default'](mainRangeEnd)
             .subtract(1 + mainDuration, "days")
-            .format(DATE_FORMAT$3) ];
+            .format(DATE_FORMAT$2) ];
       },
 
       // Takes current duration of the main range and sets the same
@@ -1223,8 +1209,8 @@
         this.pickerCompareLeft = moment__default['default'](this.pickerMain[0]).subtract(1, "month").format(MONTH_FORMAT$1);
 
         this.pickerCompare = [
-          moment__default['default'](this.pickerMain[0]).subtract(1, "month").format(DATE_FORMAT$3),
-          moment__default['default'](this.pickerMain[1]).subtract(1, "month").format(DATE_FORMAT$3) ];
+          moment__default['default'](this.pickerMain[0]).subtract(1, "month").format(DATE_FORMAT$2),
+          moment__default['default'](this.pickerMain[1]).subtract(1, "month").format(DATE_FORMAT$2) ];
       },
 
       // Takes current duration of the main range and sets the same
@@ -1235,8 +1221,8 @@
         this.pickerCompareLeft = moment__default['default'](this.pickerMain[0]).subtract(1, "year").format(MONTH_FORMAT$1);
 
         this.pickerCompare = [
-          moment__default['default'](this.pickerMain[0]).subtract(1, "year").format(DATE_FORMAT$3),
-          moment__default['default'](this.pickerMain[1]).subtract(1, "year").format(DATE_FORMAT$3) ];
+          moment__default['default'](this.pickerMain[0]).subtract(1, "year").format(DATE_FORMAT$2),
+          moment__default['default'](this.pickerMain[1]).subtract(1, "year").format(DATE_FORMAT$2) ];
       },
 
       close: function close() {
@@ -1701,7 +1687,7 @@
       undefined
     );
 
-  var DATE_FORMAT$4 = "YYYY-MM-DD";
+  var DATE_FORMAT$3 = "YYYY-MM-DD";
   var MONTH_FORMAT$2 = "YYYY-MM";
 
   var script$3 = {
@@ -1714,8 +1700,9 @@
       VCardText: lib.VCardText,
       VSpacer: lib.VSpacer,
       VCardActions: lib.VCardActions,
+      VContainer: lib.VContainer,
       VCard: lib.VCard,
-      VContainer: lib.VContainer
+      VDialog: lib.VDialog
     },
 
     name: "DatePickerMobile",
@@ -1735,7 +1722,7 @@
     },
 
     mounted: function mounted() {
-      this.today = moment__default['default']().format(DATE_FORMAT$4);
+      this.today = moment__default['default']().format(DATE_FORMAT$3);
 
       if (this.config) {
         this.pickerMain = [this.config.dateStart, this.config.dateUntil];
@@ -1751,12 +1738,12 @@
         this.pickerMainRight = moment__default['default']().format(MONTH_FORMAT$2);
 
         this.pickerMain = [
-          moment__default['default']().subtract(7, "days").format(DATE_FORMAT$4),
-          moment__default['default']().subtract(1, "day").format(DATE_FORMAT$4) ];
+          moment__default['default']().subtract(7, "days").format(DATE_FORMAT$3),
+          moment__default['default']().subtract(1, "day").format(DATE_FORMAT$3) ];
 
         this.pickerCompare = [
-          moment__default['default']().subtract(15, "day").format(DATE_FORMAT$4),
-          moment__default['default']().subtract(8, "days").format(DATE_FORMAT$4) ];
+          moment__default['default']().subtract(15, "day").format(DATE_FORMAT$3),
+          moment__default['default']().subtract(8, "days").format(DATE_FORMAT$3) ];
       }
     },
 
@@ -1766,15 +1753,15 @@
       // Friday to yesterday
       setMainLast7Days: function setMainLast7Days() {
         this.pickerMain = [
-          moment__default['default']().subtract(7, "days").format(DATE_FORMAT$4),
-          moment__default['default']().subtract(1, "day").format(DATE_FORMAT$4) ];
+          moment__default['default']().subtract(7, "days").format(DATE_FORMAT$3),
+          moment__default['default']().subtract(1, "day").format(DATE_FORMAT$3) ];
       },
 
       // Sets the main date picker to the Monday to Sunday of the previous week
       setMainPrevWeek: function setMainPrevWeek() {
         this.pickerMain = [
-          moment__default['default']().subtract(1, "week").day(1).format(DATE_FORMAT$4),
-          moment__default['default']().subtract(1, "week").day(7).format(DATE_FORMAT$4) ];
+          moment__default['default']().subtract(1, "week").day(1).format(DATE_FORMAT$3),
+          moment__default['default']().subtract(1, "week").day(7).format(DATE_FORMAT$3) ];
       },
 
       // Sets the main date picker to the last month,
@@ -1783,15 +1770,15 @@
       // If it's 31 March, the range begins at 28 or 29 Feb.
       setMainLastMonth: function setMainLastMonth() {
         this.pickerMain = [
-          moment__default['default']().subtract(1, "month").format(DATE_FORMAT$4),
-          moment__default['default']().subtract(1, "day").format(DATE_FORMAT$4) ];
+          moment__default['default']().subtract(1, "month").format(DATE_FORMAT$3),
+          moment__default['default']().subtract(1, "day").format(DATE_FORMAT$3) ];
       },
 
       // Sets the range to 1st to last of the previous month.
       setMainPrevMonth: function setMainPrevMonth() {
         this.pickerMain = [
-          moment__default['default']().subtract(1, "month").date(1).format(DATE_FORMAT$4),
-          moment__default['default']().date(0).format(DATE_FORMAT$4) ];
+          moment__default['default']().subtract(1, "month").date(1).format(DATE_FORMAT$3),
+          moment__default['default']().date(0).format(DATE_FORMAT$3) ];
       },
 
       // Takes current duration of the main range and sets the same
@@ -1805,26 +1792,26 @@
         this.pickerCompare = [
           moment__default['default'](mainRangeStart)
             .subtract(1 + mainDuration, "days")
-            .format(DATE_FORMAT$4),
+            .format(DATE_FORMAT$3),
           moment__default['default'](mainRangeEnd)
             .subtract(1 + mainDuration, "days")
-            .format(DATE_FORMAT$4) ];
+            .format(DATE_FORMAT$3) ];
       },
 
       // Takes current duration of the main range and sets the same
       // duration to the compare picker, but this duration earlier
       setComparePreviousMonth: function setComparePreviousMonth() {
         this.pickerCompare = [
-          moment__default['default'](this.pickerMain[0]).subtract(1, "month").format(DATE_FORMAT$4),
-          moment__default['default'](this.pickerMain[1]).subtract(1, "month").format(DATE_FORMAT$4) ];
+          moment__default['default'](this.pickerMain[0]).subtract(1, "month").format(DATE_FORMAT$3),
+          moment__default['default'](this.pickerMain[1]).subtract(1, "month").format(DATE_FORMAT$3) ];
       },
 
       // Takes current duration of the main range and sets the same
       // duration to the compare picker, but this duration earlier
       setComparePreviousYear: function setComparePreviousYear() {
         this.pickerCompare = [
-          moment__default['default'](this.pickerMain[0]).subtract(1, "year").format(DATE_FORMAT$4),
-          moment__default['default'](this.pickerMain[1]).subtract(1, "year").format(DATE_FORMAT$4) ];
+          moment__default['default'](this.pickerMain[0]).subtract(1, "year").format(DATE_FORMAT$3),
+          moment__default['default'](this.pickerMain[1]).subtract(1, "year").format(DATE_FORMAT$3) ];
       },
 
       close: function close() {
@@ -1857,298 +1844,309 @@
     var _h = _vm.$createElement;
     var _c = _vm._self._c || _h;
     return _c(
-      "v-container",
-      { staticClass: "ma-0 pa-0" },
+      "v-dialog",
+      {
+        attrs: {
+          value: true,
+          fullscreen: "",
+          "hide-overlay": "",
+          transition: "dialog-bottom-transition"
+        }
+      },
       [
         _c(
           "v-card",
-          {
-            staticClass:
-              "date-picker-mobile elevation-0 ma-0 py-3 d-flex flex-column",
-            attrs: { "min-height": "100vh" }
-          },
+          { staticClass: "date-picker-mobile elevation-0 d-flex flex-column" },
           [
             _c(
-              "v-card-text",
-              { staticClass: "flex-grow-1" },
+              "v-container",
               [
                 _c(
-                  "v-row",
+                  "v-card-text",
                   [
                     _c(
-                      "v-col",
-                      { staticClass: "pt-0", attrs: { cols: "12" } },
+                      "v-row",
                       [
                         _c(
-                          "v-row",
+                          "v-col",
+                          { attrs: { cols: "12" } },
                           [
                             _c(
-                              "v-col",
-                              { attrs: { cols: "12" } },
+                              "v-row",
                               [
-                                _c("v-text-field", {
-                                  staticClass: "picker-input",
-                                  attrs: {
-                                    label: "From",
-                                    type: "date",
-                                    outlined: "",
-                                    dense: "",
-                                    max: _vm.maxDate
-                                  },
-                                  model: {
-                                    value: _vm.pickerMain[0],
-                                    callback: function($$v) {
-                                      _vm.$set(_vm.pickerMain, 0, $$v);
-                                    },
-                                    expression: "pickerMain[0]"
-                                  }
-                                })
-                              ],
-                              1
-                            )
-                          ],
-                          1
-                        ),
-                        _vm._v(" "),
-                        _c(
-                          "v-row",
-                          [
-                            _c(
-                              "v-col",
-                              { attrs: { cols: "12" } },
-                              [
-                                _c("v-text-field", {
-                                  staticClass: "picker-input",
-                                  attrs: {
-                                    label: "To",
-                                    type: "date",
-                                    outlined: "",
-                                    dense: "",
-                                    max: _vm.maxDate
-                                  },
-                                  model: {
-                                    value: _vm.pickerMain[1],
-                                    callback: function($$v) {
-                                      _vm.$set(_vm.pickerMain, 1, $$v);
-                                    },
-                                    expression: "pickerMain[1]"
-                                  }
-                                })
-                              ],
-                              1
-                            )
-                          ],
-                          1
-                        ),
-                        _vm._v(" "),
-                        _c(
-                          "v-row",
-                          {
-                            staticClass: "pl-2 pr-1",
-                            attrs: { justify: "start" }
-                          },
-                          [
-                            _c(
-                              "v-btn",
-                              {
-                                staticClass: "mr-2 mb-3",
-                                attrs: {
-                                  depressed: "",
-                                  "min-width": "48%",
-                                  small: ""
-                                },
-                                on: { click: _vm.setMainLast7Days }
-                              },
-                              [_vm._v("Last 7 days")]
-                            ),
-                            _vm._v(" "),
-                            _c(
-                              "v-btn",
-                              {
-                                staticClass: "mb-2",
-                                attrs: {
-                                  depressed: "",
-                                  "min-width": "48%",
-                                  small: ""
-                                },
-                                on: { click: _vm.setMainPrevWeek }
-                              },
-                              [_vm._v("Previous week")]
-                            ),
-                            _vm._v(" "),
-                            _c(
-                              "v-btn",
-                              {
-                                staticClass: "mr-2 mb-3",
-                                attrs: {
-                                  depressed: "",
-                                  "min-width": "48%",
-                                  small: ""
-                                },
-                                on: { click: _vm.setMainLastMonth }
-                              },
-                              [_vm._v("Last month")]
-                            ),
-                            _vm._v(" "),
-                            _c(
-                              "v-btn",
-                              {
-                                staticClass: "mb-2",
-                                attrs: {
-                                  depressed: "",
-                                  "min-width": "48%",
-                                  small: ""
-                                },
-                                on: { click: _vm.setMainPrevMonth }
-                              },
-                              [_vm._v("Previous month")]
-                            )
-                          ],
-                          1
-                        ),
-                        _vm._v(" "),
-                        _c(
-                          "v-row",
-                          { staticClass: "pl-2 pt-0" },
-                          [
-                            _c("v-checkbox", {
-                              staticClass: "compare-label pt-0",
-                              attrs: { label: "Compare to the following" },
-                              model: {
-                                value: _vm.compare,
-                                callback: function($$v) {
-                                  _vm.compare = $$v;
-                                },
-                                expression: "compare"
-                              }
-                            })
-                          ],
-                          1
-                        ),
-                        _vm._v(" "),
-                        _c(
-                          "v-row",
-                          [
-                            _c(
-                              "v-col",
-                              { attrs: { cols: "12" } },
-                              [
-                                _c("v-text-field", {
-                                  staticClass: "picker-input",
-                                  attrs: {
-                                    disabled: !_vm.compare,
-                                    label: "From",
-                                    type: "date",
-                                    outlined: "",
-                                    dense: "",
-                                    max: _vm.maxDate
-                                  },
-                                  model: {
-                                    value: _vm.pickerCompare[0],
-                                    callback: function($$v) {
-                                      _vm.$set(_vm.pickerCompare, 0, $$v);
-                                    },
-                                    expression: "pickerCompare[0]"
-                                  }
-                                })
-                              ],
-                              1
-                            )
-                          ],
-                          1
-                        ),
-                        _vm._v(" "),
-                        _c(
-                          "v-row",
-                          [
-                            _c(
-                              "v-col",
-                              { attrs: { cols: "12" } },
-                              [
-                                _c("v-text-field", {
-                                  staticClass: "picker-input",
-                                  attrs: {
-                                    disabled: !_vm.compare,
-                                    label: "To",
-                                    type: "date",
-                                    outlined: "",
-                                    dense: "",
-                                    max: _vm.maxDate
-                                  },
-                                  model: {
-                                    value: _vm.pickerCompare[1],
-                                    callback: function($$v) {
-                                      _vm.$set(_vm.pickerCompare, 1, $$v);
-                                    },
-                                    expression: "pickerCompare[1]"
-                                  }
-                                })
-                              ],
-                              1
-                            )
-                          ],
-                          1
-                        ),
-                        _vm._v(" "),
-                        _c(
-                          "v-row",
-                          { staticClass: "pl-2", attrs: { justify: "start" } },
-                          [
-                            _c(
-                              "v-btn",
-                              {
-                                staticClass: "mr-2 mb-3",
-                                attrs: {
-                                  depressed: "",
-                                  small: "",
-                                  "min-width": "47%",
-                                  disabled: !_vm.compare
-                                },
-                                on: { click: _vm.setComparePreviousPeriod }
-                              },
-                              [
-                                _vm._v(
-                                  "\n              Previous period\n            "
+                                _c(
+                                  "v-col",
+                                  { attrs: { cols: "12" } },
+                                  [
+                                    _c("v-text-field", {
+                                      staticClass: "picker-input",
+                                      attrs: {
+                                        label: "From",
+                                        type: "date",
+                                        outlined: "",
+                                        dense: "",
+                                        max: _vm.maxDate
+                                      },
+                                      model: {
+                                        value: _vm.pickerMain[0],
+                                        callback: function($$v) {
+                                          _vm.$set(_vm.pickerMain, 0, $$v);
+                                        },
+                                        expression: "pickerMain[0]"
+                                      }
+                                    })
+                                  ],
+                                  1
                                 )
-                              ]
+                              ],
+                              1
                             ),
                             _vm._v(" "),
                             _c(
-                              "v-btn",
-                              {
-                                staticClass: "mr-2 mb-3",
-                                attrs: {
-                                  depressed: "",
-                                  small: "",
-                                  "min-width": "47%",
-                                  disabled: !_vm.compare
-                                },
-                                on: { click: _vm.setComparePreviousMonth }
-                              },
+                              "v-row",
                               [
-                                _vm._v(
-                                  "\n              Previous month\n            "
+                                _c(
+                                  "v-col",
+                                  { attrs: { cols: "12" } },
+                                  [
+                                    _c("v-text-field", {
+                                      staticClass: "picker-input",
+                                      attrs: {
+                                        label: "To",
+                                        type: "date",
+                                        outlined: "",
+                                        dense: "",
+                                        max: _vm.maxDate
+                                      },
+                                      model: {
+                                        value: _vm.pickerMain[1],
+                                        callback: function($$v) {
+                                          _vm.$set(_vm.pickerMain, 1, $$v);
+                                        },
+                                        expression: "pickerMain[1]"
+                                      }
+                                    })
+                                  ],
+                                  1
                                 )
-                              ]
+                              ],
+                              1
                             ),
                             _vm._v(" "),
                             _c(
-                              "v-btn",
+                              "v-row",
                               {
-                                staticClass: "mr-2 mb-3",
-                                attrs: {
-                                  depressed: "",
-                                  small: "",
-                                  "min-width": "47%",
-                                  disabled: !_vm.compare
-                                },
-                                on: { click: _vm.setComparePreviousYear }
+                                staticClass: "pl-2 pr-1",
+                                attrs: { justify: "start" }
                               },
                               [
-                                _vm._v(
-                                  "\n              Previous year\n            "
+                                _c(
+                                  "v-btn",
+                                  {
+                                    staticClass: "mr-2 mb-3",
+                                    attrs: {
+                                      depressed: "",
+                                      "min-width": "48%",
+                                      small: ""
+                                    },
+                                    on: { click: _vm.setMainLast7Days }
+                                  },
+                                  [_vm._v("Last 7 days")]
+                                ),
+                                _vm._v(" "),
+                                _c(
+                                  "v-btn",
+                                  {
+                                    staticClass: "mb-2",
+                                    attrs: {
+                                      depressed: "",
+                                      "min-width": "48%",
+                                      small: ""
+                                    },
+                                    on: { click: _vm.setMainPrevWeek }
+                                  },
+                                  [_vm._v("Previous week")]
+                                ),
+                                _vm._v(" "),
+                                _c(
+                                  "v-btn",
+                                  {
+                                    staticClass: "mr-2 mb-3",
+                                    attrs: {
+                                      depressed: "",
+                                      "min-width": "48%",
+                                      small: ""
+                                    },
+                                    on: { click: _vm.setMainLastMonth }
+                                  },
+                                  [_vm._v("Last month")]
+                                ),
+                                _vm._v(" "),
+                                _c(
+                                  "v-btn",
+                                  {
+                                    staticClass: "mb-2",
+                                    attrs: {
+                                      depressed: "",
+                                      "min-width": "48%",
+                                      small: ""
+                                    },
+                                    on: { click: _vm.setMainPrevMonth }
+                                  },
+                                  [_vm._v("Previous month")]
                                 )
-                              ]
+                              ],
+                              1
+                            ),
+                            _vm._v(" "),
+                            _c(
+                              "v-row",
+                              { staticClass: "pl-2 pt-0" },
+                              [
+                                _c("v-checkbox", {
+                                  staticClass: "compare-label pt-0",
+                                  attrs: { label: "Compare to the following" },
+                                  model: {
+                                    value: _vm.compare,
+                                    callback: function($$v) {
+                                      _vm.compare = $$v;
+                                    },
+                                    expression: "compare"
+                                  }
+                                })
+                              ],
+                              1
+                            ),
+                            _vm._v(" "),
+                            _c(
+                              "v-row",
+                              [
+                                _c(
+                                  "v-col",
+                                  { attrs: { cols: "12" } },
+                                  [
+                                    _c("v-text-field", {
+                                      staticClass: "picker-input",
+                                      attrs: {
+                                        disabled: !_vm.compare,
+                                        label: "From",
+                                        type: "date",
+                                        outlined: "",
+                                        dense: "",
+                                        max: _vm.maxDate
+                                      },
+                                      model: {
+                                        value: _vm.pickerCompare[0],
+                                        callback: function($$v) {
+                                          _vm.$set(_vm.pickerCompare, 0, $$v);
+                                        },
+                                        expression: "pickerCompare[0]"
+                                      }
+                                    })
+                                  ],
+                                  1
+                                )
+                              ],
+                              1
+                            ),
+                            _vm._v(" "),
+                            _c(
+                              "v-row",
+                              [
+                                _c(
+                                  "v-col",
+                                  { attrs: { cols: "12" } },
+                                  [
+                                    _c("v-text-field", {
+                                      staticClass: "picker-input",
+                                      attrs: {
+                                        disabled: !_vm.compare,
+                                        label: "To",
+                                        type: "date",
+                                        outlined: "",
+                                        dense: "",
+                                        max: _vm.maxDate
+                                      },
+                                      model: {
+                                        value: _vm.pickerCompare[1],
+                                        callback: function($$v) {
+                                          _vm.$set(_vm.pickerCompare, 1, $$v);
+                                        },
+                                        expression: "pickerCompare[1]"
+                                      }
+                                    })
+                                  ],
+                                  1
+                                )
+                              ],
+                              1
+                            ),
+                            _vm._v(" "),
+                            _c(
+                              "v-row",
+                              {
+                                staticClass: "pl-2",
+                                attrs: { justify: "start" }
+                              },
+                              [
+                                _c(
+                                  "v-btn",
+                                  {
+                                    staticClass: "mr-2 mb-3",
+                                    attrs: {
+                                      depressed: "",
+                                      small: "",
+                                      "min-width": "47%",
+                                      disabled: !_vm.compare
+                                    },
+                                    on: { click: _vm.setComparePreviousPeriod }
+                                  },
+                                  [
+                                    _vm._v(
+                                      "\n                Previous period\n              "
+                                    )
+                                  ]
+                                ),
+                                _vm._v(" "),
+                                _c(
+                                  "v-btn",
+                                  {
+                                    staticClass: "mr-2 mb-3",
+                                    attrs: {
+                                      depressed: "",
+                                      small: "",
+                                      "min-width": "47%",
+                                      disabled: !_vm.compare
+                                    },
+                                    on: { click: _vm.setComparePreviousMonth }
+                                  },
+                                  [
+                                    _vm._v(
+                                      "\n                Previous month\n              "
+                                    )
+                                  ]
+                                ),
+                                _vm._v(" "),
+                                _c(
+                                  "v-btn",
+                                  {
+                                    staticClass: "mr-2 mb-3",
+                                    attrs: {
+                                      depressed: "",
+                                      small: "",
+                                      "min-width": "47%",
+                                      disabled: !_vm.compare
+                                    },
+                                    on: { click: _vm.setComparePreviousYear }
+                                  },
+                                  [
+                                    _vm._v(
+                                      "\n                Previous year\n              "
+                                    )
+                                  ]
+                                )
+                              ],
+                              1
                             )
                           ],
                           1
@@ -2158,34 +2156,34 @@
                     )
                   ],
                   1
-                )
-              ],
-              1
-            ),
-            _vm._v(" "),
-            _c(
-              "v-card-actions",
-              [
-                _c("v-spacer"),
-                _vm._v(" "),
-                _c(
-                  "v-btn",
-                  {
-                    staticClass: "px-4 mr-3",
-                    attrs: { text: "" },
-                    on: { click: _vm.close }
-                  },
-                  [_vm._v("Cancel")]
                 ),
                 _vm._v(" "),
                 _c(
-                  "v-btn",
-                  {
-                    staticClass: "primary px-7",
-                    attrs: { large: "" },
-                    on: { click: _vm.applyDates }
-                  },
-                  [_vm._v("Apply")]
+                  "v-card-actions",
+                  [
+                    _c("v-spacer"),
+                    _vm._v(" "),
+                    _c(
+                      "v-btn",
+                      {
+                        staticClass: "px-4 mr-3",
+                        attrs: { text: "" },
+                        on: { click: _vm.close }
+                      },
+                      [_vm._v("Cancel")]
+                    ),
+                    _vm._v(" "),
+                    _c(
+                      "v-btn",
+                      {
+                        staticClass: "primary px-7",
+                        attrs: { large: "" },
+                        on: { click: _vm.applyDates }
+                      },
+                      [_vm._v("Apply")]
+                    )
+                  ],
+                  1
                 )
               ],
               1
@@ -2203,11 +2201,11 @@
     /* style */
     var __vue_inject_styles__$3 = function (inject) {
       if (!inject) { return }
-      inject("data-v-18965c16_0", { source: ".date-picker-mobile[data-v-18965c16] .picker-input .v-text-field__details {\n  display: none;\n}\n.date-picker-mobile[data-v-18965c16] .compare-label .v-messages {\n  display: none;\n}\n\n/*# sourceMappingURL=DatePickerMobile.vue.map */", map: {"version":3,"sources":["/Users/mark/Sites/npm-packages/vuetify-date-range-picker/src/components/DatePicker/DatePickerMobile.vue","DatePickerMobile.vue"],"names":[],"mappings":"AAkRA;EACA,aAAA;ACjRA;ADsRA;EACA,aAAA;ACpRA;;AAEA,+CAA+C","file":"DatePickerMobile.vue","sourcesContent":["<template>\n  <v-container class=\"ma-0 pa-0\">\n    <v-card min-height=\"100vh\" class=\"date-picker-mobile elevation-0 ma-0 py-3 d-flex flex-column\">\n      <v-card-text class=\"flex-grow-1\">\n        <v-row>\n          <v-col cols=\"12\" class=\"pt-0\">\n            <v-row>\n              <v-col cols=\"12\">\n                <v-text-field\n                  v-model=\"pickerMain[0]\"\n                  label=\"From\"\n                  type=\"date\"\n                  outlined\n                  dense\n                  :max=\"maxDate\"\n                  class=\"picker-input\"\n                />\n              </v-col>\n            </v-row>\n\n            <v-row>\n              <v-col cols=\"12\">\n                <v-text-field\n                  v-model=\"pickerMain[1]\"\n                  label=\"To\"\n                  type=\"date\"\n                  outlined\n                  dense\n                  :max=\"maxDate\"\n                  class=\"picker-input\"\n                />\n              </v-col>\n            </v-row>\n\n            <v-row justify=\"start\" class=\"pl-2 pr-1\">\n              <v-btn depressed min-width=\"48%\" class=\"mr-2 mb-3\" small @click=\"setMainLast7Days\">Last 7 days</v-btn>\n              <v-btn depressed min-width=\"48%\" class=\"mb-2\" small @click=\"setMainPrevWeek\">Previous week</v-btn>\n              <v-btn depressed min-width=\"48%\" class=\"mr-2 mb-3\" small @click=\"setMainLastMonth\">Last month</v-btn>\n              <v-btn depressed min-width=\"48%\" class=\"mb-2\" small @click=\"setMainPrevMonth\">Previous month</v-btn>\n            </v-row>\n\n            <v-row class=\"pl-2 pt-0\">\n              <v-checkbox v-model=\"compare\" label=\"Compare to the following\" class=\"compare-label pt-0\" />\n            </v-row>\n\n            <v-row>\n              <v-col cols=\"12\">\n                <v-text-field\n                  v-model=\"pickerCompare[0]\"\n                  :disabled=\"!compare\"\n                  label=\"From\"\n                  type=\"date\"\n                  outlined\n                  dense\n                  :max=\"maxDate\"\n                  class=\"picker-input\"\n                />\n              </v-col>\n            </v-row>\n            <v-row>\n              <v-col cols=\"12\">\n                <v-text-field\n                  v-model=\"pickerCompare[1]\"\n                  :disabled=\"!compare\"\n                  label=\"To\"\n                  type=\"date\"\n                  outlined\n                  dense\n                  :max=\"maxDate\"\n                  class=\"picker-input\"\n                />\n              </v-col>\n            </v-row>\n            <v-row justify=\"start\" class=\"pl-2\">\n              <v-btn\n                depressed\n                small\n                min-width=\"47%\"\n                class=\"mr-2 mb-3\"\n                :disabled=\"!compare\"\n                @click=\"setComparePreviousPeriod\"\n              >\n                Previous period\n              </v-btn>\n              <v-btn\n                depressed\n                small\n                min-width=\"47%\"\n                class=\"mr-2 mb-3\"\n                :disabled=\"!compare\"\n                @click=\"setComparePreviousMonth\"\n              >\n                Previous month\n              </v-btn>\n              <v-btn\n                depressed\n                small\n                min-width=\"47%\"\n                class=\"mr-2 mb-3\"\n                :disabled=\"!compare\"\n                @click=\"setComparePreviousYear\"\n              >\n                Previous year\n              </v-btn>\n            </v-row>\n          </v-col>\n        </v-row>\n      </v-card-text>\n\n      <v-card-actions>\n        <v-spacer />\n        <v-btn text class=\"px-4 mr-3\" @click=\"close\">Cancel</v-btn>\n        <v-btn large class=\"primary px-7\" @click=\"applyDates\">Apply</v-btn>\n      </v-card-actions>\n    </v-card>\n  </v-container>\n</template>\n\n<script>\nimport moment from \"moment\"\n\nconst DATE_FORMAT = \"YYYY-MM-DD\"\nconst MONTH_FORMAT = \"YYYY-MM\"\n\nexport default {\n  name: \"DatePickerMobile\",\n\n  props: [\"config\"],\n\n  data: () => ({\n    today: null,\n    compare: false,\n    pickerMain: [], // to use moment.js this has to be set in mounted()\n    pickerCompare: [], // to use moment.js this has to be set in mounted()\n  }),\n\n  computed: {\n    maxDate() {\n      return moment().format(\"YYYY-MM-DD\")\n    },\n  },\n\n  mounted() {\n    this.today = moment().format(DATE_FORMAT)\n\n    if (this.config) {\n      this.pickerMain = [this.config.dateStart, this.config.dateUntil]\n      this.pickerCompare = [this.config.compareStart, this.config.compareUntil]\n\n      this.pickerMainLeft = moment(this.config.dateStart).subtract(1, \"month\").format(MONTH_FORMAT)\n      this.pickerMainRight = moment(this.config.dateStart).format(MONTH_FORMAT)\n\n      this.compare = this.config.compare\n    } else {\n      // in case something weird happens and some defaults are needed\n      this.pickerMainLeft = moment().subtract(1, \"month\").format(MONTH_FORMAT)\n      this.pickerMainRight = moment().format(MONTH_FORMAT)\n\n      this.pickerMain = [\n        moment().subtract(7, \"days\").format(DATE_FORMAT),\n        moment().subtract(1, \"day\").format(DATE_FORMAT),\n      ]\n\n      this.pickerCompare = [\n        moment().subtract(15, \"day\").format(DATE_FORMAT),\n        moment().subtract(8, \"days\").format(DATE_FORMAT),\n      ]\n    }\n  },\n\n  methods: {\n    // Sets the main date picker to the last week,\n    // meaning if it's Friday it sets the range from last\n    // Friday to yesterday\n    setMainLast7Days() {\n      this.pickerMain = [\n        moment().subtract(7, \"days\").format(DATE_FORMAT),\n        moment().subtract(1, \"day\").format(DATE_FORMAT),\n      ]\n    },\n\n    // Sets the main date picker to the Monday to Sunday of the previous week\n    setMainPrevWeek() {\n      this.pickerMain = [\n        moment().subtract(1, \"week\").day(1).format(DATE_FORMAT),\n        moment().subtract(1, \"week\").day(7).format(DATE_FORMAT),\n      ]\n    },\n\n    // Sets the main date picker to the last month,\n    // meaning, if it's 20 March it starts the range\n    // from 20 Feb. to yesterday.\n    // If it's 31 March, the range begins at 28 or 29 Feb.\n    setMainLastMonth() {\n      this.pickerMain = [\n        moment().subtract(1, \"month\").format(DATE_FORMAT),\n        moment().subtract(1, \"day\").format(DATE_FORMAT),\n      ]\n    },\n\n    // Sets the range to 1st to last of the previous month.\n    setMainPrevMonth() {\n      this.pickerMain = [\n        moment().subtract(1, \"month\").date(1).format(DATE_FORMAT),\n        moment().date(0).format(DATE_FORMAT),\n      ]\n    },\n\n    // Takes current duration of the main range and sets the same\n    // duration to the compare picker, but this duration earlier\n    setComparePreviousPeriod() {\n      const mainRangeStart = this.pickerMain[0]\n      const mainRangeEnd = this.pickerMain[1]\n\n      const mainDuration = moment(mainRangeEnd).diff(moment(mainRangeStart), \"days\")\n\n      this.pickerCompare = [\n        moment(mainRangeStart)\n          .subtract(1 + mainDuration, \"days\")\n          .format(DATE_FORMAT),\n        moment(mainRangeEnd)\n          .subtract(1 + mainDuration, \"days\")\n          .format(DATE_FORMAT),\n      ]\n    },\n\n    // Takes current duration of the main range and sets the same\n    // duration to the compare picker, but this duration earlier\n    setComparePreviousMonth() {\n      this.pickerCompare = [\n        moment(this.pickerMain[0]).subtract(1, \"month\").format(DATE_FORMAT),\n        moment(this.pickerMain[1]).subtract(1, \"month\").format(DATE_FORMAT),\n      ]\n    },\n\n    // Takes current duration of the main range and sets the same\n    // duration to the compare picker, but this duration earlier\n    setComparePreviousYear() {\n      this.pickerCompare = [\n        moment(this.pickerMain[0]).subtract(1, \"year\").format(DATE_FORMAT),\n        moment(this.pickerMain[1]).subtract(1, \"year\").format(DATE_FORMAT),\n      ]\n    },\n\n    close() {\n      this.$emit(\"close\")\n    },\n\n    applyDates() {\n      this.pickerMain.sort()\n      this.pickerCompare.sort()\n\n      this.$emit(\"change\", {\n        dateStart: this.pickerMain[0],\n        dateUntil: this.pickerMain[1],\n        compareStart: this.pickerCompare[0],\n        compareUntil: this.pickerCompare[1],\n        compare: this.compare,\n      })\n\n      this.close()\n    },\n  },\n}\n</script>\n\n<style lang=\"scss\" scoped>\n// @import \"~vuetify/src/styles/styles.sass\";\n\n.date-picker-mobile::v-deep {\n  .picker-input {\n    // Under the date inputs there is a place\n    // for some details, which are completely\n    // unnecessary\n    .v-text-field__details {\n      display: none;\n    }\n  }\n\n  .compare-label {\n    .v-messages {\n      display: none;\n    }\n  }\n}\n</style>\n",".date-picker-mobile::v-deep .picker-input .v-text-field__details {\n  display: none;\n}\n.date-picker-mobile::v-deep .compare-label .v-messages {\n  display: none;\n}\n\n/*# sourceMappingURL=DatePickerMobile.vue.map */"]}, media: undefined });
+      inject("data-v-4daf864c_0", { source: ".date-picker-mobile[data-v-4daf864c] .picker-input .v-text-field__details {\n  display: none;\n}\n.date-picker-mobile[data-v-4daf864c] .compare-label .v-messages {\n  display: none;\n}\n\n/*# sourceMappingURL=DatePickerMobile.vue.map */", map: {"version":3,"sources":["/Users/mark/Sites/npm-packages/vuetify-date-range-picker/src/components/DatePicker/DatePickerMobile.vue","DatePickerMobile.vue"],"names":[],"mappings":"AAoRA;EACA,aAAA;ACnRA;ADwRA;EACA,aAAA;ACtRA;;AAEA,+CAA+C","file":"DatePickerMobile.vue","sourcesContent":["<template>\n  <v-dialog :value=\"true\" fullscreen hide-overlay transition=\"dialog-bottom-transition\">\n    <v-card class=\"date-picker-mobile elevation-0 d-flex flex-column\">\n      <v-container>\n        <v-card-text>\n          <v-row>\n            <v-col cols=\"12\">\n              <v-row>\n                <v-col cols=\"12\">\n                  <v-text-field\n                    v-model=\"pickerMain[0]\"\n                    label=\"From\"\n                    type=\"date\"\n                    outlined\n                    dense\n                    :max=\"maxDate\"\n                    class=\"picker-input\"\n                  />\n                </v-col>\n              </v-row>\n\n              <v-row>\n                <v-col cols=\"12\">\n                  <v-text-field\n                    v-model=\"pickerMain[1]\"\n                    label=\"To\"\n                    type=\"date\"\n                    outlined\n                    dense\n                    :max=\"maxDate\"\n                    class=\"picker-input\"\n                  />\n                </v-col>\n              </v-row>\n\n              <v-row justify=\"start\" class=\"pl-2 pr-1\">\n                <v-btn depressed min-width=\"48%\" class=\"mr-2 mb-3\" small @click=\"setMainLast7Days\">Last 7 days</v-btn>\n                <v-btn depressed min-width=\"48%\" class=\"mb-2\" small @click=\"setMainPrevWeek\">Previous week</v-btn>\n                <v-btn depressed min-width=\"48%\" class=\"mr-2 mb-3\" small @click=\"setMainLastMonth\">Last month</v-btn>\n                <v-btn depressed min-width=\"48%\" class=\"mb-2\" small @click=\"setMainPrevMonth\">Previous month</v-btn>\n              </v-row>\n\n              <v-row class=\"pl-2 pt-0\">\n                <v-checkbox v-model=\"compare\" label=\"Compare to the following\" class=\"compare-label pt-0\" />\n              </v-row>\n\n              <v-row>\n                <v-col cols=\"12\">\n                  <v-text-field\n                    v-model=\"pickerCompare[0]\"\n                    :disabled=\"!compare\"\n                    label=\"From\"\n                    type=\"date\"\n                    outlined\n                    dense\n                    :max=\"maxDate\"\n                    class=\"picker-input\"\n                  />\n                </v-col>\n              </v-row>\n              <v-row>\n                <v-col cols=\"12\">\n                  <v-text-field\n                    v-model=\"pickerCompare[1]\"\n                    :disabled=\"!compare\"\n                    label=\"To\"\n                    type=\"date\"\n                    outlined\n                    dense\n                    :max=\"maxDate\"\n                    class=\"picker-input\"\n                  />\n                </v-col>\n              </v-row>\n              <v-row justify=\"start\" class=\"pl-2\">\n                <v-btn\n                  depressed\n                  small\n                  min-width=\"47%\"\n                  class=\"mr-2 mb-3\"\n                  :disabled=\"!compare\"\n                  @click=\"setComparePreviousPeriod\"\n                >\n                  Previous period\n                </v-btn>\n                <v-btn\n                  depressed\n                  small\n                  min-width=\"47%\"\n                  class=\"mr-2 mb-3\"\n                  :disabled=\"!compare\"\n                  @click=\"setComparePreviousMonth\"\n                >\n                  Previous month\n                </v-btn>\n                <v-btn\n                  depressed\n                  small\n                  min-width=\"47%\"\n                  class=\"mr-2 mb-3\"\n                  :disabled=\"!compare\"\n                  @click=\"setComparePreviousYear\"\n                >\n                  Previous year\n                </v-btn>\n              </v-row>\n            </v-col>\n          </v-row>\n        </v-card-text>\n\n        <v-card-actions>\n          <v-spacer />\n          <v-btn text class=\"px-4 mr-3\" @click=\"close\">Cancel</v-btn>\n          <v-btn large class=\"primary px-7\" @click=\"applyDates\">Apply</v-btn>\n        </v-card-actions>\n      </v-container>\n    </v-card>\n  </v-dialog>\n</template>\n\n<script>\nimport moment from \"moment\"\n\nconst DATE_FORMAT = \"YYYY-MM-DD\"\nconst MONTH_FORMAT = \"YYYY-MM\"\n\nexport default {\n  name: \"DatePickerMobile\",\n\n  props: [\"config\"],\n\n  data: () => ({\n    today: null,\n    compare: false,\n    pickerMain: [], // to use moment.js this has to be set in mounted()\n    pickerCompare: [], // to use moment.js this has to be set in mounted()\n  }),\n\n  computed: {\n    maxDate() {\n      return moment().format(\"YYYY-MM-DD\")\n    },\n  },\n\n  mounted() {\n    this.today = moment().format(DATE_FORMAT)\n\n    if (this.config) {\n      this.pickerMain = [this.config.dateStart, this.config.dateUntil]\n      this.pickerCompare = [this.config.compareStart, this.config.compareUntil]\n\n      this.pickerMainLeft = moment(this.config.dateStart).subtract(1, \"month\").format(MONTH_FORMAT)\n      this.pickerMainRight = moment(this.config.dateStart).format(MONTH_FORMAT)\n\n      this.compare = this.config.compare\n    } else {\n      // in case something weird happens and some defaults are needed\n      this.pickerMainLeft = moment().subtract(1, \"month\").format(MONTH_FORMAT)\n      this.pickerMainRight = moment().format(MONTH_FORMAT)\n\n      this.pickerMain = [\n        moment().subtract(7, \"days\").format(DATE_FORMAT),\n        moment().subtract(1, \"day\").format(DATE_FORMAT),\n      ]\n\n      this.pickerCompare = [\n        moment().subtract(15, \"day\").format(DATE_FORMAT),\n        moment().subtract(8, \"days\").format(DATE_FORMAT),\n      ]\n    }\n  },\n\n  methods: {\n    // Sets the main date picker to the last week,\n    // meaning if it's Friday it sets the range from last\n    // Friday to yesterday\n    setMainLast7Days() {\n      this.pickerMain = [\n        moment().subtract(7, \"days\").format(DATE_FORMAT),\n        moment().subtract(1, \"day\").format(DATE_FORMAT),\n      ]\n    },\n\n    // Sets the main date picker to the Monday to Sunday of the previous week\n    setMainPrevWeek() {\n      this.pickerMain = [\n        moment().subtract(1, \"week\").day(1).format(DATE_FORMAT),\n        moment().subtract(1, \"week\").day(7).format(DATE_FORMAT),\n      ]\n    },\n\n    // Sets the main date picker to the last month,\n    // meaning, if it's 20 March it starts the range\n    // from 20 Feb. to yesterday.\n    // If it's 31 March, the range begins at 28 or 29 Feb.\n    setMainLastMonth() {\n      this.pickerMain = [\n        moment().subtract(1, \"month\").format(DATE_FORMAT),\n        moment().subtract(1, \"day\").format(DATE_FORMAT),\n      ]\n    },\n\n    // Sets the range to 1st to last of the previous month.\n    setMainPrevMonth() {\n      this.pickerMain = [\n        moment().subtract(1, \"month\").date(1).format(DATE_FORMAT),\n        moment().date(0).format(DATE_FORMAT),\n      ]\n    },\n\n    // Takes current duration of the main range and sets the same\n    // duration to the compare picker, but this duration earlier\n    setComparePreviousPeriod() {\n      const mainRangeStart = this.pickerMain[0]\n      const mainRangeEnd = this.pickerMain[1]\n\n      const mainDuration = moment(mainRangeEnd).diff(moment(mainRangeStart), \"days\")\n\n      this.pickerCompare = [\n        moment(mainRangeStart)\n          .subtract(1 + mainDuration, \"days\")\n          .format(DATE_FORMAT),\n        moment(mainRangeEnd)\n          .subtract(1 + mainDuration, \"days\")\n          .format(DATE_FORMAT),\n      ]\n    },\n\n    // Takes current duration of the main range and sets the same\n    // duration to the compare picker, but this duration earlier\n    setComparePreviousMonth() {\n      this.pickerCompare = [\n        moment(this.pickerMain[0]).subtract(1, \"month\").format(DATE_FORMAT),\n        moment(this.pickerMain[1]).subtract(1, \"month\").format(DATE_FORMAT),\n      ]\n    },\n\n    // Takes current duration of the main range and sets the same\n    // duration to the compare picker, but this duration earlier\n    setComparePreviousYear() {\n      this.pickerCompare = [\n        moment(this.pickerMain[0]).subtract(1, \"year\").format(DATE_FORMAT),\n        moment(this.pickerMain[1]).subtract(1, \"year\").format(DATE_FORMAT),\n      ]\n    },\n\n    close() {\n      this.$emit(\"close\")\n    },\n\n    applyDates() {\n      this.pickerMain.sort()\n      this.pickerCompare.sort()\n\n      this.$emit(\"change\", {\n        dateStart: this.pickerMain[0],\n        dateUntil: this.pickerMain[1],\n        compareStart: this.pickerCompare[0],\n        compareUntil: this.pickerCompare[1],\n        compare: this.compare,\n      })\n\n      this.close()\n    },\n  },\n}\n</script>\n\n<style lang=\"scss\" scoped>\n// @import \"~vuetify/src/styles/styles.sass\";\n\n.date-picker-mobile::v-deep {\n  .picker-input {\n    // Under the date inputs there is a place\n    // for some details, which are completely\n    // unnecessary\n    .v-text-field__details {\n      display: none;\n    }\n  }\n\n  .compare-label {\n    .v-messages {\n      display: none;\n    }\n  }\n}\n</style>\n",".date-picker-mobile::v-deep .picker-input .v-text-field__details {\n  display: none;\n}\n.date-picker-mobile::v-deep .compare-label .v-messages {\n  display: none;\n}\n\n/*# sourceMappingURL=DatePickerMobile.vue.map */"]}, media: undefined });
 
     };
     /* scoped */
-    var __vue_scope_id__$3 = "data-v-18965c16";
+    var __vue_scope_id__$3 = "data-v-4daf864c";
     /* module identifier */
     var __vue_module_identifier__$3 = undefined;
     /* functional template */
@@ -2248,13 +2246,18 @@
 
     data: function () { return ({
       dateSelectorOpen: false,
+
+      compare: false,
+
       dateStart: null,
       dateUntil: null,
-      selectedPeriod: null,
+
       compareStart: null,
       compareUntil: null,
-      compare: false,
-      comparePeriod: null,
+
+      primaryPreset: null,
+      comparePreset: null,
+
       // The following takes care of the classes which should not go to the root element
       // but to the <date-selector /> which actually represents the whole picker
       inheritedClasses: "",
@@ -2262,15 +2265,14 @@
 
     watch: {
       config: function config(dateRange) {
-        console.log("dateRange prop change:", dateRange);
-        this.changeValues(dateRange);
+        this.updateConfig(dateRange);
       },
     },
 
     mounted: function mounted() {
       console.log("[DatePicker -> mounted()] config:", JSON.stringify(this.config, null, 2));
 
-      this.changeValues(this.config);
+      this.updateConfig(this.config);
 
       // The classes which are provided to the root element are passed to the <date-selector />
       this.inheritedClasses = this.$el.className;
@@ -2280,22 +2282,37 @@
 
     methods: {
       dateSelectorChanged: function dateSelectorChanged(values) {
-        this.changeValues(values);
+        this.updateConfig(values);
         this.$emit("change", values);
       },
 
-      changeValues: function changeValues(values) {
-        console.log("changeValues", values);
+      updateConfig: function updateConfig(values) {
+        console.log("updateConfig", values);
+
+        this.compare = values.compare;
 
         this.dateStart = values.dateStart;
         this.dateUntil = values.dateUntil;
         this.compareStart = values.compareStart;
         this.compareUntil = values.compareUntil;
 
-        this.compare = values.compare;
+        // overwrite primary period if preset is passed
+        if (values.primaryPreset && presets[values.primaryPreset]) {
+          console.log("primaryPreset preset overwrite");
+          this.dateStart = presets[values.primaryPreset][0];
+          this.dateUntil = presets[values.primaryPreset][1];
+        }
 
-        this.selectedPeriod = values.selectedPeriod;
-        this.comparePeriod = values.comparePeriod;
+        // overwrite compare period if preset is passed based on primary period
+        if (values.comparePreset && presets[values.comparePreset]) {
+          console.log("comparePreset preset overwrite");
+          var comparePreset = presets[values.comparePreset]([this.dateStart, this.dateUntil]);
+          this.compareStart = comparePreset[0];
+          this.compareUntil = comparePreset[1];
+        }
+
+        this.primaryPreset = values.primaryPreset;
+        this.comparePreset = values.comparePreset;
       },
     },
   };
@@ -2402,11 +2419,11 @@
     /* style */
     var __vue_inject_styles__$4 = function (inject) {
       if (!inject) { return }
-      inject("data-v-ca856444_0", { source: ".date-selector[data-v-ca856444] {\n  padding: 0;\n  margin: 0;\n  max-height: 60px;\n}\n.date-pickers-container[data-v-ca856444] {\n  position: fixed;\n  top: 0;\n  left: 0;\n  padding: 0;\n  margin: 0;\n  z-index: 100;\n  width: 100vw;\n}\n\n/*# sourceMappingURL=DatePicker.vue.map */", map: {"version":3,"sources":["/Users/mark/Sites/npm-packages/vuetify-date-range-picker/src/components/DatePicker.vue","DatePicker.vue"],"names":[],"mappings":"AAqHA;EACA,UAAA;EACA,SAAA;EACA,gBAAA;ACpHA;ADuHA;EACA,eAAA;EACA,MAAA;EACA,OAAA;EACA,UAAA;EACA,SAAA;EACA,YAAA;EACA,YAAA;ACpHA;;AAEA,yCAAyC","file":"DatePicker.vue","sourcesContent":["<template>\n  <div class=\"date-selector\">\n    <v-overlay :value=\"dateSelectorOpen\" @click.native=\"dateSelectorOpen = false\" />\n\n    <date-selector\n      v-bind=\"$attrs\"\n      :class=\"inheritedClasses\"\n      :date-start=\"dateStart\"\n      :date-until=\"dateUntil\"\n      :compare-start=\"compareStart\"\n      :compare-until=\"compareUntil\"\n      :compare=\"compare\"\n      @click.native=\"dateSelectorOpen = !dateSelectorOpen\"\n    />\n\n    <div v-if=\"dateSelectorOpen\" class=\"date-pickers-container\">\n      <date-picker-desktop\n        v-if=\"this.$vuetify.breakpoint.mdAndUp\"\n        :config=\"config\"\n        :compare-ranges=\"compare\"\n        @change=\"dateSelectorChanged\"\n        @close=\"dateSelectorOpen = false\"\n      />\n      <date-picker-tablet\n        v-else-if=\"this.$vuetify.breakpoint.sm\"\n        :config=\"config\"\n        :compare-ranges=\"compare\"\n        @change=\"dateSelectorChanged\"\n        @close=\"dateSelectorOpen = false\"\n      />\n      <date-picker-mobile\n        v-else\n        :config=\"config\"\n        :compare-ranges=\"compare\"\n        @change=\"dateSelectorChanged\"\n        @close=\"dateSelectorOpen = false\"\n      />\n    </div>\n  </div>\n</template>\n\n<script>\nimport DateSelector from \"./DatePicker/DateSelector.vue\"\nimport DatePickerDesktop from \"./DatePicker/DatePickerDesktop.vue\"\nimport DatePickerTablet from \"./DatePicker/DatePickerTablet.vue\"\nimport DatePickerMobile from \"./DatePicker/DatePickerMobile.vue\"\n\nexport default {\n  name: \"DatePicker\",\n\n  components: {\n    DateSelector,\n    DatePickerDesktop,\n    DatePickerTablet,\n    DatePickerMobile,\n  },\n\n  inheritAttrs: false,\n\n  props: [\"config\"],\n\n  data: () => ({\n    dateSelectorOpen: false,\n    dateStart: null,\n    dateUntil: null,\n    selectedPeriod: null,\n    compareStart: null,\n    compareUntil: null,\n    compare: false,\n    comparePeriod: null,\n    // The following takes care of the classes which should not go to the root element\n    // but to the <date-selector /> which actually represents the whole picker\n    inheritedClasses: \"\",\n  }),\n\n  watch: {\n    config(dateRange) {\n      console.log(\"dateRange prop change:\", dateRange)\n      this.changeValues(dateRange)\n    },\n  },\n\n  mounted() {\n    console.log(\"[DatePicker -> mounted()] config:\", JSON.stringify(this.config, null, 2))\n\n    this.changeValues(this.config)\n\n    // The classes which are provided to the root element are passed to the <date-selector />\n    this.inheritedClasses = this.$el.className\n    // We don't want to lose the default root element classes\n    this.$el.className = \"date-selector d-inline-flex align-center justify-center\"\n  },\n\n  methods: {\n    dateSelectorChanged(values) {\n      this.changeValues(values)\n      this.$emit(\"change\", values)\n    },\n\n    changeValues(values) {\n      console.log(\"changeValues\", values)\n\n      this.dateStart = values.dateStart\n      this.dateUntil = values.dateUntil\n      this.compareStart = values.compareStart\n      this.compareUntil = values.compareUntil\n\n      this.compare = values.compare\n\n      this.selectedPeriod = values.selectedPeriod\n      this.comparePeriod = values.comparePeriod\n    },\n  },\n}\n</script>\n\n<style lang=\"scss\" scoped>\n.date-selector {\n  padding: 0;\n  margin: 0;\n  max-height: 60px;\n}\n\n.date-pickers-container {\n  position: fixed;\n  top: 0;\n  left: 0;\n  padding: 0;\n  margin: 0;\n  z-index: 100;\n  width: 100vw;\n}\n</style>\n",".date-selector {\n  padding: 0;\n  margin: 0;\n  max-height: 60px;\n}\n\n.date-pickers-container {\n  position: fixed;\n  top: 0;\n  left: 0;\n  padding: 0;\n  margin: 0;\n  z-index: 100;\n  width: 100vw;\n}\n\n/*# sourceMappingURL=DatePicker.vue.map */"]}, media: undefined });
+      inject("data-v-f27ab478_0", { source: ".date-selector[data-v-f27ab478] {\n  padding: 0;\n  margin: 0;\n  max-height: 60px;\n}\n.date-pickers-container[data-v-f27ab478] {\n  position: fixed;\n  top: 0;\n  left: 0;\n  padding: 0;\n  margin: 0;\n  z-index: 100;\n  width: 100vw;\n}\n\n/*# sourceMappingURL=DatePicker.vue.map */", map: {"version":3,"sources":["/Users/mark/Sites/npm-packages/vuetify-date-range-picker/src/components/DatePicker.vue","DatePicker.vue"],"names":[],"mappings":"AAyIA;EACA,UAAA;EACA,SAAA;EACA,gBAAA;ACxIA;AD2IA;EACA,eAAA;EACA,MAAA;EACA,OAAA;EACA,UAAA;EACA,SAAA;EACA,YAAA;EACA,YAAA;ACxIA;;AAEA,yCAAyC","file":"DatePicker.vue","sourcesContent":["<template>\n  <div class=\"date-selector\">\n    <v-overlay :value=\"dateSelectorOpen\" @click.native=\"dateSelectorOpen = false\" />\n\n    <date-selector\n      v-bind=\"$attrs\"\n      :class=\"inheritedClasses\"\n      :date-start=\"dateStart\"\n      :date-until=\"dateUntil\"\n      :compare-start=\"compareStart\"\n      :compare-until=\"compareUntil\"\n      :compare=\"compare\"\n      @click.native=\"dateSelectorOpen = !dateSelectorOpen\"\n    />\n\n    <div v-if=\"dateSelectorOpen\" class=\"date-pickers-container\">\n      <date-picker-desktop\n        v-if=\"this.$vuetify.breakpoint.mdAndUp\"\n        :config=\"config\"\n        :compare-ranges=\"compare\"\n        @change=\"dateSelectorChanged\"\n        @close=\"dateSelectorOpen = false\"\n      />\n      <date-picker-tablet\n        v-else-if=\"this.$vuetify.breakpoint.sm\"\n        :config=\"config\"\n        :compare-ranges=\"compare\"\n        @change=\"dateSelectorChanged\"\n        @close=\"dateSelectorOpen = false\"\n      />\n      <date-picker-mobile\n        v-else\n        :config=\"config\"\n        :compare-ranges=\"compare\"\n        @change=\"dateSelectorChanged\"\n        @close=\"dateSelectorOpen = false\"\n      />\n    </div>\n  </div>\n</template>\n\n<script>\nimport presets from \"./DatePicker/presets\"\nimport DateSelector from \"./DatePicker/DateSelector.vue\"\nimport DatePickerDesktop from \"./DatePicker/DatePickerDesktop.vue\"\nimport DatePickerTablet from \"./DatePicker/DatePickerTablet.vue\"\nimport DatePickerMobile from \"./DatePicker/DatePickerMobile.vue\"\n\nexport default {\n  name: \"DatePicker\",\n\n  components: {\n    DateSelector,\n    DatePickerDesktop,\n    DatePickerTablet,\n    DatePickerMobile,\n  },\n\n  inheritAttrs: false,\n\n  props: [\"config\"],\n\n  data: () => ({\n    dateSelectorOpen: false,\n\n    compare: false,\n\n    dateStart: null,\n    dateUntil: null,\n\n    compareStart: null,\n    compareUntil: null,\n\n    primaryPreset: null,\n    comparePreset: null,\n\n    // The following takes care of the classes which should not go to the root element\n    // but to the <date-selector /> which actually represents the whole picker\n    inheritedClasses: \"\",\n  }),\n\n  watch: {\n    config(dateRange) {\n      this.updateConfig(dateRange)\n    },\n  },\n\n  mounted() {\n    console.log(\"[DatePicker -> mounted()] config:\", JSON.stringify(this.config, null, 2))\n\n    this.updateConfig(this.config)\n\n    // The classes which are provided to the root element are passed to the <date-selector />\n    this.inheritedClasses = this.$el.className\n    // We don't want to lose the default root element classes\n    this.$el.className = \"date-selector d-inline-flex align-center justify-center\"\n  },\n\n  methods: {\n    dateSelectorChanged(values) {\n      this.updateConfig(values)\n      this.$emit(\"change\", values)\n    },\n\n    updateConfig(values) {\n      console.log(\"updateConfig\", values)\n\n      this.compare = values.compare\n\n      this.dateStart = values.dateStart\n      this.dateUntil = values.dateUntil\n      this.compareStart = values.compareStart\n      this.compareUntil = values.compareUntil\n\n      // overwrite primary period if preset is passed\n      if (values.primaryPreset && presets[values.primaryPreset]) {\n        console.log(\"primaryPreset preset overwrite\")\n        this.dateStart = presets[values.primaryPreset][0]\n        this.dateUntil = presets[values.primaryPreset][1]\n      }\n\n      // overwrite compare period if preset is passed based on primary period\n      if (values.comparePreset && presets[values.comparePreset]) {\n        console.log(\"comparePreset preset overwrite\")\n        const comparePreset = presets[values.comparePreset]([this.dateStart, this.dateUntil])\n        this.compareStart = comparePreset[0]\n        this.compareUntil = comparePreset[1]\n      }\n\n      this.primaryPreset = values.primaryPreset\n      this.comparePreset = values.comparePreset\n    },\n  },\n}\n</script>\n\n<style lang=\"scss\" scoped>\n.date-selector {\n  padding: 0;\n  margin: 0;\n  max-height: 60px;\n}\n\n.date-pickers-container {\n  position: fixed;\n  top: 0;\n  left: 0;\n  padding: 0;\n  margin: 0;\n  z-index: 100;\n  width: 100vw;\n}\n</style>\n",".date-selector {\n  padding: 0;\n  margin: 0;\n  max-height: 60px;\n}\n\n.date-pickers-container {\n  position: fixed;\n  top: 0;\n  left: 0;\n  padding: 0;\n  margin: 0;\n  z-index: 100;\n  width: 100vw;\n}\n\n/*# sourceMappingURL=DatePicker.vue.map */"]}, media: undefined });
 
     };
     /* scoped */
-    var __vue_scope_id__$4 = "data-v-ca856444";
+    var __vue_scope_id__$4 = "data-v-f27ab478";
     /* module identifier */
     var __vue_module_identifier__$4 = undefined;
     /* functional template */
