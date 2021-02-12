@@ -28,7 +28,7 @@ export default {
 ## Usage
 
 ```html
-<date-range-picker :config="configuration" @update="setDateRange" />
+<date-range-picker :config="configuration" @change="setDateRange" />
 ```
 
 configuration:
@@ -37,14 +37,14 @@ configuration:
 <script>
   var configuration = {
     dark: false,
+    compare: true,
     dateFormat: "MMM Do, YYYY",
     dateStart: DAYS_AGO_7,
     dateUntil: TODAY,
-    datePreset: LAST_7_DAYS,
-    compare: true,
     compareStart: DAYS_AGO_15,
     compareUntil: DAYS_AGO_8,
-    comparePreset: PREVIOUS_7_DAYS,
+    primaryPreset: LAST_WEEK,
+    comparePreset: PREVIOUS_PERIOD,
   }
 </script>
 ```
@@ -55,17 +55,17 @@ configuration:
 | ------ | ------ | ------------- | ---------------------------------- |
 | config | Object | configuration | Date format of the DateRangePicker |
 
-| Object property | Type    | Default         | Description                            |
-| --------------- | ------- | --------------- | -------------------------------------- |
-| dark            | Boolean | false           | dark theme for DateRangePicker         |
-| dateFormat      | String  | MM-DD-YYYY      | Date format of the DateRangePicker     |
-| dateStart       | STRING  | DAYS_AGO_7      | 7 days ago                             |
-| dateUntil       | STRING  | TODAY           | today                                  |
-| datePreset      | STRING  | LAST_7_DAYS     | constant name representing 7 last days |
-| compare         | Boolean | false           | turn on/off comare period              |
-| compareStart    | STRING  | DAYS_AGO_15     | 7 prior days from dateStart            |
-| compareUntil    | STRING  | DAYS_AGO_8      | 7 prior days from dateuntil            |
-| comparePreset   | STRING  | PREVIOUS_7_DAYS | previous period or year                |
+| Object property | Type    | Default         | Description                                                              |
+| --------------- | ------- | --------------- | ------------------------------------------------------------------------ |
+| dark            | Boolean | false           | dark theme for DateRangePicker                                           |
+| compare         | Boolean | false           | turn on/off comare period                                                |
+| dateFormat      | String  | MM-DD-YYYY      | Date format of the DateRangePicker                                       |
+| dateStart       | STRING  | DAYS_AGO_7      | 7 days ago                                                               |
+| dateUntil       | STRING  | TODAY           | today                                                                    |
+| compareStart    | STRING  | DAYS_AGO_15     | 7 prior days from dateStart                                              |
+| compareUntil    | STRING  | DAYS_AGO_8      | 7 prior days from dateuntil                                              |
+| primaryPreset   | STRING  | LAST_WEEK       | constant name representing last week                                     |
+| comparePreset   | STRING  | PREVIOUS_PERIOD | constant name representing previous 7 days from primary preset selection |
 
 ## Events
 
@@ -73,7 +73,7 @@ These events are emitted on actions in the datepicker
 
 | Event  | Output  | Description                                                                                                             |
 | ------ | ------- | ----------------------------------------------------------------------------------------------------------------------- |
-| update | Object  | Date Range Picker date range selections, selected preset, comparison period, as described in above configuration object |
+| change | Object  | Date Range Picker date range selections, selected preset, comparison period, as described in above configuration object |
 | opened | Boolean | emits true if the component is engaged and false when not                                                               |
 
 ## Date formatting
@@ -94,3 +94,21 @@ Should be parsing and using date string format as in `moment` package.
 | MMMM  | month name             | January     |
 | yy    | two digit year         | 16          |
 | yyyy  | four digit year        | 2016        |
+
+### Presets
+
+#### Static presets
+
+Used for primary date range selection
+
+- LAST_WEEK
+- LAST_MONTH
+- LAST_7_DAYS
+- LAST_30_DAYS
+
+#### Computed presets
+
+Used for compare date range selection based on primary date range selection
+
+- PREVIOUS_PERIOD
+- PREVIOUS_YEAR
