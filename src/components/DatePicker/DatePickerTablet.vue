@@ -11,7 +11,7 @@
                 first-day-of-week="1"
                 range
                 color="blue darken-2 picker-main-selected"
-                :max="today"
+                :max="maxDate"
                 :picker-date.sync="pickerMainLeft"
                 class="pr-1"
               />
@@ -26,13 +26,14 @@
                 first-day-of-week="1"
                 range
                 color="orange darken-4 picker-compare-selected"
-                :max="today"
+                :max="maxDate"
                 :picker-date.sync="pickerMainLeft"
                 class="pr-1"
               />
             </v-col>
           </v-row>
         </v-col>
+
         <v-col cols="7">
           <v-row>
             <v-col cols="6">
@@ -60,15 +61,24 @@
               />
             </v-col>
           </v-row>
+
           <v-row class="pl-2 pr-1">
-            <v-btn text x-small @click="setMainLast7Days">Last 7 days</v-btn>
-            <v-btn text x-small @click="setMainPrevWeek">Prev. week</v-btn>
-            <v-btn text x-small @click="setMainLastMonth">Last month</v-btn>
-            <v-btn text x-small @click="setMainPrevMonth">Prev. month</v-btn>
+            <v-btn text x-small :outlined="primaryPreset === 'LAST_WEEK'" @click="setMainLastWeek"> Last week </v-btn>
+            <v-btn text x-small :outlined="primaryPreset === 'LAST_MONTH'" @click="setMainLastMonth">
+              Last month
+            </v-btn>
+            <v-btn text x-small :outlined="primaryPreset === 'LAST_7_DAYS'" @click="setMainLast7Days">
+              Last 7 days
+            </v-btn>
+            <v-btn text x-small :outlined="primaryPreset === 'LAST_30_DAYS'" @click="setMainLast30Days">
+              Last 30 days
+            </v-btn>
           </v-row>
+
           <v-row class="pl-2 pt-6">
             <v-checkbox v-model="compare" label="Compare to the following" class="compare-label" />
           </v-row>
+
           <v-row>
             <v-col cols="6">
               <v-text-field
@@ -98,9 +108,24 @@
             </v-col>
           </v-row>
           <v-row class="pl-2">
-            <v-btn text x-small :disabled="!compare" @click="setComparePreviousPeriod"> Previous period </v-btn>
-            <v-btn text x-small :disabled="!compare" @click="setComparePreviousMonth"> Previous month </v-btn>
-            <v-btn text x-small :disabled="!compare" @click="setComparePreviousYear"> Previous year </v-btn>
+            <v-btn
+              text
+              x-small
+              :disabled="!compare"
+              :outlined="comparePreset === 'PREVIOUS_PERIOD'"
+              @click="setComparePreviousPeriod"
+            >
+              Previous period
+            </v-btn>
+            <v-btn
+              text
+              x-small
+              :disabled="!compare"
+              :outlined="comparePreset === 'PREVIOUS_YEAR'"
+              @click="setComparePreviousYear"
+            >
+              Previous year
+            </v-btn>
           </v-row>
         </v-col>
       </v-row>
@@ -115,9 +140,7 @@
 
 <script>
 import moment from "moment"
-
-const DATE_FORMAT = "YYYY-MM-DD"
-const MONTH_FORMAT = "YYYY-MM"
+import presets from "./presets"
 
 export default {
   name: "DatePickerTablet",
@@ -126,19 +149,18 @@ export default {
 
   data: () => ({
     compare_: false,
-    today: null,
     pickerMain: [], // to use moment.js this has to be set in mounted()
     pickerCompare: [], // to use moment.js this has to be set in mounted()
     pickerMainIsActive: true,
     pickerMainLeft: null,
-    pickerMainRight: null,
-    pickerCompareLeft: null,
-    pickerCompareRight: null,
+
+    primaryPreset: null,
+    comparePreset: null,
   }),
 
   computed: {
     maxDate() {
-      return moment().format("YYYY-MM-DD")
+      return presets.TODAY
     },
     compare: {
       get() {
@@ -149,135 +171,122 @@ export default {
         this.pickerMainIsActive = !this.compare_
       },
     },
+    primaryPresetHash() {
+      return JSON.stringify(this.pickerMain)
+    },
+    comparePresetHash() {
+      return JSON.stringify(this.pickerCompare)
+    },
+  },
+
+  watch: {
+    // monitor props config to update component
+    config() {
+      this.primaryPreset = this.config.primaryPreset
+      this.comparePreset = this.config.comparePreset
+      console.log("config change!")
+    },
+
+    // monitor primary period selection changes to reset presets if needed
+    primaryPresetHash() {
+      if (!this.presetMain) this.primaryPreset = null
+      this.presetMain = false
+
+      // adjust compare date range if compare preset is set on
+      if (this.comparePreset === "PREVIOUS_PERIOD") this.setComparePreviousPeriod()
+      if (this.comparePreset === "PREVIOUS_YEAR") this.setComparePreviousYear()
+    },
+
+    // monitor main period selection changes to reset presets if needed
+    comparePresetHash() {
+      if (!this.presetCompare) this.comparePreset = null
+      this.presetCompare = false
+    },
   },
 
   mounted() {
-    this.today = moment().format(DATE_FORMAT)
+    const config = this.config
 
-    if (this.config) {
-      this.pickerMain = [this.config.dateStart, this.config.dateUntil]
-      this.pickerCompare = [this.config.compareStart, this.config.compareUntil]
-
-      this.pickerMainLeft = moment(this.config.dateStart).subtract(1, "month").format(MONTH_FORMAT)
-      this.pickerMainRight = moment(this.config.dateStart).format(MONTH_FORMAT)
-
+    if (config) {
       this.compare = this.config.compare
-    } else {
-      // in case something weird happens and some defaults are needed
-      this.pickerMainLeft = moment().subtract(1, "month").format(MONTH_FORMAT)
-      this.pickerMainRight = moment().format(MONTH_FORMAT)
 
-      this.pickerMain = [
-        moment().subtract(7, "days").format(DATE_FORMAT),
-        moment().subtract(1, "day").format(DATE_FORMAT),
-      ]
+      this.pickerMain = [config.dateStart, config.dateUntil]
+      this.pickerCompare = [config.compareStart, config.compareUntil]
 
-      this.pickerCompare = [
-        moment().subtract(15, "day").format(DATE_FORMAT),
-        moment().subtract(8, "days").format(DATE_FORMAT),
-      ]
+      // adjust primary date range if primary preset is set on
+      if (config.primaryPreset === "LAST_7_DAYS") this.setMainLast7Days()
+      if (config.primaryPreset === "LAST_30_DAYS") this.setMainLast30Days()
+      if (config.primaryPreset === "LAST_WEEK") this.setMainLastWeek()
+      if (config.primaryPreset === "LAST_MONTH") this.setMainLastMonth()
+
+      // adjust compare date range if compare preset is set on
+      if (config.comparePreset === "PREVIOUS_PERIOD") this.setComparePreviousPeriod()
+      if (config.comparePreset === "PREVIOUS_YEAR") this.setComparePreviousYear()
+
+      this.pickerMainLeft = moment(config.dateStart).subtract(1, "month").format(presets.MONTH_FORMAT)
+    }
+
+    // TO DO: set default to default preset instead hard coded
+    // in case something weird happens and some defaults are needed
+    else {
+      this.pickerMainLeft = moment().subtract(1, "month").format(presets.MONTH_FORMAT)
+
+      this.pickerMain = presets.LAST_7_DAYS
+      this.pickerCompare = presets.PREVIOUS_PERIOD(this.pickerMain)
     }
   },
 
   methods: {
-    // Sets the main date picker to the last week,
-    // meaning if it's Friday it sets the range from last
-    // Friday to yesterday
     setMainLast7Days() {
+      this.presetMain = true
       this.pickerMainIsActive = true
-      this.pickerMainLeft = moment().subtract(7, "days").format(MONTH_FORMAT)
-
-      this.pickerMain = [
-        moment().subtract(7, "days").format(DATE_FORMAT),
-        moment().subtract(1, "day").format(DATE_FORMAT),
-      ]
+      this.pickerMain = presets.LAST_7_DAYS
+      this.pickerMainLeft = presets.LAST_7_DAYS[0]
+      this.primaryPreset = "LAST_7_DAYS"
     },
 
-    // Sets the main date picker to the Monday to Sunday of the previous week
-    setMainPrevWeek() {
+    setMainLast30Days() {
+      this.presetMain = true
       this.pickerMainIsActive = true
-      this.pickerMainLeft = moment().subtract(1, "week").day(1).format(MONTH_FORMAT)
-
-      this.pickerMain = [
-        moment().subtract(1, "week").day(1).format(DATE_FORMAT),
-        moment().subtract(1, "week").day(7).format(DATE_FORMAT),
-      ]
+      this.pickerMain = presets.LAST_30_DAYS
+      this.pickerMainLeft = presets.LAST_30_DAYS[0]
+      this.primaryPreset = "LAST_30_DAYS"
     },
 
-    // Sets the main date picker to the last month,
-    // meaning, if it's 20 March it starts the range
-    // from 20 Feb. to yesterday.
-    // If it's 31 March, the range begins at 28 or 29 Feb.
+    setMainLastWeek() {
+      this.presetMain = true
+      this.pickerMainIsActive = true
+      this.pickerMain = presets.LAST_WEEK
+      this.pickerMainLeft = presets.LAST_WEEK[0]
+      this.primaryPreset = "LAST_WEEK"
+    },
+
     setMainLastMonth() {
+      this.presetMain = true
       this.pickerMainIsActive = true
-      this.pickerMainLeft = moment().subtract(1, "month").format(DATE_FORMAT)
-
-      this.pickerMain = [
-        moment().subtract(1, "month").format(DATE_FORMAT),
-        moment().subtract(1, "day").format(DATE_FORMAT),
-      ]
-    },
-
-    // Sets the range to 1st to last of the previous month.
-    setMainPrevMonth() {
-      this.pickerMainIsActive = true
-      this.pickerMainLeft = moment().subtract(1, "month").date(1).format(MONTH_FORMAT)
-
-      this.pickerMain = [
-        moment().subtract(1, "month").date(1).format(DATE_FORMAT),
-        moment().date(0).format(DATE_FORMAT),
-      ]
+      this.pickerMain = presets.LAST_MONTH
+      this.pickerMainLeft = presets.LAST_MONTH[0]
+      this.primaryPreset = "LAST_MONTH"
     },
 
     // Takes current duration of the main range and sets the same
     // duration to the compare picker, but this duration earlier
     setComparePreviousPeriod() {
-      const mainRangeStart = this.pickerMain[0]
-      const mainRangeEnd = this.pickerMain[1]
-      const mainDuration = moment(mainRangeEnd).diff(moment(mainRangeStart), "days")
-
+      this.presetCompare = true
       this.pickerMainIsActive = false
-      this.pickerMainLeft = moment(mainRangeStart)
-        .subtract(1 + mainDuration, "days")
-        .format(MONTH_FORMAT)
-      this.pickerCompareLeft = moment(mainRangeEnd)
-        .subtract(1 + mainDuration, "days")
-        .format(MONTH_FORMAT)
-
-      this.pickerCompare = [
-        moment(mainRangeStart)
-          .subtract(1 + mainDuration, "days")
-          .format(DATE_FORMAT),
-        moment(mainRangeEnd)
-          .subtract(1 + mainDuration, "days")
-          .format(DATE_FORMAT),
-      ]
-    },
-
-    // Takes current duration of the main range and sets the same
-    // duration to the compare picker, but this duration earlier
-    setComparePreviousMonth() {
-      this.pickerMainIsActive = false
-      this.pickerMainLeft = moment(this.pickerMain[0]).subtract(1, "month").format(MONTH_FORMAT)
-      this.pickerCompareLeft = moment(this.pickerMain[0]).subtract(1, "month").format(MONTH_FORMAT)
-
-      this.pickerCompare = [
-        moment(this.pickerMain[0]).subtract(1, "month").format(DATE_FORMAT),
-        moment(this.pickerMain[1]).subtract(1, "month").format(DATE_FORMAT),
-      ]
+      this.pickerCompare = presets.PREVIOUS_PERIOD(this.pickerMain)
+      this.pickerMainLeft = this.pickerCompare[0]
+      this.comparePreset = "PREVIOUS_PERIOD"
     },
 
     // Takes current duration of the main range and sets the same
     // duration to the compare picker, but this duration earlier
     setComparePreviousYear() {
+      this.presetCompare = true
       this.pickerMainIsActive = false
-      this.pickerMainLeft = moment(this.pickerMain[0]).subtract(1, "year").format(MONTH_FORMAT)
-      this.pickerCompareLeft = moment(this.pickerMain[0]).subtract(1, "year").format(MONTH_FORMAT)
-
-      this.pickerCompare = [
-        moment(this.pickerMain[0]).subtract(1, "year").format(DATE_FORMAT),
-        moment(this.pickerMain[1]).subtract(1, "year").format(DATE_FORMAT),
-      ]
+      this.pickerCompare = presets.PREVIOUS_YEAR(this.pickerMain)
+      this.pickerMainLeft = this.pickerCompare[0]
+      this.comparePreset = "PREVIOUS_YEAR"
     },
 
     close() {
@@ -289,11 +298,13 @@ export default {
       this.pickerCompare.sort()
 
       this.$emit("change", {
+        compare: this.compare,
         dateStart: this.pickerMain[0],
         dateUntil: this.pickerMain[1],
         compareStart: this.pickerCompare[0],
         compareUntil: this.pickerCompare[1],
-        compare: this.compare,
+        primaryPreset: this.primaryPreset,
+        comparePreset: this.comparePreset,
       })
 
       this.close()

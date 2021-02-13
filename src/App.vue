@@ -146,7 +146,7 @@ export default {
   computed: {
     config() {
       return {
-        compare: true,
+        compare: this.compare,
         dateStart: this.dateStart,
         dateUntil: this.dateUntil,
         compareStart: this.compareStart,

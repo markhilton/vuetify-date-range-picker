@@ -173,8 +173,6 @@
 import moment from "moment"
 import presets from "./presets"
 
-const MONTH_FORMAT = "YYYY-MM"
-
 export default {
   name: "DatePickerDesktop",
 
@@ -202,7 +200,7 @@ export default {
 
   computed: {
     maxDate() {
-      return presets.today
+      return presets.TODAY
     },
     compare: {
       get() {
@@ -247,20 +245,20 @@ export default {
 
     // Left and right date pickers should move accordingly
     pickerMainLeft(val) {
-      this.pickerMainRight = moment(val).add(1, "month").format(MONTH_FORMAT)
+      this.pickerMainRight = moment(val).add(1, "month").format(presets.MONTH_FORMAT)
     },
 
     pickerMainRight(val) {
-      this.pickerMainLeft = moment(val).subtract(1, "month").format(MONTH_FORMAT)
+      this.pickerMainLeft = moment(val).subtract(1, "month").format(presets.MONTH_FORMAT)
     },
 
     // The compare date picker should display the same month as the primary one
     pickerCompareLeft(val) {
-      this.pickerCompareRight = moment(val).add(1, "month").format(MONTH_FORMAT)
+      this.pickerCompareRight = moment(val).add(1, "month").format(presets.MONTH_FORMAT)
     },
 
     pickerCompareRight(val) {
-      this.pickerCompareLeft = moment(val).subtract(1, "month").format(MONTH_FORMAT)
+      this.pickerCompareLeft = moment(val).subtract(1, "month").format(presets.MONTH_FORMAT)
     },
   },
 
@@ -283,15 +281,15 @@ export default {
       if (config.comparePreset === "PREVIOUS_PERIOD") this.setComparePreviousPeriod()
       if (config.comparePreset === "PREVIOUS_YEAR") this.setComparePreviousYear()
 
-      this.pickerMainLeft = moment(config.dateStart).subtract(1, "month").format(MONTH_FORMAT)
-      this.pickerMainRight = moment(config.dateStart).format(MONTH_FORMAT)
+      this.pickerMainLeft = moment(config.dateStart).subtract(1, "month").format(presets.MONTH_FORMAT)
+      this.pickerMainRight = moment(config.dateStart).format(presets.MONTH_FORMAT)
     }
 
     // TO DO: set default to default preset instead hard coded
     // in case something weird happens and some defaults are needed
     else {
-      this.pickerMainLeft = moment().subtract(1, "month").format(MONTH_FORMAT)
-      this.pickerMainRight = moment().format(MONTH_FORMAT)
+      this.pickerMainLeft = moment().subtract(1, "month").format(presets.MONTH_FORMAT)
+      this.pickerMainRight = moment().format(presets.MONTH_FORMAT)
 
       this.pickerMain = presets.LAST_7_DAYS
       this.pickerCompare = presets.PREVIOUS_PERIOD(this.pickerMain)
@@ -348,7 +346,7 @@ export default {
       this.pickerMainIsActive = false
       this.pickerCompare = presets.PREVIOUS_YEAR(this.pickerMain)
       this.pickerMainLeft = this.pickerCompare[0]
-      this.pickerCompareLeft = moment(this.pickerMain[0]).subtract(1, "year").format(MONTH_FORMAT)
+      this.pickerCompareLeft = moment(this.pickerMain[0]).subtract(1, "year").format(presets.MONTH_FORMAT)
       this.comparePreset = "PREVIOUS_YEAR"
     },
 

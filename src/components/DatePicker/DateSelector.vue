@@ -18,9 +18,8 @@
 
 <script>
 import moment from "moment"
+import presets from "./presets"
 import { mdiCalendarRangeOutline } from "@mdi/js"
-
-const DATE_FORMAT = "MMM D, YYYY"
 
 export default {
   name: "DateSelector",
@@ -36,26 +35,26 @@ export default {
   computed: {
     getDateStart() {
       return this.dateStart
-        ? moment(this.dateStart).format(DATE_FORMAT)
-        : moment().subtract(7, "days").format(DATE_FORMAT)
+        ? moment(this.dateStart).format(presets.DEFAULT_FORMAT)
+        : moment(presets.LAST_7_DAYS[0]).format(presets.DEFAULT_FORMAT)
     },
 
     getDateUntil() {
       return this.dateUntil
-        ? moment(this.dateUntil).format(DATE_FORMAT)
-        : moment().subtract(1, "day").format(DATE_FORMAT)
+        ? moment(this.dateUntil).format(presets.DEFAULT_FORMAT)
+        : moment(presets.LAST_7_DAYS[1]).format(presets.DEFAULT_FORMAT)
     },
 
     getCompareStart() {
       return this.compareStart
-        ? moment(this.compareStart).format(DATE_FORMAT)
-        : moment().subtract(15, "days").format(DATE_FORMAT)
+        ? moment(this.compareStart).format(presets.DEFAULT_FORMAT)
+        : moment(presets.PREVIOUS_PERIOD([this.getDateStart, this.getDateUntil])[0]).format(presets.DEFAULT_FORMAT)
     },
 
     getCompareUntil() {
       return this.compareUntil
-        ? moment(this.compareUntil).format(DATE_FORMAT)
-        : moment().subtract(8, "days").format(DATE_FORMAT)
+        ? moment(this.compareUntil).format(presets.DEFAULT_FORMAT)
+        : moment(presets.PREVIOUS_PERIOD([this.getDateStart, this.getDateUntil])[1]).format(presets.DEFAULT_FORMAT)
     },
   },
 }
