@@ -1,4 +1,5 @@
 // Import vue component
+import DateRangePresets from "./components/presets"
 import DateRangeSelector from "./components/DatePicker.vue"
 
 // Declare install function executed by Vue.use()
@@ -23,6 +24,8 @@ if (typeof window !== "undefined") {
 }
 
 if (GlobalVue) GlobalVue.use(plugin)
+
+export const presets = DateRangePresets
 
 // To allow use as module (npm/webpack/etc.) export component
 export default DateRangeSelector
