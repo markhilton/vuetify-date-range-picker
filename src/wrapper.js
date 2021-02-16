@@ -1,5 +1,5 @@
 // Import vue component
-import DateRangePresets from "./components/presets"
+import DateRangePresets from "./components/DatePicker/presets"
 import DateRangeSelector from "./components/DatePicker.vue"
 
 // Declare install function executed by Vue.use()
