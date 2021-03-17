@@ -1,15 +1,16 @@
 <template>
-  <v-sheet class="pa-2 date-selector d-inline-block elevation-2 rounded" :icon-color="iconColor">
+  <v-sheet class="pa-2 date-selector d-inline-block elevation-2 rounded" @click="SET_DIALOG_OPENED(true)">
     <v-row>
       <v-col class="date-selector__icon d-flex align-center py-1 px-6 pr-8">
-        <v-icon :color="iconColor">{{ icon.mdiCalendarRangeOutline }}</v-icon>
+        <v-icon @click.native.stop="FLIP_COMPARE_STATE()">{{ icon.mdiCalendarRangeOutline }}</v-icon>
       </v-col>
 
       <v-col style="line-height: 10px" class="date-selector__info d-flex align-center pa-1">
-        {{ getDateStart }} &mdash; {{ getDateUntil }}
+        {{ getDefaultDateFormat(getDateStart) }} &mdash; {{ getDefaultDateFormat(getDateUntil) }}
 
-        <small v-if="compare" class="d-flex mt-n2">
-          Compare to: {{ getCompareStart }} &mdash; {{ getCompareUntil }}
+        <small v-if="getCompareState" class="d-flex mt-n2">
+          Compare to:
+          {{ getDefaultDateFormat(getDateCompareStart) }} &mdash; {{ getDefaultDateFormat(getDateCompareUntil) }}
         </small>
       </v-col>
     </v-row>
@@ -17,14 +18,11 @@
 </template>
 
 <script>
-import moment from "moment"
-import presets from "./presets"
+import { mapGetters, mapMutations } from "vuex"
 import { mdiCalendarRangeOutline } from "@mdi/js"
 
 export default {
   name: "DateSelector",
-
-  props: ["iconColor", "dateStart", "dateUntil", "compareStart", "compareUntil", "compare"],
 
   data: () => ({
     icon: {
@@ -33,29 +31,23 @@ export default {
   }),
 
   computed: {
-    getDateStart() {
-      return this.dateStart
-        ? moment(this.dateStart).format(presets.DEFAULT_FORMAT)
-        : moment(presets.LAST_7_DAYS[0]).format(presets.DEFAULT_FORMAT)
-    },
+    ...mapGetters([
+      // date format helper
+      "getDefaultDateFormat",
 
-    getDateUntil() {
-      return this.dateUntil
-        ? moment(this.dateUntil).format(presets.DEFAULT_FORMAT)
-        : moment(presets.LAST_7_DAYS[1]).format(presets.DEFAULT_FORMAT)
-    },
+      // compare checkbox
+      "getCompareState",
 
-    getCompareStart() {
-      return this.compareStart
-        ? moment(this.compareStart).format(presets.DEFAULT_FORMAT)
-        : moment(presets.PREVIOUS_PERIOD([this.getDateStart, this.getDateUntil])[0]).format(presets.DEFAULT_FORMAT)
-    },
+      // individual dates
+      "getDateStart",
+      "getDateUntil",
+      "getDateCompareStart",
+      "getDateCompareUntil",
+    ]),
+  },
 
-    getCompareUntil() {
-      return this.compareUntil
-        ? moment(this.compareUntil).format(presets.DEFAULT_FORMAT)
-        : moment(presets.PREVIOUS_PERIOD([this.getDateStart, this.getDateUntil])[1]).format(presets.DEFAULT_FORMAT)
-    },
+  methods: {
+    ...mapMutations(["FLIP_COMPARE_STATE", "SET_DIALOG_OPENED"]),
   },
 }
 </script>

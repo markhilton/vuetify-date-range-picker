@@ -3,58 +3,68 @@
     <v-card-text class="pickers">
       <v-row>
         <v-col cols="7">
-          <v-row :class="['picker-main', pickerMainIsActive ? 'active' : '']">
+          <v-row :class="['picker-main', isPickerPrimaryActive ? 'active' : '']">
             <v-col cols="6">
+              <!-- left calendar -->
+              Primary Picker Left
               <v-date-picker
-                v-model="pickerMain"
                 range
                 no-title
                 first-day-of-week="1"
-                :max="maxDate"
-                :picker-date.sync="pickerMainLeft"
+                :max="getMaxDate"
+                :value="getPickerPrimary"
+                :picker-date="getPickerPrimaryLeft"
                 class="picker-main-left pr-1"
                 color="blue darken-2 picker-main-selected"
+                @change="SET_PICKER_MAIN($event)"
               />
             </v-col>
             <v-col cols="6">
+              <!-- right calendar -->
+              Primary Picker Right
               <v-date-picker
-                v-model="pickerMain"
                 range
                 no-title
                 first-day-of-week="1"
-                :max="maxDate"
-                :picker-date.sync="pickerMainRight"
+                :max="getMaxDate"
+                :value="getPickerPrimary"
+                :picker-date="getPickerPrimaryRight"
                 class="picker-main-right"
                 color="blue darken-2 picker-main-selected"
+                @change="SET_PICKER_MAIN($event)"
               />
             </v-col>
           </v-row>
 
-          <v-row v-if="compare" justify="center" class="picker-compare">
+          <v-row v-if="getCompareState" justify="center" class="picker-compare">
             <v-col cols="6">
+              Compare Picker Left
               <v-date-picker
-                v-model="pickerCompare"
                 range
                 no-title
                 show-current="false"
                 first-day-of-week="1"
-                :max="maxDate"
-                :picker-date.sync="pickerMainLeft"
+                :max="getMaxDate"
+                :value="getPickerCompare"
+                :picker-date="getPickerCompareLeft"
                 class="picker-compare-left pr-1"
                 color="orange darken-4 picker-compare-selected"
+                @change="SET_PICKER_COMPARE($event)"
               />
             </v-col>
             <v-col cols="6">
+              Compare Picker Right
               <v-date-picker
-                v-model="pickerCompare"
                 range
                 no-title
                 show-current="false"
                 first-day-of-week="1"
-                :max="maxDate"
-                :picker-date.sync="pickerMainRight"
+                :max="getMaxDate"
+                :value="getPickerCompare"
+                :picker-date="getPickerCompareRight"
                 class="picker-compare-right"
                 color="orange darken-4 picker-compare-selected"
+                @change="SET_PICKER_COMPARE($event)"
               />
             </v-col>
           </v-row>
@@ -64,98 +74,81 @@
           <v-row>
             <v-col cols="6">
               <v-text-field
-                v-model="pickerMain[0]"
                 label="From"
                 type="date"
                 dense
                 outlined
-                :max="maxDate"
+                :max="getMaxDate"
+                :value="getDateStart"
                 class="picker-input"
-                @click="pickerMainIsActive = true"
+                @change="SET_DATE_START($event)"
+                @click="SET_PICKER_PRIMARY_ACTIVE(true)"
               />
             </v-col>
             <v-col cols="6">
               <v-text-field
-                v-model="pickerMain[1]"
                 label="To"
                 type="date"
                 dense
                 outlined
-                :max="maxDate"
+                :max="getMaxDate"
+                :value="getDateUntil"
                 class="picker-input"
-                @click="pickerMainIsActive = true"
+                @change="SET_DATE_UNTIL($event)"
+                @click="SET_PICKER_PRIMARY_ACTIVE(true)"
               />
             </v-col>
           </v-row>
 
           <!-- presets for main period -->
           <v-row class="pl-2 pr-1">
-            <v-btn text x-small :outlined="primaryPreset === 'LAST_WEEK'" @click="setMainLastWeek"> Last week </v-btn>
-            <v-btn text x-small :outlined="primaryPreset === 'LAST_MONTH'" @click="setMainLastMonth">
-              Last month
-            </v-btn>
-            <v-btn text x-small :outlined="primaryPreset === 'LAST_7_DAYS'" @click="setMainLast7Days">
-              Last 7 days
-            </v-btn>
-            <v-btn text x-small :outlined="primaryPreset === 'LAST_30_DAYS'" @click="setMainLast30Days">
-              Last 30 days
-            </v-btn>
+            <PresetsPrimary />
           </v-row>
 
           <v-row class="pl-2 pt-6">
-            <v-checkbox v-model="compare" label="Compare to the following" class="compare-label" />
+            <v-checkbox
+              :input-value="getCompareState"
+              label="Compare to the following"
+              class="compare-label"
+              @change="FLIP_COMPARE_STATE()"
+            />
           </v-row>
 
           <v-row>
             <v-col cols="6">
               <v-text-field
-                v-model="pickerCompare[0]"
-                :disabled="!compare"
                 label="From"
                 type="date"
                 outlined
                 dense
-                :max="maxDate"
+                :max="getMaxDate"
+                :value="getDateCompareStart"
+                :disabled="!getCompareState"
                 class="picker-input"
-                @click="pickerMainIsActive = false"
+                @change="SET_COMAPRE_START($event)"
+                @click="SET_PICKER_PRIMARY_ACTIVE(false)"
               />
             </v-col>
 
             <v-col cols="6">
               <v-text-field
-                v-model="pickerCompare[1]"
-                :disabled="!compare"
                 label="To"
                 type="date"
                 outlined
                 dense
-                :max="maxDate"
+                :max="getMaxDate"
+                :value="getDateCompareUntil"
+                :disabled="!getCompareState"
                 class="picker-input"
-                @click="pickerMainIsActive = false"
+                @change="SET_COMPARE_UNTIL($event)"
+                @click="SET_PICKER_PRIMARY_ACTIVE(false)"
               />
             </v-col>
           </v-row>
 
           <!-- presets for compare period -->
           <v-row class="pl-2">
-            <v-btn
-              text
-              x-small
-              :disabled="!compare"
-              :outlined="comparePreset === 'PREVIOUS_PERIOD'"
-              @click="setComparePreviousPeriod"
-            >
-              Previous period
-            </v-btn>
-            <v-btn
-              text
-              x-small
-              :disabled="!compare"
-              :outlined="comparePreset === 'PREVIOUS_YEAR'"
-              @click="setComparePreviousYear"
-            >
-              Previous year
-            </v-btn>
+            <PresetsCompare />
           </v-row>
         </v-col>
       </v-row>
@@ -163,213 +156,74 @@
 
     <v-card-actions>
       <v-spacer />
-      <v-btn text class="px-4 mr-6" @click="close">Cancel</v-btn>
-      <v-btn large class="primary px-7" @click="applyDates">Apply</v-btn>
+      <v-btn text class="px-4 mr-6" @click="SET_DIALOG_OPENED(false)">Cancel</v-btn>
+      <v-btn large class="primary px-7" @click="SET_CONFIG()">Apply</v-btn>
     </v-card-actions>
   </v-card>
 </template>
 
 <script>
-import moment from "moment"
-import presets from "./presets"
+import { mapGetters, mapMutations } from "vuex"
+import PresetsPrimary from "./PresetsPrimary"
+import PresetsCompare from "./PresetsCompare"
 
 export default {
   name: "DatePickerDesktop",
 
+  components: {
+    PresetsPrimary,
+    PresetsCompare,
+  },
+
   props: ["config"],
 
-  data: () => ({
-    presetMain: false,
-    presetCompare: false,
-    compare_: false,
-
-    pickerMain: [], // to use moment.js this has to be set in mounted()
-    pickerCompare: [], // to use moment.js this has to be set in mounted()
-    pickerMainIsActive: true,
-    pickerMainLeft: null,
-    pickerMainRight: null,
-    pickerCompareLeft: null,
-    pickerCompareRight: null,
-
-    primaryDefault: "LAST_7_DAYS",
-    compareDefault: "PREVIOUS_PERIOD",
-
-    primaryPreset: null,
-    comparePreset: null,
-  }),
-
   computed: {
-    maxDate() {
-      return presets.TODAY
-    },
-    compare: {
-      get() {
-        return this.compare_
-      },
-      set(val) {
-        this.compare_ = val
-        this.pickerMainIsActive = !this.compare_
-      },
-    },
-    primaryPresetHash() {
-      return JSON.stringify(this.pickerMain)
-    },
-    comparePresetHash() {
-      return JSON.stringify(this.pickerCompare)
-    },
-  },
+    ...mapGetters([
+      // config
+      "getMaxDate",
 
-  watch: {
-    // monitor props config to update component
-    config() {
-      this.primaryPreset = this.config.primaryPreset
-      this.comparePreset = this.config.comparePreset
-      console.log("config change!")
-    },
+      // compare checkbox
+      "getCompareState",
 
-    // monitor primary period selection changes to reset presets if needed
-    primaryPresetHash() {
-      if (!this.presetMain) this.primaryPreset = null
-      this.presetMain = false
+      // individual dates
+      "getDateStart",
+      "getDateUntil",
+      "getDateCompareStart",
+      "getDateCompareUntil",
 
-      // adjust compare date range if compare preset is set on
-      if (this.comparePreset === "PREVIOUS_PERIOD") this.setComparePreviousPeriod()
-      if (this.comparePreset === "PREVIOUS_YEAR") this.setComparePreviousYear()
-    },
+      // date picker arrays of date range
+      "getPickerPrimary",
+      "getPickerCompare",
 
-    // monitor main period selection changes to reset presets if needed
-    comparePresetHash() {
-      if (!this.presetCompare) this.comparePreset = null
-      this.presetCompare = false
-    },
-
-    // Left and right date pickers should move accordingly
-    pickerMainLeft(val) {
-      this.pickerMainRight = moment(val).add(1, "month").format(presets.MONTH_FORMAT)
-    },
-
-    pickerMainRight(val) {
-      this.pickerMainLeft = moment(val).subtract(1, "month").format(presets.MONTH_FORMAT)
-    },
-
-    // The compare date picker should display the same month as the primary one
-    pickerCompareLeft(val) {
-      this.pickerCompareRight = moment(val).add(1, "month").format(presets.MONTH_FORMAT)
-    },
-
-    pickerCompareRight(val) {
-      this.pickerCompareLeft = moment(val).subtract(1, "month").format(presets.MONTH_FORMAT)
-    },
-  },
-
-  mounted() {
-    const config = this.config
-
-    if (config) {
-      this.compare = this.config.compare
-
-      this.pickerMain = [config.dateStart, config.dateUntil]
-      this.pickerCompare = [config.compareStart, config.compareUntil]
-
-      // adjust primary date range if primary preset is set on
-      if (config.primaryPreset === "LAST_7_DAYS") this.setMainLast7Days()
-      if (config.primaryPreset === "LAST_30_DAYS") this.setMainLast30Days()
-      if (config.primaryPreset === "LAST_WEEK") this.setMainLastWeek()
-      if (config.primaryPreset === "LAST_MONTH") this.setMainLastMonth()
-
-      // adjust compare date range if compare preset is set on
-      if (config.comparePreset === "PREVIOUS_PERIOD") this.setComparePreviousPeriod()
-      if (config.comparePreset === "PREVIOUS_YEAR") this.setComparePreviousYear()
-
-      this.pickerMainLeft = moment(config.dateStart).subtract(1, "month").format(presets.MONTH_FORMAT)
-      this.pickerMainRight = moment(config.dateStart).format(presets.MONTH_FORMAT)
-    }
-
-    // TO DO: set default to default preset instead hard coded
-    // in case something weird happens and some defaults are needed
-    else {
-      this.pickerMainLeft = moment().subtract(1, "month").format(presets.MONTH_FORMAT)
-      this.pickerMainRight = moment().format(presets.MONTH_FORMAT)
-
-      this.pickerMain = presets.LAST_7_DAYS
-      this.pickerCompare = presets.PREVIOUS_PERIOD(this.pickerMain)
-    }
+      // vuetify date range calendars setup
+      "isPickerPrimaryActive",
+      "getPickerPrimaryLeft",
+      "getPickerPrimaryRight",
+      "getPickerCompareLeft",
+      "getPickerCompareRight",
+    ]),
   },
 
   methods: {
-    setMainLast7Days() {
-      this.presetMain = true
-      this.pickerMainIsActive = true
-      this.pickerMain = presets.LAST_7_DAYS
-      this.pickerMainLeft = presets.LAST_7_DAYS[0]
-      this.primaryPreset = "LAST_7_DAYS"
-    },
+    ...mapMutations([
+      // controls compare checkbox
+      "FLIP_COMPARE_STATE",
 
-    setMainLast30Days() {
-      this.presetMain = true
-      this.pickerMainIsActive = true
-      this.pickerMain = presets.LAST_30_DAYS
-      this.pickerMainLeft = presets.LAST_30_DAYS[0]
-      this.primaryPreset = "LAST_30_DAYS"
-    },
+      // controls applied selections
+      "SET_CONFIG",
 
-    setMainLastWeek() {
-      this.presetMain = true
-      this.pickerMainIsActive = true
-      this.pickerMain = presets.LAST_WEEK
-      this.pickerMainLeft = presets.LAST_WEEK[0]
-      this.primaryPreset = "LAST_WEEK"
-    },
+      // controls dialog modal
+      "SET_DIALOG_OPENED",
 
-    setMainLastMonth() {
-      this.presetMain = true
-      this.pickerMainIsActive = true
-      this.pickerMain = presets.LAST_MONTH
-      this.pickerMainLeft = presets.LAST_MONTH[0]
-      this.primaryPreset = "LAST_MONTH"
-    },
+      // control selected date ranges
+      "SET_DATE_START",
+      "SET_DATE_UNTIL",
+      "SET_COMAPRE_START",
+      "SET_COMPARE_UNTIL",
 
-    // Takes current duration of the main range and sets the same
-    // duration to the compare picker, but this duration earlier
-    setComparePreviousPeriod() {
-      this.presetCompare = true
-      this.pickerMainIsActive = false
-      this.pickerCompare = presets.PREVIOUS_PERIOD(this.pickerMain)
-      this.pickerMainLeft = this.pickerCompare[0]
-      this.comparePreset = "PREVIOUS_PERIOD"
-    },
-
-    // Takes current duration of the main range and sets the same
-    // duration to the compare picker, but this duration earlier
-    setComparePreviousYear() {
-      this.presetCompare = true
-      this.pickerMainIsActive = false
-      this.pickerCompare = presets.PREVIOUS_YEAR(this.pickerMain)
-      this.pickerMainLeft = this.pickerCompare[0]
-      this.pickerCompareLeft = moment(this.pickerMain[0]).subtract(1, "year").format(presets.MONTH_FORMAT)
-      this.comparePreset = "PREVIOUS_YEAR"
-    },
-
-    close() {
-      this.$emit("close")
-    },
-
-    applyDates() {
-      this.pickerMain.sort()
-      this.pickerCompare.sort()
-
-      this.$emit("change", {
-        compare: this.compare,
-        dateStart: this.pickerMain[0],
-        dateUntil: this.pickerMain[1],
-        compareStart: this.pickerCompare[0],
-        compareUntil: this.pickerCompare[1],
-        primaryPreset: this.primaryPreset,
-        comparePreset: this.comparePreset,
-      })
-
-      this.close()
-    },
+      // control vuetify calendar pickers
+      "SET_PICKER_PRIMARY_ACTIVE",
+    ]),
   },
 }
 </script>

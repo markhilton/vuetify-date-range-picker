@@ -2,7 +2,11 @@
   "private": false,
   "name": "@nerd305/vuetify-date-range-picker",
   "version": "0.0.35",
-  "description": "Vuetify Date Range Picker optimized for best mobile and desktop user experience",
+  "description": "Vuetify Date Range Picker with compare period and presets, optimized for best mobile and desktop user experience",
+  "keywords": [
+    "DateRangePicker",
+    "VuetifyDateRangePicker"
+  ],
   "author": "Mark Hilton",
   "license": "MIT",
   "homepage": "https://github.com/markhilton/vuetify-date-range-picker",
@@ -32,7 +36,8 @@
     "@mdi/js": ">=5.0.0",
     "vue": ">=2.0.0",
     "vue-moment": ">=4.1.0",
-    "vuetify": "^2.4.3"
+    "vuetify": "^2.4.3",
+    "vuex": "^3.6.2"
   },
   "devDependencies": {
     "@rollup/plugin-buble": "^0.21.3",

@@ -10,7 +10,7 @@ Date Range Picker component build with Vuetify, optimized for best mobile and de
 ## Install
 
 ```bash
-npm install markhilton/vuetify-date-range-picker --save
+npm install @nerd305/vuetify-date-range-picker
 ```
 
 ```javascript
@@ -31,19 +31,21 @@ export default {
 <date-range-picker :config="configuration" @change="setDateRange" />
 ```
 
-configuration:
+example configuration using last 30 days preset and compare to previous period:
 
 ```html
 <script>
-  var configuration = {
+  import { presets } from "@nerd305/vuetify-date-range-picker"
+
+  const configuration = {
     dark: false,
     compare: true,
     dateFormat: "MMM Do, YYYY",
-    dateStart: DAYS_AGO_7,
-    dateUntil: TODAY,
-    compareStart: DAYS_AGO_15,
-    compareUntil: DAYS_AGO_8,
-    primaryPreset: LAST_WEEK,
+    dateStart: presets.LAST_30_DAYS[0],
+    dateUntil: presets.LAST_30_DAYS[1],
+    compareStart: presets.PREVIOUS_PERIOD[LAST_30_DAYS][0],
+    compareUntil: presets.PREVIOUS_PERIOD[LAST_30_DAYS][1],
+    primaryPreset: LAST_30_DAYS,
     comparePreset: PREVIOUS_PERIOD,
   }
 </script>

@@ -66,28 +66,17 @@
         </v-col>
       </v-row>
 
-      <v-checkbox v-model="compare" label="Compare" class="compare-label mt-0 mb-5" />
+      <v-row>
+        <v-col>
+          <v-checkbox v-model="compare" label="Compare" class="compare-label mt-0 mb-5" />
+        </v-col>
+        <v-col>
+          <v-checkbox v-model="darkTheme" label="Dark Theme" class="compare-label mt-0 mb-5" />
+        </v-col>
+      </v-row>
 
       <v-row justify="center">
         <date-picker :config="config" @change="datePickerChanged" />
-      </v-row>
-
-      <v-row justify="center" class="mt-7">
-        <date-picker
-          :config="secondConfig"
-          icon-color="white"
-          class="primary white--text elevation-3"
-          @change="datePickerChanged"
-        />
-      </v-row>
-
-      <v-row justify="center" class="mt-7">
-        <date-picker
-          :config="thirdConfig"
-          icon-color="white"
-          class="orange darken-3 white--text elevation-0"
-          @change="datePickerChanged"
-        />
       </v-row>
 
       <v-row>
@@ -113,11 +102,13 @@ export default {
   components: { DatePicker },
 
   data: () => ({
+    darkTheme: false,
+
     emitted: null,
     compare: true,
 
-    primaryPreset: null,
-    comparePreset: null,
+    primaryPreset: "LAST_7_DAYS",
+    comparePreset: "PREVIOUS_PERIOD",
     primaryPresets: Object.keys(primaryPresets),
     comparePresets: Object.keys(comparePresets),
 
@@ -154,6 +145,12 @@ export default {
         primaryPreset: this.primaryPreset,
         comparePreset: this.comparePreset,
       }
+    },
+  },
+
+  watch: {
+    darkTheme(val) {
+      this.$vuetify.theme.dark = val
     },
   },
 
