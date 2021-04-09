@@ -10,6 +10,8 @@ export default {
   // primary date range
   date_start: presets[defaultPrimaryPreset][0],
   date_until: presets[defaultPrimaryPreset][1],
+  picker_active_mount: presets[defaultPrimaryPreset][0],
+  picker_active_compare_mount: presets[defaultPrimaryPreset][0],
 
   // compare period date range
   compare_start: presets.PREVIOUS_PERIOD(presets[defaultPrimaryPreset])[0],
