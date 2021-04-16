@@ -36,15 +36,16 @@ export default {
   },
   SET_COMPARE_START(state, date) {
     state.compare_start = date
+    state.compare_preset = null
   },
   SET_COMPARE_UNTIL(state, date) {
     state.compare_until = date
+    state.compare_preset = null
   },
 
   // control selected primary preset
   SET_PRIMARY_PRESET(state, preset) {
-    console.log("preset", preset)
-    console.log("preset", preset)
+    console.log("preset primary", preset)
 
     state.primary_preset = preset
 
@@ -68,10 +69,11 @@ export default {
   SET_COMPARE_PRESET(state, preset) {
     const range = presets[preset]([state.date_start, state.date_until])
 
+    state.compare_preset = preset
     state.compare_start = range[0]
     state.compare_until = range[1]
-    state.compare_preset = preset
 
+    state.picker_active_mount = range[0]
     state.picker_primary_active = false
 
     // state.preset_compare = true
@@ -165,10 +167,11 @@ export default {
     state.compare_preset = ''
   },
 
-  SET_PICKER_MAIN_TEST(state, ev) {
+  SET_PICKER_DATE(state, ev) {
     state.picker_active_mount = ev
   },
-  SET_PICKER_COMPARE_TEST(state, ev) {
-    state.picker_active_compare_mount = ev
+  SET_PICKER_DATE_TEST(state, ev) {
+    state.getPickerPrimaryLeft = ev
+    state.getPickerPrimaryRight = ev
   },
 }

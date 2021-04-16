@@ -47,8 +47,8 @@ export default {
   },
 
   getPickerPrimaryLeft(state) {
-    // return moment(state.date_until).subtract(1, "month").format(presets.MONTH_FORMAT)
-    return moment(state.date_start).format(presets.MONTH_FORMAT)
+    return moment(state.date_until).subtract(1, "month").format(presets.MONTH_FORMAT)
+    // return moment(state.date_start).format(presets.MONTH_FORMAT)
   },
   getPickerPrimaryRight(state) {
     return moment(state.date_until).format(presets.MONTH_FORMAT)

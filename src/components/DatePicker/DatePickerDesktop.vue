@@ -6,35 +6,39 @@
           <v-row :class="['picker-main', isPickerPrimaryActive ? 'active' : '']">
             <v-col cols="6">
               <!-- left calendar -->
-              <p v-if="!getCompareState">Primary Picker Left</p>
+              <p :class="getCompareState ? 'picker-label' : ''">Primary Picker Left</p>
               <v-date-picker
                 range
                 no-title
                 first-day-of-week="1"
                 :max="getMaxDate"
+                :value="getPickerPrimary"
                 :picker-date="getPickerPrimaryLeft"
                 class="picker-main-left pr-1"
                 color="blue darken-2 picker-main-selected"
                 @click:date="SET_PICKER_MAIN($event)"
+                @update:picker-date="SET_PICKER_DATE_TEST($event)"
               />
             </v-col>
             <v-col cols="6">
               <!-- right calendar -->
-              <p v-if="!getCompareState">Primary Picker Right</p>
+              <p :class="getCompareState ? 'picker-label' : ''">Primary Picker Right</p>
               <v-date-picker
                 range
                 no-title
                 first-day-of-week="1"
                 :max="getMaxDate"
+                :value="getPickerPrimary"
                 :picker-date="getPickerPrimaryRight"
                 class="picker-main-right"
                 color="blue darken-2 picker-main-selected"
-                @change="SET_PICKER_MAIN($event)"
+                @click:date="SET_PICKER_MAIN($event)"
+                @update:picker-date="SET_PICKER_DATE_TEST($event)"
               />
             </v-col>
           </v-row>
 
-          <v-row v-if="getCompareState" justify="center" class="picker-compare">
+          <v-row v-if="getCompareState" justify="center" :class="['picker-compare', getCompareState ? 'active' : '']">
             <v-col cols="6">
               <p> Compare Picker Left</p>
               <v-date-picker
@@ -44,10 +48,11 @@
                 first-day-of-week="1"
                 :max="getMaxDate"
                 :value="getPickerCompare"
-                :picker-date="getPickerArrow"
+                :picker-date="getPickerPrimaryLeft"
                 class="picker-compare-left pr-1"
-                color="orange darken-2  picker-compare-selected"
-                @change="SET_PICKER_COMPARE($event)"
+                color="orange darken-2 picker-compare-selected"
+                @click:date="SET_PICKER_COMPARE($event)"
+                @update:picker-date="SET_PICKER_DATE_TEST($event)"
               />
             </v-col>
             <v-col cols="6">
@@ -59,11 +64,11 @@
                 first-day-of-week="1"
                 :max="getMaxDate"
                 :value="getPickerCompare"
-                :picker-date="getPickerArrow"
+                :picker-date="getPickerPrimaryRight"
                 class="picker-compare-right"
-                color="orange darken-4 picker-compare-selected"
-                @change="SET_PICKER_COMPARE($event)"
-                @update:picker-date="SET_PICKER_MAIN_TEST($event)"
+                color="orange darken-2 picker-compare-selected"
+                @click:date="SET_PICKER_COMPARE($event)"
+                @update:picker-date="SET_PICKER_DATE_TEST($event)"
               />
             </v-col>
           </v-row>
@@ -80,7 +85,7 @@
                 :max="getMaxDate"
                 :value="getDateStart"
                 class="picker-input"
-                @change="SET_DATE_START($event)"
+                @input="SET_DATE_START($event)"
                 @click="SET_PICKER_PRIMARY_ACTIVE(true)"
               />
             </v-col>
@@ -93,7 +98,7 @@
                 :max="getMaxDate"
                 :value="getDateUntil"
                 class="picker-input"
-                @change="SET_DATE_UNTIL($event)"
+                @input="SET_DATE_UNTIL($event)"
                 @click="SET_PICKER_PRIMARY_ACTIVE(true)"
               />
             </v-col>
@@ -124,7 +129,7 @@
                 :value="getDateCompareStart"
                 :disabled="!getCompareState"
                 class="picker-input"
-                @change="SET_COMAPRE_START($event)"
+                @input="SET_COMAPRE_START($event)"
                 @click="SET_PICKER_PRIMARY_ACTIVE(false)"
               />
             </v-col>
@@ -139,7 +144,7 @@
                 :value="getDateCompareUntil"
                 :disabled="!getCompareState"
                 class="picker-input"
-                @change="SET_COMPARE_UNTIL($event)"
+                @input="SET_COMPARE_UNTIL($event)"
                 @click="SET_PICKER_PRIMARY_ACTIVE(false)"
               />
             </v-col>
@@ -196,7 +201,9 @@ export default {
 
       // vuetify date range calendars setup
       "isPickerPrimaryActive",
-      "getPickerArrow",
+
+      "getPickerDate",
+
       "getPickerPrimaryLeft",
       "getPickerPrimaryRight",
       "getPickerCompareLeft",
@@ -224,6 +231,9 @@ export default {
 
       // control vuetify calendar pickers
       "SET_PICKER_PRIMARY_ACTIVE",
+      "SET_PICKER_DATE",
+      "SET_PICKER_DATE_TEST",
+      "SET_PICKER_COMPARE",
     ]),
   },
 }
@@ -246,6 +256,10 @@ export default {
     position: relative;
     z-index: 1;
 
+    .picker-label {
+      opacity: 0;
+    }
+
     .v-picker {
       background-color: transparent;
     }
@@ -267,7 +281,7 @@ export default {
 
     &:not(.active) {
       .picker-main-selected {
-        color: darkgrey;
+        color: #ffffff;
       }
     }
   }
@@ -280,6 +294,9 @@ export default {
 
     position: relative;
     z-index: 2;
+    &.active {
+      z-index: 1015;
+    }
 
     // Header should be rendered but not visible
     .v-date-picker-header {

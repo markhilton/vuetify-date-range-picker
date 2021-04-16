@@ -5,7 +5,7 @@
         <v-col cols="5">
           <v-row justify="center" :class="['picker-main', isPickerPrimaryActive ? 'active' : '']">
             <v-col cols="12">
-              <p>Primary</p>
+              <p :class="getCompareState ? 'picker-label' : ''">Primary</p>
               <v-date-picker
                 range
                 no-title
@@ -14,9 +14,9 @@
                 :value="getPickerPrimary"
                 :picker-date="getPickerDate"
                 class="picker-compare-left pr-1"
-                color="blue darken-2 picker-compare-selected"
+                color="blue darken-2 picker-main-selected"
                 @click:date="SET_PICKER_MAIN($event)"
-                @update:picker-date="SET_PICKER_MAIN_TEST($event)"
+                @update:picker-date="SET_PICKER_DATE($event)"
               />
             </v-col>
           </v-row>
@@ -28,12 +28,12 @@
                   no-title
                   first-day-of-week="1"
                   class="picker-main-right"
-                  color="orange darken-2 picker-main-selected"
+                  color="orange darken-2 picker-compare-selected"
                   :max="getMaxDate"
                   :value="getPickerCompare"
-                  :picker-date="getPickerCompareDate"
+                  :picker-date="getPickerDate"
                   @click:date="SET_PICKER_COMPARE($event)"
-                  @update:picker-date="SET_PICKER_COMPARE_TEST($event)"
+                  @update:picker-date="SET_PICKER_DATE($event)"
               />
             </v-col>
           </v-row>
@@ -42,8 +42,6 @@
         <v-col cols="7">
           <v-row>
             <v-col cols="6">
-<!--              {{getPickerCompare}}-->
-              {{getPickerCompareDate}}
               <v-text-field
                 label="From"
                 type="date"
@@ -121,7 +119,7 @@
     </v-card-text>
     <v-card-actions>
       <v-spacer />
-      <v-btn text class="px-4 mr-6" @click="SET_DIALOG_OPENED(false)">Cancel11</v-btn>
+      <v-btn text class="px-4 mr-6" @click="SET_DIALOG_OPENED(false)">Cancel</v-btn>
       <v-btn large class="primary px-7" @click="SET_CONFIG()">Apply</v-btn>
     </v-card-actions>
   </v-card>
@@ -139,10 +137,6 @@ export default {
     PresetsPrimary,
     PresetsCompare,
   },
-
-  // props: ["config"],
-
-  data: () => ({}),
 
   computed: {
     ...mapGetters([
@@ -199,15 +193,13 @@ export default {
 
       // control vuetify calendar pickers
       "SET_PICKER_PRIMARY_ACTIVE",
-        "SET_PICKER_MAIN_TEST",
-        "SET_PICKER_COMPARE_TEST",
+      "SET_PICKER_DATE",
     ]),
   },
 }
 </script>
 
 <style lang="scss" scoped>
-// @import "~vuetify/src/styles/styles.sass";
 
 .date-picker-tablet::v-deep {
   max-width: 785px;
@@ -226,7 +218,9 @@ export default {
   .picker-main {
     position: relative;
     z-index: 1;
-
+    .picker-label {
+      opacity: 0;
+    }
     .v-picker {
       background-color: transparent;
     }
@@ -248,7 +242,7 @@ export default {
 
     &:not(.active) {
       .picker-main-selected {
-        color: darkgrey;
+        color: #ffffff;
       }
     }
   }
@@ -257,9 +251,9 @@ export default {
     display: none;
   }
 
-  .picker-main-right .v-date-picker-header > button:nth-of-type(1) {
-    display: none;
-  }
+  //.picker-main-right .v-date-picker-header > button:nth-of-type(1) {
+  //  display: none;
+  //}
 
   // The secondary date picker should be translated
   // over the primary and many of its elements should
@@ -272,7 +266,6 @@ export default {
     &.active {
       z-index: 1015;
     }
-
     // Header should be rendered but not visible
     .v-date-picker-header {
       opacity: 0;
