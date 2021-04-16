@@ -16,9 +16,9 @@ export default {
     state.picker_primary = state
   },
   // set compare picker
-  SET_PICKER_COMPARE(state) {
-    state.picker_compare = state
-  },
+  // SET_PICKER_COMPARE(state) {
+  //   state.picker_compare = state
+  // },
   // set primary picker active
   SET_PICKER_PRIMARY_ACTIVE(state) {
     state.picker_primary_active = Boolean(state)
@@ -36,15 +36,20 @@ export default {
   },
   SET_COMPARE_START(state, date) {
     state.compare_start = date
+    state.compare_preset = null
   },
   SET_COMPARE_UNTIL(state, date) {
     state.compare_until = date
+    state.compare_preset = null
   },
 
   // control selected primary preset
   SET_PRIMARY_PRESET(state, preset) {
+    console.log("preset primary", preset)
+
     state.primary_preset = preset
 
+    state.picker_active_mount = presets[preset][0]
     state.date_start = presets[preset][0]
     state.date_until = presets[preset][1]
 
@@ -64,10 +69,11 @@ export default {
   SET_COMPARE_PRESET(state, preset) {
     const range = presets[preset]([state.date_start, state.date_until])
 
+    state.compare_preset = preset
     state.compare_start = range[0]
     state.compare_until = range[1]
-    state.compare_preset = preset
 
+    state.picker_active_mount = range[0]
     state.picker_primary_active = false
 
     // state.preset_compare = true
@@ -136,5 +142,36 @@ export default {
 
     // close dialog
     state.dialog_opened = false
+  },
+  SET_PICKER_MAIN (state, date) {
+    console.log('date', date)
+    if (state.date_start && state.date_until) {
+      state.date_start = date
+      state.date_until = undefined
+    } else if (state.date_start && !state.date_until) {
+      state.date_until = date
+    } else {
+      state.date_start = date
+    }
+    state.primary_preset = ''
+  },
+  SET_PICKER_COMPARE (state, date) {
+    if (state.compare_start && state.compare_until) {
+      state.compare_start = date
+      state.compare_until = undefined
+    } else if (state.compare_start && !state.compare_until) {
+      state.compare_until = date
+    } else {
+      state.compare_start = date
+    }
+    state.compare_preset = ''
+  },
+
+  SET_PICKER_DATE(state, ev) {
+    state.picker_active_mount = ev
+  },
+  SET_PICKER_DATE_TEST(state, ev) {
+    state.getPickerPrimaryLeft = ev
+    state.getPickerPrimaryRight = ev
   },
 }

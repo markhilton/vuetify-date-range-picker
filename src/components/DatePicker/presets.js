@@ -46,6 +46,7 @@ export const THIS_YEAR = [
 ]
 
 export const PREVIOUS_PERIOD = ([start, until]) => {
+  console.log("[preset]", until)
   const duration = moment(until).diff(moment(start), "days") + 1
 
   return [
