@@ -7,7 +7,6 @@
 
       <v-col style="line-height: 10px" class="date-selector__info d-flex align-center pa-1">
         {{ getDefaultDateFormat(getDateStart) }} &mdash; {{ getDefaultDateFormat(getDateUntil) }}
-
         <small v-if="getCompareState" class="d-flex mt-n2">
           Compare to:
           {{ getDefaultDateFormat(getDateCompareStart) }} &mdash; {{ getDefaultDateFormat(getDateCompareUntil) }}
@@ -53,7 +52,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-// @import "~vuetify/src/styles/styles.sass";
 
 .date-selector::v-deep {
   min-width: 250px;

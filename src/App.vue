@@ -9,34 +9,19 @@
 
       <v-row no-gutters>
         <v-col cols="6" class="pr-1">
-          <v-select v-model="primaryPreset" :items="primaryPresets" label="Primary Preset" />
-        </v-col>
-        <v-col cols="6" class="pl-2">
-          <v-select v-model="comparePreset" :items="comparePresets" label="Compare Preset" />
-        </v-col>
-      </v-row>
-
-      <v-row no-gutters>
-        <v-col cols="6" class="pr-1">
-          <v-text-field
-            v-model="dateStart"
-            label="From"
-            type="date"
-            outlined
-            dense
-            class="picker-input"
-            @keyup="primaryPreset = null"
+          <v-select
+            :items="getPrimaryPresets"
+            :value="getPrimaryPreset"
+            label="Primary Preset"
+            @input="SET_PRIMARY_PRESET($event)"
           />
         </v-col>
         <v-col cols="6" class="pl-2">
-          <v-text-field
-            v-model="dateUntil"
-            label="To"
-            type="date"
-            outlined
-            dense
-            class="picker-input"
-            @keyup="primaryPreset = null"
+          <v-select
+            :items="getComparePresets"
+            :value="getComparePreset"
+            label="Compare Preset"
+            @input="SET_COMPARE_PRESET($event)"
           />
         </v-col>
       </v-row>
@@ -44,47 +29,91 @@
       <v-row no-gutters>
         <v-col cols="6" class="pr-1">
           <v-text-field
-            v-model="compareStart"
-            label="Compare From"
-            type="date"
-            outlined
-            dense
-            class="picker-input"
-            @keyup="comparePreset = null"
+              label="From"
+              type="date"
+              dense
+              outlined
+              :max="getMaxDate"
+              :value="getDateStart"
+              class="picker-input"
+              @input="SET_DATE_START($event)"
+              @click="SET_PICKER_PRIMARY_ACTIVE(true)"
           />
         </v-col>
         <v-col cols="6" class="pl-2">
           <v-text-field
-            v-model="compareUntil"
-            label="Compare To"
-            type="date"
-            outlined
-            dense
-            class="picker-input"
-            @keyup="comparePreset = null"
+              label="To"
+              type="date"
+              dense
+              outlined
+              :max="getMaxDate"
+              :value="getDateUntil"
+              class="picker-input"
+              @input="SET_DATE_UNTIL($event)"
+              @click="SET_PICKER_PRIMARY_ACTIVE(true)"
+          />
+        </v-col>
+      </v-row>
+
+      <v-row no-gutters>
+        <v-col cols="6" class="pr-1">
+          <v-text-field
+              label="From"
+              type="date"
+              outlined
+              dense
+              :max="getMaxDate"
+              :value="getDateCompareStart"
+              :disabled="!getCompareState"
+              class="picker-input"
+              @input="SET_COMPARE_START($event)"
+              @click="SET_PICKER_PRIMARY_ACTIVE(false)"
+          />
+        </v-col>
+        <v-col cols="6" class="pl-2">
+          <v-text-field
+              label="To"
+              type="date"
+              outlined
+              dense
+              :max="getMaxDate"
+              :value="getDateCompareUntil"
+              :disabled="!getCompareState"
+              class="picker-input"
+              @input="SET_COMPARE_UNTIL($event)"
+              @click="SET_PICKER_PRIMARY_ACTIVE(false)"
           />
         </v-col>
       </v-row>
 
       <v-row>
         <v-col>
-          <v-checkbox v-model="compare" label="Compare" class="compare-label mt-0 mb-5" />
+          <v-checkbox
+            :input-value="getCompareState"
+            label="Compare"
+            class="compare-label mt-0 mb-5"
+            @change="FLIP_COMPARE_STATE()"
+          />
         </v-col>
         <v-col>
-          <v-checkbox v-model="darkTheme" label="Dark Theme" class="compare-label mt-0 mb-5" />
+          <v-checkbox
+              :input-value="getThemeState"
+              label="Dark Theme"
+              class="compare-label mt-0 mb-5"
+              @change="SET_THEME_STATE()"
+          />
         </v-col>
       </v-row>
 
       <v-row justify="center">
-        <date-picker :config="config" @change="datePickerChanged" />
+        <date-picker />
       </v-row>
 
       <v-row>
         <v-col>
           <h4 class="mb-2 mt-5 text-decoration-underline">Emitted:</h4>
-
           <div style="background: #333; color: #fff" class="pa-4">
-            <pre>{{ emitted }}</pre>
+            <pre>{{ getEmittedConfig }}</pre>
           </div>
         </v-col>
       </v-row>
@@ -94,71 +123,60 @@
 
 <script>
 import DatePicker from "./components/DatePicker.vue"
-import { primaryPresets, comparePresets } from "./components/DatePicker/presets"
+import { mapGetters, mapMutations } from "vuex";
 
 export default {
   name: "App",
 
   components: { DatePicker },
 
-  data: () => ({
-    darkTheme: false,
-
-    emitted: null,
-    compare: true,
-
-    primaryPreset: "LAST_7_DAYS",
-    comparePreset: "PREVIOUS_PERIOD",
-    primaryPresets: Object.keys(primaryPresets),
-    comparePresets: Object.keys(comparePresets),
-
-    dateStart: "2020-01-05",
-    dateUntil: "2020-01-07",
-    compareStart: "2019-01-01",
-    compareUntil: "2019-01-07",
-
-    secondConfig: {
-      dateStart: "2009-02-20",
-      dateUntil: "2009-02-28",
-      compareStart: "2009-02-01",
-      compareUntil: "2009-02-07",
-      compare: true,
-    },
-
-    thirdConfig: {
-      dateStart: "2020-12-03",
-      dateUntil: "2020-12-07",
-      compareStart: "2020-11-26",
-      compareUntil: "2020-11-27",
-      compare: false,
-    },
-  }),
-
   computed: {
-    config() {
-      return {
-        compare: this.compare,
-        dateStart: this.dateStart,
-        dateUntil: this.dateUntil,
-        compareStart: this.compareStart,
-        compareUntil: this.compareUntil,
-        primaryPreset: this.primaryPreset,
-        comparePreset: this.comparePreset,
-      }
-    },
+    ...mapGetters([
+      // config
+      "getMaxDate",
+      "getThemeState",
+      "getEmittedConfig",
+
+      // compare checkbox
+      "getCompareState",
+
+      // individual dates
+      "getDateStart",
+      "getDateUntil",
+      "getDateCompareUntil",
+      "getDateCompareStart",
+
+      // vuetify date range calendars setup
+      "getPrimaryPreset",
+      "getComparePreset",
+      "getPrimaryPresets",
+      "getComparePresets",
+    ]),
   },
 
   watch: {
-    darkTheme(val) {
+    getThemeState(val) {
       this.$vuetify.theme.dark = val
     },
   },
 
   methods: {
-    datePickerChanged(val) {
-      this.emitted = JSON.stringify(val, null, 2)
-      console.log("[App @datePickerChanged] val:", this.emitted)
-    },
+    ...mapMutations([
+      // controls compare checkbox
+      "FLIP_COMPARE_STATE",
+
+      // control selected date ranges
+      "SET_DATE_START",
+      "SET_DATE_UNTIL",
+      "SET_COMPARE_START",
+      "SET_COMPARE_UNTIL",
+
+      // control vuetify calendar pickers
+      "SET_PICKER_PRIMARY_ACTIVE",
+      "SET_THEME_STATE",
+      "SET_PRIMARY_PRESET",
+      "SET_COMPARE_PRESET",
+    ]),
   },
 }
 </script>

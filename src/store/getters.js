@@ -11,6 +11,9 @@ export default {
   getCompareState(state) {
     return state.compare
   },
+  getThemeState(state) {
+    return state.dark_theme
+  },
 
   // primary date picker state
   getDateStart(state) {
@@ -42,50 +45,43 @@ export default {
   getPickerDate(state) {
     return moment(state.picker_active_mount).format(presets.MONTH_FORMAT)
   },
-  getPickerCompareDate(state) {
-    return moment(state.picker_active_compare_mount).format(presets.MONTH_FORMAT)
-  },
+  // getPickerCompareDate(state) {
+  //   return moment(state.picker_active_compare_mount).format(presets.MONTH_FORMAT)
+  // },
 
   getPickerPrimaryLeft(state) {
-    return moment(state.date_until).subtract(1, "month").format(presets.MONTH_FORMAT)
-    // return moment(state.date_start).format(presets.MONTH_FORMAT)
+    return moment(state.picker_active_mount).subtract(1, "month").format(presets.MONTH_FORMAT)
   },
   getPickerPrimaryRight(state) {
-    return moment(state.date_until).format(presets.MONTH_FORMAT)
+    return moment(state.picker_active_mount).format(presets.MONTH_FORMAT)
   },
-  getPickerCompareLeft(state) {
-    return moment(state.compare_until).subtract(1, "month").format(presets.MONTH_FORMAT)
-  },
-  getPickerCompareRight(state) {
-    return moment(state.compare_until).format(presets.MONTH_FORMAT)
+
+  getEmittedConfig(state) {
+    return state.emitted_config
   },
 
   getConfig(state) {
-    const config = {
-      compare: state.compare,
+    if (state.primary_preset) {
+      state.config.dateStart = null
+      state.config.dateUntil = null
+      state.config.primaryPreset = state.primary_preset
+    } else {
+      state.config.dateStart = state.date_start
+      state.config.dateUntil = state.date_until
+      state.config.primaryPreset = null
     }
 
     if (state.primary_preset) {
-      config.dateStart = null
-      config.dateUntil = null
-      config.primaryPreset = state.primary_preset
+      state.config.compareStart = null
+      state.config.compareUntil = null
+      state.config.comparePreset = state.compare_preset
     } else {
-      config.dateStart = state.date_start
-      config.dateUntil = state.date_until
-      config.primaryPreset = null
+      state.config.compareStart = state.compare_start
+      state.config.compareUntil = state.compare_until
+      state.config.comparePreset = null
     }
 
-    if (state.primary_preset) {
-      config.compareStart = null
-      config.compareUntil = null
-      config.comparePreset = state.compare_preset
-    } else {
-      config.compareStart = state.compare_start
-      config.compareUntil = state.compare_until
-      config.comparePreset = null
-    }
-
-    return config
+    return  state.config
   },
 
   // input field helpers
@@ -93,20 +89,20 @@ export default {
     return presets.TODAY
   },
 
-  // watch helpers
-  getPropsHash() {
-    return state.props_hash
-  },
-  getConfigHash(state, getters) {
-    return JSON.stringify(getters.config)
-  },
-
-  // presets
+  // preset default
   getPrimaryPreset(state) {
     return state.primary_preset
   },
   getComparePreset(state) {
     return state.compare_preset
+  },
+
+  // presets
+  getPrimaryPresets(state) {
+    return state.primary_presets
+  },
+  getComparePresets(state) {
+    return state.compare_presets
   },
 
   getDefaultDateFormat() {

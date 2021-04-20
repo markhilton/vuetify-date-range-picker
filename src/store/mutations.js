@@ -1,24 +1,34 @@
 import moment from "moment"
 import presets from "../components/DatePicker/presets"
 
+const defaultPrimaryPreset = "LAST_7_DAYS"
+const defaultComparePreset = "PREVIOUS_PERIOD"
+
 export default {
   // controls the dialog
   SET_DIALOG_OPENED(state, status) {
+    state.emitted_config = { ...state.config}
     state.dialog_opened = status
   },
+
   // flips compare period checkbox
   FLIP_COMPARE_STATE(state) {
     state.compare = !state.compare
-    if (state.compare) state.picker_primary_active = false
+    if (state.compare) {
+      state.picker_primary_active = false
+    } else {
+      //reset compare preset
+      state.compare_preset = defaultComparePreset
+      state.compare_start = presets.PREVIOUS_PERIOD(presets[defaultPrimaryPreset])[0]
+      state.compare_until = presets.PREVIOUS_PERIOD(presets[defaultPrimaryPreset])[1]
+    }
   },
-  // sets main picker
-  SET_PICKER_PRIMARY(state) {
-    state.picker_primary = state
+
+  // Theme mode
+  SET_THEME_STATE(state) {
+    state.dark_theme = !state.dark_theme
   },
-  // set compare picker
-  // SET_PICKER_COMPARE(state) {
-  //   state.picker_compare = state
-  // },
+
   // set primary picker active
   SET_PICKER_PRIMARY_ACTIVE(state) {
     state.picker_primary_active = Boolean(state)
@@ -139,12 +149,14 @@ export default {
       primaryPreset: state.primary_preset,
       comparePreset: state.compare_preset,
     }
+    state.emitted_config = { ...state.config }
 
     // close dialog
     state.dialog_opened = false
   },
-  SET_PICKER_MAIN (state, date) {
-    console.log('date', date)
+
+  //Set primary start and until date
+  SET_PICKER_PRIMARY (state, date) {
     if (state.date_start && state.date_until) {
       state.date_start = date
       state.date_until = undefined
@@ -155,6 +167,8 @@ export default {
     }
     state.primary_preset = ''
   },
+
+  //Set compere start and until date
   SET_PICKER_COMPARE (state, date) {
     if (state.compare_start && state.compare_until) {
       state.compare_start = date
@@ -167,11 +181,15 @@ export default {
     state.compare_preset = ''
   },
 
+  //Set active mount
   SET_PICKER_DATE(state, ev) {
     state.picker_active_mount = ev
   },
-  SET_PICKER_DATE_TEST(state, ev) {
-    state.getPickerPrimaryLeft = ev
-    state.getPickerPrimaryRight = ev
+
+  // Set active mount for date piker next to each other
+  SET_PICKER_DATE_LEFT(state, ev) {
+    if (moment(state.picker_active_mount).diff(moment(ev), "months") >= 2) {
+        state.picker_active_mount = ev
+    }
   },
 }

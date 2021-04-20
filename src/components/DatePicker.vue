@@ -30,10 +30,6 @@ export default {
     DatePickerMobile,
   },
 
-  inheritAttrs: false,
-
-  props: ["config"],
-
   data: () => ({
     // The following takes care of the classes which should not go to the root element
     // but to the <date-selector /> which actually represents the whole picker
@@ -42,22 +38,10 @@ export default {
 
   computed: {
     ...mapGetters(["isDialogOpened"]),
-
-    propsHash() {
-      return JSON.stringify(this.config)
-    },
-  },
-
-  watch: {
-    propsHash() {
-      this.SET_PROPS(this.config)
-    },
   },
 
   mounted() {
     console.log("[DatePicker -> mounted()] config:", JSON.stringify(this.config, null, 2))
-
-    this.SET_PROPS(this.config)
 
     // The classes which are provided to the root element are passed to the <date-selector />
     this.inheritedClasses = this.$el.className
@@ -68,11 +52,6 @@ export default {
 
   methods: {
     ...mapMutations(["SET_DIALOG_OPENED", "SET_PROPS"]),
-
-    dateSelectorChanged(values) {
-      this.updateConfig(values)
-      this.$emit("change", values)
-    },
   },
 }
 </script>

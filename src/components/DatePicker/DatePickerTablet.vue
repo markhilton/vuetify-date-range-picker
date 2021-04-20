@@ -15,7 +15,7 @@
                 :picker-date="getPickerDate"
                 class="picker-compare-left pr-1"
                 color="blue darken-2 picker-main-selected"
-                @click:date="SET_PICKER_MAIN($event)"
+                @click:date="SET_PICKER_PRIMARY($event)"
                 @update:picker-date="SET_PICKER_DATE($event)"
               />
             </v-col>
@@ -69,31 +69,33 @@
             </v-col>
           </v-row>
 
+          <!-- presets for main period -->
           <v-row class="pl-2 pr-1">
             <PresetsPrimary />
           </v-row>
 
           <v-row class="pl-2 pt-6">
             <v-checkbox
-                :input-value="getCompareState"
-                label="Compare to the following"
-                class="compare-label"
-                @change="FLIP_COMPARE_STATE()"/>
+              :input-value="getCompareState"
+              label="Compare to the following"
+              class="compare-label"
+              @change="FLIP_COMPARE_STATE()"
+            />
           </v-row>
 
           <v-row>
             <v-col cols="6">
               <v-text-field
-                  label="From"
-                  type="date"
-                  outlined
-                  dense
-                  :max="getMaxDate"
-                  :value="getDateCompareStart"
-                  :disabled="!getCompareState"
-                  class="picker-input"
-                  @input="SET_COMPARE_START($event)"
-                  @click="SET_PICKER_PRIMARY_ACTIVE(false)"
+                label="From"
+                type="date"
+                outlined
+                dense
+                :max="getMaxDate"
+                :value="getDateCompareStart"
+                :disabled="!getCompareState"
+                class="picker-input"
+                @input="SET_COMPARE_START($event)"
+                @click="SET_PICKER_PRIMARY_ACTIVE(false)"
               />
             </v-col>
             <v-col cols="6">
@@ -111,9 +113,12 @@
               />
             </v-col>
           </v-row>
+
+          <!-- presets for compare period -->
           <v-row class="pl-2">
             <PresetsCompare />
           </v-row>
+
         </v-col>
       </v-row>
     </v-card-text>
@@ -159,15 +164,8 @@ export default {
       // vuetify date range calendars setup
       "isPickerPrimaryActive",
       "getPickerDate",
-      "getPickerCompareDate",
-      "getPickerPrimaryLeft",
-      "getPickerPrimaryRight",
-      "getPickerCompareLeft",
-      "getPickerCompareRight",
     ]),
   },
-
-  mounted() {},
 
   methods: {
     ...mapMutations([
@@ -183,13 +181,10 @@ export default {
       // control selected date ranges
       "SET_DATE_START",
       "SET_DATE_UNTIL",
-      "SET_COMAPRE_START",
-      "SET_COMPARE_UNTIL",
-      "SET_PICKER_MAIN",
-      "SET_MONTH",
-      "SET_PICKER_COMPARE",
-
       "SET_COMPARE_START",
+      "SET_COMPARE_UNTIL",
+      "SET_PICKER_PRIMARY",
+      "SET_PICKER_COMPARE",
 
       // control vuetify calendar pickers
       "SET_PICKER_PRIMARY_ACTIVE",
@@ -238,6 +233,10 @@ export default {
       button:not(.picker-main-selected) {
         background-color: transparent;
       }
+      button:focus {
+        background-color: #1976D2;
+        color: #ffffff;
+      }
     }
 
     &:not(.active) {
@@ -247,13 +246,6 @@ export default {
     }
   }
 
-  .picker-main-left .v-date-picker-header > button:nth-of-type(2) {
-    display: none;
-  }
-
-  //.picker-main-right .v-date-picker-header > button:nth-of-type(1) {
-  //  display: none;
-  //}
 
   // The secondary date picker should be translated
   // over the primary and many of its elements should
@@ -278,6 +270,10 @@ export default {
 
       button:not(.picker-compare-selected) {
         color: transparent;
+      }
+      button:focus {
+        background-color: #f57c00;
+        color: #ffffff;
       }
     }
 
