@@ -1,11 +1,14 @@
-import presets from "../components/DatePicker/presets"
+import presets, { primaryPresets, comparePresets } from "../components/DatePicker/presets"
 
 const defaultPrimaryPreset = "LAST_7_DAYS"
 const defaultComparePreset = "PREVIOUS_PERIOD"
 
 export default {
   // date range picker config props and emitted values
+  config: null,
+  emitted_config: null,
   compare: true,
+  dark_theme: false,
 
   // primary date range
   date_start: presets[defaultPrimaryPreset][0],
@@ -20,6 +23,10 @@ export default {
   // primary and compare presets
   primary_preset: defaultPrimaryPreset,
   compare_preset: defaultComparePreset,
+
+  // primary and compare presets lists
+  primary_presets: Object.keys(primaryPresets),
+  compare_presets: Object.keys(comparePresets),
 
   // layout
   dialog_opened: false,

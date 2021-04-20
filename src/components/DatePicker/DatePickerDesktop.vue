@@ -16,8 +16,8 @@
                 :picker-date="getPickerPrimaryLeft"
                 class="picker-main-left pr-1"
                 color="blue darken-2 picker-main-selected"
-                @click:date="SET_PICKER_MAIN($event)"
-                @update:picker-date="SET_PICKER_DATE_TEST($event)"
+                @click:date="SET_PICKER_PRIMARY($event)"
+                @update:picker-date="SET_PICKER_DATE_LEFT($event)"
               />
             </v-col>
             <v-col cols="6">
@@ -32,8 +32,8 @@
                 :picker-date="getPickerPrimaryRight"
                 class="picker-main-right"
                 color="blue darken-2 picker-main-selected"
-                @click:date="SET_PICKER_MAIN($event)"
-                @update:picker-date="SET_PICKER_DATE_TEST($event)"
+                @click:date="SET_PICKER_PRIMARY($event)"
+                @update:picker-date="SET_PICKER_DATE($event)"
               />
             </v-col>
           </v-row>
@@ -49,10 +49,10 @@
                 :max="getMaxDate"
                 :value="getPickerCompare"
                 :picker-date="getPickerPrimaryLeft"
-                class="picker-compare-left pr-1"
+                class="pr-1"
                 color="orange darken-2 picker-compare-selected"
                 @click:date="SET_PICKER_COMPARE($event)"
-                @update:picker-date="SET_PICKER_DATE_TEST($event)"
+                @update:picker-date="SET_PICKER_DATE_LEFT($event)"
               />
             </v-col>
             <v-col cols="6">
@@ -65,10 +65,9 @@
                 :max="getMaxDate"
                 :value="getPickerCompare"
                 :picker-date="getPickerPrimaryRight"
-                class="picker-compare-right"
                 color="orange darken-2 picker-compare-selected"
                 @click:date="SET_PICKER_COMPARE($event)"
-                @update:picker-date="SET_PICKER_DATE_TEST($event)"
+                @update:picker-date="SET_PICKER_DATE($event)"
               />
             </v-col>
           </v-row>
@@ -129,7 +128,7 @@
                 :value="getDateCompareStart"
                 :disabled="!getCompareState"
                 class="picker-input"
-                @input="SET_COMAPRE_START($event)"
+                @input="SET_COMPARE_START($event)"
                 @click="SET_PICKER_PRIMARY_ACTIVE(false)"
               />
             </v-col>
@@ -179,8 +178,6 @@ export default {
     PresetsCompare,
   },
 
-  props: ["config"],
-
   computed: {
     ...mapGetters([
       // config
@@ -198,16 +195,12 @@ export default {
       // date picker arrays of date range
       "getPickerPrimary",
       "getPickerCompare",
+      "getPickerDate",
+      "getPickerPrimaryLeft",
+      "getPickerPrimaryRight",
 
       // vuetify date range calendars setup
       "isPickerPrimaryActive",
-
-      "getPickerDate",
-
-      "getPickerPrimaryLeft",
-      "getPickerPrimaryRight",
-      "getPickerCompareLeft",
-      "getPickerCompareRight",
     ]),
   },
 
@@ -225,15 +218,15 @@ export default {
       // control selected date ranges
       "SET_DATE_START",
       "SET_DATE_UNTIL",
-      "SET_COMAPRE_START",
+      "SET_COMPARE_START",
       "SET_COMPARE_UNTIL",
-      "SET_PICKER_MAIN",
 
       // control vuetify calendar pickers
       "SET_PICKER_PRIMARY_ACTIVE",
       "SET_PICKER_DATE",
-      "SET_PICKER_DATE_TEST",
+      "SET_PICKER_PRIMARY",
       "SET_PICKER_COMPARE",
+      "SET_PICKER_DATE_LEFT",
     ]),
   },
 }
@@ -277,6 +270,10 @@ export default {
       button:not(.picker-main-selected) {
         background-color: transparent;
       }
+      button:focus {
+        background-color: #1976D2;
+        color: #ffffff;
+      }
     }
 
     &:not(.active) {
@@ -311,6 +308,10 @@ export default {
       button:not(.picker-compare-selected) {
         color: transparent;
       }
+      button:focus {
+        background-color: #f57c00;
+        color: #ffffff;
+      }
     }
 
     .v-picker {
@@ -327,6 +328,7 @@ export default {
     }
   }
 
+  //right and left arrows should be rendered but not visible
   .picker-main-left .v-date-picker-header > button:nth-of-type(2) {
     display: none;
   }
