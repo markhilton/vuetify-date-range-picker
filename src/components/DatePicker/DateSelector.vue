@@ -1,8 +1,8 @@
 <template>
   <v-sheet class="pa-2 date-selector d-inline-block elevation-2 rounded" @click="SET_DIALOG_OPENED(true)">
     <v-row>
-      <v-col class="date-selector__icon d-flex align-center py-1 px-6 pr-8">
-        <v-icon @click.native.stop="FLIP_COMPARE_STATE()">{{ icon.mdiCalendarRangeOutline }}</v-icon>
+      <v-col class="date-selector__icon d-flex align-center">
+        <v-icon class="py-1" @click.native.stop="FLIP_COMPARE_STATE()">{{getCompareState ? icon.mdiCalendarCheck : icon.mdiCalendarRemove}}</v-icon>
       </v-col>
 
       <v-col style="line-height: 10px" class="date-selector__info d-flex align-center pa-1">
@@ -18,14 +18,15 @@
 
 <script>
 import { mapGetters, mapMutations } from "vuex"
-import { mdiCalendarRangeOutline } from "@mdi/js"
+import { mdiCalendarCheck, mdiCalendarRemove } from "@mdi/js"
 
 export default {
   name: "DateSelector",
 
   data: () => ({
     icon: {
-      mdiCalendarRangeOutline,
+      mdiCalendarCheck,
+      mdiCalendarRemove,
     },
   }),
 
