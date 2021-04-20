@@ -24,15 +24,15 @@
               <v-row>
                 <v-col cols="12">
                   <v-text-field
-                      label="To"
-                      type="date"
-                      dense
-                      outlined
-                      :max="getMaxDate"
-                      :value="getDateUntil"
-                      class="picker-input"
-                      @input="SET_DATE_UNTIL($event)"
-                      @click="SET_PICKER_PRIMARY_ACTIVE(true)"
+                    label="To"
+                    type="date"
+                    dense
+                    outlined
+                    :max="getMaxDate"
+                    :value="getDateUntil"
+                    class="picker-input"
+                    @input="SET_DATE_UNTIL($event)"
+                    @click="SET_PICKER_PRIMARY_ACTIVE(true)"
                   />
                 </v-col>
               </v-row>
@@ -88,14 +88,13 @@
               <v-row justify="start" class="pl-2">
                 <PresetsCompare />
               </v-row>
-
             </v-col>
           </v-row>
         </v-card-text>
 
         <v-card-actions>
           <v-spacer />
-          <v-btn text class="px-4 mr-3"  @click="SET_DIALOG_OPENED(false)">Cancel</v-btn>
+          <v-btn text class="px-4 mr-3" @click="SET_DIALOG_OPENED(false)">Cancel</v-btn>
           <v-btn large class="primary px-7" @click="SET_CONFIG()">Apply</v-btn>
         </v-card-actions>
       </v-container>
@@ -104,9 +103,9 @@
 </template>
 
 <script>
-import PresetsPrimary from "./PresetsPrimary"
-import PresetsCompare from "./PresetsCompare"
-import { mapGetters, mapMutations } from "vuex";
+import PresetsPrimary from "./PresetsPrimary.vue"
+import PresetsCompare from "./PresetsCompare.vue"
+import { mapGetters, mapMutations } from "vuex"
 
 export default {
   name: "DatePickerMobile",
@@ -115,7 +114,6 @@ export default {
     PresetsPrimary,
     PresetsCompare,
   },
-
 
   computed: {
     ...mapGetters([
@@ -157,7 +155,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-
 .date-picker-mobile::v-deep {
   .picker-input {
     // Under the date inputs there is a place

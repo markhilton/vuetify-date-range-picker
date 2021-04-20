@@ -7,7 +7,7 @@ const defaultComparePreset = "PREVIOUS_PERIOD"
 export default {
   // controls the dialog
   SET_DIALOG_OPENED(state, status) {
-    state.emitted_config = { ...state.config}
+    state.emitted_config = { ...state.config }
     state.dialog_opened = status
   },
 
@@ -156,7 +156,7 @@ export default {
   },
 
   //Set primary start and until date
-  SET_PICKER_PRIMARY (state, date) {
+  SET_PICKER_PRIMARY(state, date) {
     if (state.date_start && state.date_until) {
       state.date_start = date
       state.date_until = undefined
@@ -165,11 +165,11 @@ export default {
     } else {
       state.date_start = date
     }
-    state.primary_preset = ''
+    state.primary_preset = ""
   },
 
   //Set compere start and until date
-  SET_PICKER_COMPARE (state, date) {
+  SET_PICKER_COMPARE(state, date) {
     if (state.compare_start && state.compare_until) {
       state.compare_start = date
       state.compare_until = undefined
@@ -178,7 +178,7 @@ export default {
     } else {
       state.compare_start = date
     }
-    state.compare_preset = ''
+    state.compare_preset = ""
   },
 
   //Set active mount
@@ -189,7 +189,7 @@ export default {
   // Set active mount for date piker next to each other
   SET_PICKER_DATE_LEFT(state, ev) {
     if (moment(state.picker_active_mount).diff(moment(ev), "months") >= 2) {
-        state.picker_active_mount = ev
+      state.picker_active_mount = ev
     }
   },
 }

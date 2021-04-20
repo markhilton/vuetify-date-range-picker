@@ -24,16 +24,16 @@
             <v-col cols="12">
               <p>Compare</p>
               <v-date-picker
-                  range
-                  no-title
-                  first-day-of-week="1"
-                  class="picker-main-right"
-                  color="orange darken-2 picker-compare-selected"
-                  :max="getMaxDate"
-                  :value="getPickerCompare"
-                  :picker-date="getPickerDate"
-                  @click:date="SET_PICKER_COMPARE($event)"
-                  @update:picker-date="SET_PICKER_DATE($event)"
+                range
+                no-title
+                first-day-of-week="1"
+                class="picker-main-right"
+                color="orange darken-2 picker-compare-selected"
+                :max="getMaxDate"
+                :value="getPickerCompare"
+                :picker-date="getPickerDate"
+                @click:date="SET_PICKER_COMPARE($event)"
+                @update:picker-date="SET_PICKER_DATE($event)"
               />
             </v-col>
           </v-row>
@@ -100,16 +100,16 @@
             </v-col>
             <v-col cols="6">
               <v-text-field
-                  label="To"
-                  type="date"
-                  outlined
-                  dense
-                  :max="getMaxDate"
-                  :value="getDateCompareUntil"
-                  :disabled="!getCompareState"
-                  class="picker-input"
-                  @input="SET_COMPARE_UNTIL($event)"
-                  @click="SET_PICKER_PRIMARY_ACTIVE(false)"
+                label="To"
+                type="date"
+                outlined
+                dense
+                :max="getMaxDate"
+                :value="getDateCompareUntil"
+                :disabled="!getCompareState"
+                class="picker-input"
+                @input="SET_COMPARE_UNTIL($event)"
+                @click="SET_PICKER_PRIMARY_ACTIVE(false)"
               />
             </v-col>
           </v-row>
@@ -118,7 +118,6 @@
           <v-row class="pl-2">
             <PresetsCompare />
           </v-row>
-
         </v-col>
       </v-row>
     </v-card-text>
@@ -131,8 +130,8 @@
 </template>
 
 <script>
-import PresetsPrimary from "./PresetsPrimary"
-import PresetsCompare from "./PresetsCompare"
+import PresetsPrimary from "./PresetsPrimary.vue"
+import PresetsCompare from "./PresetsCompare.vue"
 import { mapGetters, mapMutations } from "vuex"
 
 export default {
@@ -195,7 +194,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-
 .date-picker-tablet::v-deep {
   max-width: 785px;
   margin-top: 15vh;
@@ -234,7 +232,7 @@ export default {
         background-color: transparent;
       }
       button:focus {
-        background-color: #1976D2;
+        background-color: #1976d2;
         color: #ffffff;
       }
     }
@@ -245,7 +243,6 @@ export default {
       }
     }
   }
-
 
   // The secondary date picker should be translated
   // over the primary and many of its elements should

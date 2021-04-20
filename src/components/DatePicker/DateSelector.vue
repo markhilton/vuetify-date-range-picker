@@ -2,7 +2,9 @@
   <v-sheet class="pa-2 date-selector d-inline-block elevation-2 rounded" @click="SET_DIALOG_OPENED(true)">
     <v-row>
       <v-col class="date-selector__icon d-flex align-center">
-        <v-icon class="py-1" @click.native.stop="FLIP_COMPARE_STATE()">{{getCompareState ? icon.mdiCalendarCheck : icon.mdiCalendarRemove}}</v-icon>
+        <v-icon class="py-1" @click.native.stop="FLIP_COMPARE_STATE()">{{
+          getCompareState ? icon.mdiCalendarCheck : icon.mdiCalendarRemove
+        }}</v-icon>
       </v-col>
 
       <v-col style="line-height: 10px" class="date-selector__info d-flex align-center pa-1">
@@ -53,7 +55,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-
 .date-selector::v-deep {
   min-width: 250px;
   max-width: 290px;

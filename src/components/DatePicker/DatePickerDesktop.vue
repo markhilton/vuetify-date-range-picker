@@ -40,7 +40,7 @@
 
           <v-row v-if="getCompareState" justify="center" :class="['picker-compare', getCompareState ? 'active' : '']">
             <v-col cols="6">
-              <p> Compare Picker Left</p>
+              <p>Compare Picker Left</p>
               <v-date-picker
                 range
                 no-title
@@ -167,8 +167,8 @@
 
 <script>
 import { mapGetters, mapMutations } from "vuex"
-import PresetsPrimary from "./PresetsPrimary"
-import PresetsCompare from "./PresetsCompare"
+import PresetsPrimary from "./PresetsPrimary.vue"
+import PresetsCompare from "./PresetsCompare.vue"
 
 export default {
   name: "DatePickerDesktop",
@@ -271,7 +271,7 @@ export default {
         background-color: transparent;
       }
       button:focus {
-        background-color: #1976D2;
+        background-color: #1976d2;
         color: #ffffff;
       }
     }

@@ -1,7 +1,7 @@
 {
   "private": false,
   "name": "@nerd305/vuetify-date-range-picker",
-  "version": "0.0.35",
+  "version": "0.0.36",
   "description": "Vuetify Date Range Picker with compare period and presets, optimized for best mobile and desktop user experience",
   "keywords": [
     "DateRangePicker",
@@ -61,6 +61,7 @@
     "eslint-plugin-prettier-vue": "^2.1.1",
     "eslint-plugin-promise": "^4.0.1",
     "eslint-plugin-vue": "^7.5.0",
+    "precommit": "^1.2.2",
     "prettier": "^2.2.1",
     "rollup": "^2.38.0",
     "rollup-plugin-vue": "^5.1.9",

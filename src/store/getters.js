@@ -81,7 +81,7 @@ export default {
       state.config.comparePreset = null
     }
 
-    return  state.config
+    return state.config
   },
 
   // input field helpers

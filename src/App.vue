@@ -123,7 +123,7 @@
 
 <script>
 import DatePicker from "./components/DatePicker.vue"
-import { mapGetters, mapMutations } from "vuex";
+import { mapGetters, mapMutations } from "vuex"
 
 export default {
   name: "App",
