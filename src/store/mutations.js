@@ -108,24 +108,24 @@ export default {
   SET_PROPS(state, props) {
     console.log("[ SET_PROPS ]:")
 
-    state.compare = Boolean(props?.compare)
+    state.compare = Boolean(props && props.compare)
 
     console.log("- applying compare:", state.compare)
 
-    if (presets[props?.primaryPreset]) {
+    if (presets[props && props.primaryPreset]) {
       state.primary_preset = props.primaryPreset
-      state.date_start = presets[props?.primaryPreset][0]
-      state.date_until = presets[props?.primaryPreset][1]
+      state.date_start = presets[props && props.primaryPreset][0]
+      state.date_until = presets[props && props.primaryPreset][1]
 
       console.log("- applying primary preset:", presets[props.primaryPreset])
     } else {
-      state.date_start = props?.dateStart || presets[state.primary_preset][0]
-      state.date_until = props?.dateUntil || presets[state.primary_preset][1]
+      state.date_start = (props && props.dateStart) || presets[state.primary_preset][0]
+      state.date_until = (props && props.dateUntil) || presets[state.primary_preset][1]
 
       console.log("- applying primary date range:", state.date_start, "-", state.date_until)
     }
 
-    if (presets[props?.comparePreset]) {
+    if (presets[props && props.comparePreset]) {
       const range = presets[props.comparePreset]([state.date_start, state.date_until])
 
       state.compare_preset = props.comparePreset
@@ -135,11 +135,11 @@ export default {
       console.log("- applying compare preset:", range)
     } else {
       state.compare_start =
-        props?.compareStart || presets[state.compare_preset]([state.date_start, state.date_until])[0]
+        (props && props.compareStart) || presets[state.compare_preset]([state.date_start, state.date_until])[0]
       state.compare_until =
-        props?.compareUntil || presets[state.compare_preset]([state.date_start, state.date_until])[1]
+        (props && props.compareUntil) || presets[state.compare_preset]([state.date_start, state.date_until])[1]
 
-      console.log("- applying compare date range:", props?.compareStart, "-", props?.compareUntil)
+      console.log("- applying compare date range:", props && props.compareStart, "-", props && props.compareUntil)
     }
   },
 
