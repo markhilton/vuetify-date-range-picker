@@ -40,7 +40,6 @@
 
           <v-row v-if="getCompareState" justify="center" :class="['picker-compare', getCompareState ? 'active' : '']">
             <v-col cols="6">
-              <p>Compare Picker Left</p>
               <v-date-picker
                 range
                 no-title
@@ -56,7 +55,6 @@
               />
             </v-col>
             <v-col cols="6">
-              <p>Compare Picker Right</p>
               <v-date-picker
                 range
                 no-title
