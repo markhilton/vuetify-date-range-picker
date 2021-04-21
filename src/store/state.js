@@ -31,7 +31,4 @@ export default {
   // layout
   dialog_opened: false,
   picker_primary_active: true,
-
-  // picker_compare: presets.PREVIOUS_PERIOD(presets[defaultPrimaryPreset]),
-  // picker_compare_left: presets.PREVIOUS_PERIOD(presets[defaultPrimaryPreset])[0],
 }

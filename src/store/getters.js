@@ -11,6 +11,7 @@ export default {
   getCompareState(state) {
     return state.compare
   },
+
   getThemeState(state) {
     return state.dark_theme
   },
@@ -19,9 +20,11 @@ export default {
   getDateStart(state) {
     return state.date_start
   },
+
   getDateUntil(state) {
     return state.date_until
   },
+
   getPickerPrimary(state) {
     return [state.date_start, state.date_until]
   },
@@ -30,9 +33,11 @@ export default {
   getDateCompareStart(state) {
     return state.compare_start
   },
+
   getDateCompareUntil(state) {
     return state.compare_until
   },
+
   getPickerCompare(state) {
     return [state.compare_start, state.compare_until]
   },
@@ -45,13 +50,11 @@ export default {
   getPickerDate(state) {
     return moment(state.picker_active_mount).format(presets.MONTH_FORMAT)
   },
-  // getPickerCompareDate(state) {
-  //   return moment(state.picker_active_compare_mount).format(presets.MONTH_FORMAT)
-  // },
 
   getPickerPrimaryLeft(state) {
     return moment(state.picker_active_mount).subtract(1, "month").format(presets.MONTH_FORMAT)
   },
+
   getPickerPrimaryRight(state) {
     return moment(state.picker_active_mount).format(presets.MONTH_FORMAT)
   },
@@ -93,6 +96,7 @@ export default {
   getPrimaryPreset(state) {
     return state.primary_preset
   },
+
   getComparePreset(state) {
     return state.compare_preset
   },
@@ -101,6 +105,7 @@ export default {
   getPrimaryPresets(state) {
     return state.primary_presets
   },
+
   getComparePresets(state) {
     return state.compare_presets
   },

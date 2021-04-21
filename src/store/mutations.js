@@ -17,7 +17,7 @@ export default {
     if (state.compare) {
       state.picker_primary_active = false
     } else {
-      //reset compare preset
+      // reset compare preset
       state.compare_preset = defaultComparePreset
       state.compare_start = presets.PREVIOUS_PERIOD(presets[defaultPrimaryPreset])[0]
       state.compare_until = presets.PREVIOUS_PERIOD(presets[defaultPrimaryPreset])[1]
@@ -33,21 +33,25 @@ export default {
   SET_PICKER_PRIMARY_ACTIVE(state) {
     state.picker_primary_active = Boolean(state)
   },
+
   // control date range properties
   SET_DATE_START(state, date) {
     state.date_start = date
     state.compare_start = presets[state.compare_preset]([state.date_start, state.date_until])[0]
     state.primary_preset = null
   },
+
   SET_DATE_UNTIL(state, date) {
     state.date_until = date
     state.compare_until = presets[state.compare_preset]([state.date_start, state.date_until])[1]
     state.primary_preset = null
   },
+
   SET_COMPARE_START(state, date) {
     state.compare_start = date
     state.compare_preset = null
   },
+
   SET_COMPARE_UNTIL(state, date) {
     state.compare_until = date
     state.compare_preset = null
@@ -155,7 +159,7 @@ export default {
     state.dialog_opened = false
   },
 
-  //Set primary start and until date
+  // set primary start and until date
   SET_PICKER_PRIMARY(state, date) {
     if (state.date_start && state.date_until) {
       state.date_start = date
@@ -168,7 +172,7 @@ export default {
     state.primary_preset = ""
   },
 
-  //Set compere start and until date
+  // set compere start and until date
   SET_PICKER_COMPARE(state, date) {
     if (state.compare_start && state.compare_until) {
       state.compare_start = date
@@ -181,12 +185,12 @@ export default {
     state.compare_preset = ""
   },
 
-  //Set active mount
+  // set active mount
   SET_PICKER_DATE(state, ev) {
     state.picker_active_mount = ev
   },
 
-  // Set active mount for date piker next to each other
+  // set active mount for date piker next to each other
   SET_PICKER_DATE_LEFT(state, ev) {
     if (moment(state.picker_active_mount).diff(moment(ev), "months") >= 2) {
       state.picker_active_mount = ev
