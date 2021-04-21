@@ -145,6 +145,7 @@ export default {
       // control selected date ranges
       "SET_DATE_START",
       "SET_DATE_UNTIL",
+      "SET_COMPARE_START",
       "SET_COMPARE_UNTIL",
 
       // control vuetify calendar pickers
