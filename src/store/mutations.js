@@ -1,9 +1,6 @@
 import moment from "moment"
 import presets from "../components/DatePicker/presets"
 
-const defaultPrimaryPreset = "LAST_7_DAYS"
-const defaultComparePreset = "PREVIOUS_PERIOD"
-
 export default {
   // controls the dialog
   SET_DIALOG_OPENED(state, status) {
@@ -19,9 +16,9 @@ export default {
       state.picker_primary_active = false
     } else {
       // reset compare preset
-      state.compare_preset = defaultComparePreset
-      state.compare_start = presets.PREVIOUS_PERIOD(presets[defaultPrimaryPreset])[0]
-      state.compare_until = presets.PREVIOUS_PERIOD(presets[defaultPrimaryPreset])[1]
+      state.compare_preset = state.compare_preset
+      state.compare_start = presets.PREVIOUS_PERIOD(presets[state.primary_preset])[0]
+      state.compare_until = presets.PREVIOUS_PERIOD(presets[state.primary_preset])[1]
     }
   },
 
@@ -122,8 +119,8 @@ export default {
 
       console.log("- applying primary preset:", presets[props.primaryPreset])
     } else {
-      state.date_start = props?.dateStart || presets[defaultPrimaryPreset][0]
-      state.date_until = props?.dateUntil || presets[defaultPrimaryPreset][1]
+      state.date_start = props?.dateStart || presets[state.primary_preset][0]
+      state.date_until = props?.dateUntil || presets[state.primary_preset][1]
 
       console.log("- applying primary date range:", state.date_start, "-", state.date_until)
     }
@@ -138,9 +135,9 @@ export default {
       console.log("- applying compare preset:", range)
     } else {
       state.compare_start =
-        props?.compareStart || presets[defaultComparePreset]([state.date_start, state.date_until])[0]
+        props?.compareStart || presets[state.compare_preset]([state.date_start, state.date_until])[0]
       state.compare_until =
-        props?.compareUntil || presets[defaultComparePreset]([state.date_start, state.date_until])[1]
+        props?.compareUntil || presets[state.compare_preset]([state.date_start, state.date_until])[1]
 
       console.log("- applying compare date range:", props?.compareStart, "-", props?.compareUntil)
     }
@@ -175,7 +172,7 @@ export default {
     } else {
       state.date_start = date
     }
-    state.primary_preset = ""
+    state.primary_preset = null
   },
 
   // set compere start and until date
@@ -188,7 +185,7 @@ export default {
     } else {
       state.compare_start = date
     }
-    state.compare_preset = ""
+    state.compare_preset = null
   },
 
   // set active mount
