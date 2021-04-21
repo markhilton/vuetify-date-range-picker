@@ -30,6 +30,8 @@ export default {
     DatePickerMobile,
   },
 
+  props: ["config"],
+
   data: () => ({
     // The following takes care of the classes which should not go to the root element
     // but to the <date-selector /> which actually represents the whole picker
@@ -55,6 +57,8 @@ export default {
 
     // We don't want to lose the default root element classes
     this.$el.className = "date-selector d-inline-flex align-center justify-center"
+
+    this.SET_PROPS(this.config)
   },
 
   methods: {

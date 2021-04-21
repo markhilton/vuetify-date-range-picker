@@ -29,28 +29,24 @@
       <v-row no-gutters>
         <v-col cols="6" class="pr-1">
           <v-text-field
+            v-model="init.dateStart"
             label="From"
             type="date"
             dense
             outlined
             :max="getMaxDate"
-            :value="getDateStart"
             class="picker-input"
-            @input="SET_DATE_START($event)"
-            @click="SET_PICKER_PRIMARY_ACTIVE(true)"
           />
         </v-col>
         <v-col cols="6" class="pl-2">
           <v-text-field
+            v-model="init.dateUntil"
             label="To"
             type="date"
             dense
             outlined
             :max="getMaxDate"
-            :value="getDateUntil"
             class="picker-input"
-            @input="SET_DATE_UNTIL($event)"
-            @click="SET_PICKER_PRIMARY_ACTIVE(true)"
           />
         </v-col>
       </v-row>
@@ -58,42 +54,33 @@
       <v-row no-gutters>
         <v-col cols="6" class="pr-1">
           <v-text-field
+            v-model="init.compareStart"
             label="From"
             type="date"
             outlined
             dense
             :max="getMaxDate"
-            :value="getDateCompareStart"
             :disabled="!getCompareState"
             class="picker-input"
-            @input="SET_COMPARE_START($event)"
-            @click="SET_PICKER_PRIMARY_ACTIVE(false)"
           />
         </v-col>
         <v-col cols="6" class="pl-2">
           <v-text-field
+            v-model="init.compareUntil"
             label="To"
             type="date"
             outlined
             dense
             :max="getMaxDate"
-            :value="getDateCompareUntil"
             :disabled="!getCompareState"
             class="picker-input"
-            @input="SET_COMPARE_UNTIL($event)"
-            @click="SET_PICKER_PRIMARY_ACTIVE(false)"
           />
         </v-col>
       </v-row>
 
       <v-row>
         <v-col>
-          <v-checkbox
-            :input-value="getCompareState"
-            label="Compare"
-            class="compare-label mt-0 mb-5"
-            @change="FLIP_COMPARE_STATE()"
-          />
+          <v-checkbox v-model="init.compare" label="Compare" class="compare-label mt-0 mb-5" />
         </v-col>
         <v-col>
           <v-checkbox
@@ -106,7 +93,7 @@
       </v-row>
 
       <v-row justify="center">
-        <date-picker :config="dateRange" @change="setDateRange" />
+        <date-picker :config="init" @change="setDateRange" />
       </v-row>
 
       <v-row>
@@ -148,7 +135,17 @@ export default {
   components: { DatePicker },
 
   data: () => ({
-    dateRange: {},
+    init: {
+      // test with and without init values
+      compare: true,
+      // dateStart: "2021-01-01",
+      // dateUntil: "2021-02-01",
+      // compareStart: "2020-01-01",
+      // compareUntil: "2020-02-01",
+      primaryPreset: "LAST_30_DAYS",
+      comparePreset: "PREVIOUS_YEAR",
+    },
+    dateRange: null,
   }),
 
   computed: {

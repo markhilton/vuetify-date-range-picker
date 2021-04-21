@@ -6,7 +6,6 @@
           <v-row :class="['picker-main', isPickerPrimaryActive ? 'active' : '']">
             <v-col cols="6">
               <!-- left calendar -->
-              <p :class="getCompareState ? 'picker-label' : ''">Primary Picker Left</p>
               <v-date-picker
                 range
                 no-title
@@ -22,7 +21,6 @@
             </v-col>
             <v-col cols="6">
               <!-- right calendar -->
-              <p :class="getCompareState ? 'picker-label' : ''">Primary Picker Right</p>
               <v-date-picker
                 range
                 no-title
