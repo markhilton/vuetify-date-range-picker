@@ -92,7 +92,7 @@
     PREVIOUS_YEAR: PREVIOUS_YEAR,
   };
 
-  var presets = Object.assign({}, {TODAY: TODAY,
+  var DateRangePresets = Object.assign({}, {TODAY: TODAY,
     DATE_FORMAT: DATE_FORMAT,
     MONTH_FORMAT: MONTH_FORMAT,
     DEFAULT_FORMAT: DEFAULT_FORMAT},
@@ -111,14 +111,14 @@
     dark_theme: false,
 
     // primary date range
-    date_start: presets[defaultPrimaryPreset][0],
-    date_until: presets[defaultPrimaryPreset][1],
-    picker_active_mount: presets[defaultPrimaryPreset][0],
-    picker_active_compare_mount: presets[defaultPrimaryPreset][0],
+    date_start: DateRangePresets[defaultPrimaryPreset][0],
+    date_until: DateRangePresets[defaultPrimaryPreset][1],
+    picker_active_mount: DateRangePresets[defaultPrimaryPreset][0],
+    picker_active_compare_mount: DateRangePresets[defaultPrimaryPreset][0],
 
     // compare period date range
-    compare_start: presets.PREVIOUS_PERIOD(presets[defaultPrimaryPreset])[0],
-    compare_until: presets.PREVIOUS_PERIOD(presets[defaultPrimaryPreset])[1],
+    compare_start: DateRangePresets.PREVIOUS_PERIOD(DateRangePresets[defaultPrimaryPreset])[0],
+    compare_until: DateRangePresets.PREVIOUS_PERIOD(DateRangePresets[defaultPrimaryPreset])[1],
 
     // primary and compare presets
     primary_preset: defaultPrimaryPreset,
@@ -180,15 +180,15 @@
     },
 
     getPickerDate: function getPickerDate(state) {
-      return moment__default['default'](state.picker_active_mount).format(presets.MONTH_FORMAT)
+      return moment__default['default'](state.picker_active_mount).format(DateRangePresets.MONTH_FORMAT)
     },
 
     getPickerPrimaryLeft: function getPickerPrimaryLeft(state) {
-      return moment__default['default'](state.picker_active_mount).subtract(1, "month").format(presets.MONTH_FORMAT)
+      return moment__default['default'](state.picker_active_mount).subtract(1, "month").format(DateRangePresets.MONTH_FORMAT)
     },
 
     getPickerPrimaryRight: function getPickerPrimaryRight(state) {
-      return moment__default['default'](state.picker_active_mount).format(presets.MONTH_FORMAT)
+      return moment__default['default'](state.picker_active_mount).format(DateRangePresets.MONTH_FORMAT)
     },
 
     getEmittedConfig: function getEmittedConfig(state) {
@@ -221,7 +221,7 @@
 
     // input field helpers
     getMaxDate: function getMaxDate(state) {
-      return presets.TODAY
+      return DateRangePresets.TODAY
     },
 
     // preset default
@@ -244,7 +244,7 @@
 
     getDefaultDateFormat: function getDefaultDateFormat() {
       return function (date) {
-        return moment__default['default'](date).format(presets.DEFAULT_FORMAT)
+        return moment__default['default'](date).format(DateRangePresets.DEFAULT_FORMAT)
       }
     },
   };
@@ -267,8 +267,8 @@
       } else {
         // reset compare preset
         state.compare_preset = defaultComparePreset$1;
-        state.compare_start = presets.PREVIOUS_PERIOD(presets[defaultPrimaryPreset$1])[0];
-        state.compare_until = presets.PREVIOUS_PERIOD(presets[defaultPrimaryPreset$1])[1];
+        state.compare_start = DateRangePresets.PREVIOUS_PERIOD(DateRangePresets[defaultPrimaryPreset$1])[0];
+        state.compare_until = DateRangePresets.PREVIOUS_PERIOD(DateRangePresets[defaultPrimaryPreset$1])[1];
       }
     },
 
@@ -285,13 +285,13 @@
     // control date range properties
     SET_DATE_START: function SET_DATE_START(state, date) {
       state.date_start = date;
-      state.compare_start = presets[state.compare_preset]([state.date_start, state.date_until])[0];
+      state.compare_start = DateRangePresets[state.compare_preset]([state.date_start, state.date_until])[0];
       state.primary_preset = null;
     },
 
     SET_DATE_UNTIL: function SET_DATE_UNTIL(state, date) {
       state.date_until = date;
-      state.compare_until = presets[state.compare_preset]([state.date_start, state.date_until])[1];
+      state.compare_until = DateRangePresets[state.compare_preset]([state.date_start, state.date_until])[1];
       state.primary_preset = null;
     },
 
@@ -311,11 +311,11 @@
 
       state.primary_preset = preset;
 
-      state.picker_active_mount = presets[preset][0];
-      state.date_start = presets[preset][0];
-      state.date_until = presets[preset][1];
+      state.picker_active_mount = DateRangePresets[preset][0];
+      state.date_start = DateRangePresets[preset][0];
+      state.date_until = DateRangePresets[preset][1];
 
-      var compare = presets[state.compare_preset]([state.date_start, state.date_until]);
+      var compare = DateRangePresets[state.compare_preset]([state.date_start, state.date_until]);
 
       state.compare_start = compare[0];
       state.compare_until = compare[1];
@@ -329,7 +329,7 @@
 
     // control selected compare preset
     SET_COMPARE_PRESET: function SET_COMPARE_PRESET(state, preset) {
-      var range = presets[preset]([state.date_start, state.date_until]);
+      var range = DateRangePresets[preset]([state.date_start, state.date_until]);
 
       state.compare_preset = preset;
       state.compare_start = range[0];
@@ -360,12 +360,12 @@
 
       state.compare = Boolean(props.compare);
 
-      if (presets[props.primaryPreset]) {
+      if (DateRangePresets[props.primaryPreset]) {
         state.primary_preset = props.primaryPreset;
-        state.date_start = presets[props.primaryPreset][0];
-        state.date_until = presets[props.primaryPreset][1];
+        state.date_start = DateRangePresets[props.primaryPreset][0];
+        state.date_until = DateRangePresets[props.primaryPreset][1];
 
-        console.log("- applying primary preset:", presets[props.primaryPreset]);
+        console.log("- applying primary preset:", DateRangePresets[props.primaryPreset]);
       } else {
         state.date_start = props.dateStart;
         state.date_until = props.dateUntil;
@@ -373,8 +373,8 @@
         console.log("- applying primary date range:", props.dateStart, "-", props.dateUntil);
       }
 
-      if (presets[props.comparePreset]) {
-        var range = presets[props.comparePreset]([state.date_start, state.date_until]);
+      if (DateRangePresets[props.comparePreset]) {
+        var range = DateRangePresets[props.comparePreset]([state.date_start, state.date_until]);
 
         state.compare_preset = props.comparePreset;
         state.compare_start = range[0];
@@ -446,7 +446,7 @@
     },
   };
 
-  var store = {
+  var DateRangeStore = {
     state: state,
     getters: getters,
     mutations: mutations,
@@ -3464,7 +3464,7 @@
     install$1.installed = true;
     Vue.component("DateRangeSelector", __vue_component__$6);
 
-    if (options.store) { options.store.registerModule("datePicker", store); }
+    if (options.store) { options.store.registerModule("datePicker", DateRangeStore); }
   }
 
   // Create module definition for Vue.use()
@@ -3483,15 +3483,13 @@
 
   if (GlobalVue) { GlobalVue.use(plugin); }
 
-  // To allow use as module (npm/webpack/etc.) export component
-  var wrapper = {
-    install: install$1,
-    store: store,
-    presets: presets,
-  };
+  var store = DateRangeStore;
+  var presets = DateRangePresets;
 
-  exports.default = wrapper;
+  exports.default = __vue_component__$6;
   exports.install = install$1;
+  exports.presets = presets;
+  exports.store = store;
 
   Object.defineProperty(exports, '__esModule', { value: true });
 

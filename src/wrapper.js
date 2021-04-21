@@ -1,6 +1,6 @@
 // Import vue component
-import store from "./store"
-import presets from "./components/DatePicker/presets"
+import DateRangeStore from "./store"
+import DateRangePresets from "./components/DatePicker/presets"
 import DateRangeSelector from "./components/DatePicker.vue"
 
 // Declare install function executed by Vue.use()
@@ -12,7 +12,7 @@ export function install(Vue, options = {}) {
   install.installed = true
   Vue.component("DateRangeSelector", DateRangeSelector)
 
-  if (options.store) options.store.registerModule("datePicker", store)
+  if (options.store) options.store.registerModule("datePicker", DateRangeStore)
 }
 
 // Create module definition for Vue.use()
@@ -31,9 +31,8 @@ if (typeof window !== "undefined") {
 
 if (GlobalVue) GlobalVue.use(plugin)
 
+export const store = DateRangeStore
+export const presets = DateRangePresets
+
 // To allow use as module (npm/webpack/etc.) export component
-export default {
-  install,
-  store,
-  presets,
-}
+export default DateRangeSelector
