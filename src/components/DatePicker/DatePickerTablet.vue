@@ -143,7 +143,7 @@ export default {
   },
 
   computed: {
-    ...mapGetters([
+    ...mapGetters("datepicker", [
       // config
       "getMaxDate",
 
@@ -167,7 +167,7 @@ export default {
   },
 
   methods: {
-    ...mapMutations([
+    ...mapMutations("datepicker", [
       // controls compare checkbox
       "FLIP_COMPARE_STATE",
 

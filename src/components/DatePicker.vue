@@ -37,7 +37,7 @@ export default {
   }),
 
   computed: {
-    ...mapGetters(["isDialogOpened"]),
+    ...mapGetters("datepicker", ["isDialogOpened"]),
   },
 
   mounted() {
@@ -51,7 +51,7 @@ export default {
   },
 
   methods: {
-    ...mapMutations(["SET_DIALOG_OPENED", "SET_PROPS"]),
+    ...mapMutations("datepicker", ["SET_DIALOG_OPENED", "SET_PROPS"]),
   },
 }
 </script>

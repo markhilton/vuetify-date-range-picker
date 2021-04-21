@@ -33,7 +33,7 @@ export default {
   }),
 
   computed: {
-    ...mapGetters([
+    ...mapGetters("datepicker", [
       // date format helper
       "getDefaultDateFormat",
 
@@ -49,7 +49,7 @@ export default {
   },
 
   methods: {
-    ...mapMutations(["FLIP_COMPARE_STATE", "SET_DIALOG_OPENED"]),
+    ...mapMutations("datepicker", ["FLIP_COMPARE_STATE", "SET_DIALOG_OPENED"]),
   },
 }
 </script>

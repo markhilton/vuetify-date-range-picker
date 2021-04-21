@@ -89,11 +89,11 @@ export default {
   name: "PrimaryPresets",
 
   computed: {
-    ...mapGetters(["getPrimaryPreset"]),
+    ...mapGetters("datepicker", ["getPrimaryPreset"]),
   },
 
   methods: {
-    ...mapMutations(["SET_PRIMARY_PRESET"]),
+    ...mapMutations("datepicker", ["SET_PRIMARY_PRESET"]),
   },
 }
 </script>

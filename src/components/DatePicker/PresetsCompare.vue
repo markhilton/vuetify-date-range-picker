@@ -42,11 +42,11 @@ export default {
   name: "ComparePresets",
 
   computed: {
-    ...mapGetters(["getCompareState", "getComparePreset"]),
+    ...mapGetters("datepicker", ["getCompareState", "getComparePreset"]),
   },
 
   methods: {
-    ...mapMutations(["SET_COMPARE_PRESET"]),
+    ...mapMutations("datepicker", ["SET_COMPARE_PRESET"]),
   },
 }
 </script>

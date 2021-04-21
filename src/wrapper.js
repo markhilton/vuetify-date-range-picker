@@ -31,8 +31,8 @@ if (typeof window !== "undefined") {
 
 if (GlobalVue) GlobalVue.use(plugin)
 
-export const store = DateRangeStore
 export const presets = DateRangePresets
+export const datepicker = DateRangeStore
 
 // To allow use as module (npm/webpack/etc.) export component
 export default DateRangeSelector
