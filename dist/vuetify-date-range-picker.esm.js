@@ -86,13 +86,365 @@ var comparePresets = {
   PREVIOUS_YEAR: PREVIOUS_YEAR,
 };
 
-var DateRangePresets = Object.assign({}, {TODAY: TODAY,
+var presets = Object.assign({}, {TODAY: TODAY,
   DATE_FORMAT: DATE_FORMAT,
   MONTH_FORMAT: MONTH_FORMAT,
   DEFAULT_FORMAT: DEFAULT_FORMAT},
 
   primaryPresets,
   comparePresets);
+
+var defaultPrimaryPreset = "LAST_7_DAYS";
+var defaultComparePreset = "PREVIOUS_PERIOD";
+
+var state = {
+  // date range picker config props and emitted values
+  config: null,
+  emitted_config: null,
+  compare: true,
+  dark_theme: false,
+
+  // primary date range
+  date_start: presets[defaultPrimaryPreset][0],
+  date_until: presets[defaultPrimaryPreset][1],
+  picker_active_mount: presets[defaultPrimaryPreset][0],
+  picker_active_compare_mount: presets[defaultPrimaryPreset][0],
+
+  // compare period date range
+  compare_start: presets.PREVIOUS_PERIOD(presets[defaultPrimaryPreset])[0],
+  compare_until: presets.PREVIOUS_PERIOD(presets[defaultPrimaryPreset])[1],
+
+  // primary and compare presets
+  primary_preset: defaultPrimaryPreset,
+  compare_preset: defaultComparePreset,
+
+  // primary and compare presets lists
+  primary_presets: Object.keys(primaryPresets),
+  compare_presets: Object.keys(comparePresets),
+
+  // layout
+  dialog_opened: false,
+  picker_primary_active: true,
+};
+
+var getters = {
+  // dialog window state
+  isDialogOpened: function isDialogOpened(state) {
+    return state.dialog_opened
+  },
+
+  // compare checkbox state
+  getCompareState: function getCompareState(state) {
+    return state.compare
+  },
+
+  getThemeState: function getThemeState(state) {
+    return state.dark_theme
+  },
+
+  // primary date picker state
+  getDateStart: function getDateStart(state) {
+    return state.date_start
+  },
+
+  getDateUntil: function getDateUntil(state) {
+    return state.date_until
+  },
+
+  getPickerPrimary: function getPickerPrimary(state) {
+    return [state.date_start, state.date_until]
+  },
+
+  // compare date picker state
+  getDateCompareStart: function getDateCompareStart(state) {
+    return state.compare_start
+  },
+
+  getDateCompareUntil: function getDateCompareUntil(state) {
+    return state.compare_until
+  },
+
+  getPickerCompare: function getPickerCompare(state) {
+    return [state.compare_start, state.compare_until]
+  },
+
+  // vuetify date pickers state
+  isPickerPrimaryActive: function isPickerPrimaryActive(state) {
+    return state.picker_primary_active
+  },
+
+  getPickerDate: function getPickerDate(state) {
+    return moment(state.picker_active_mount).format(presets.MONTH_FORMAT)
+  },
+
+  getPickerPrimaryLeft: function getPickerPrimaryLeft(state) {
+    return moment(state.picker_active_mount).subtract(1, "month").format(presets.MONTH_FORMAT)
+  },
+
+  getPickerPrimaryRight: function getPickerPrimaryRight(state) {
+    return moment(state.picker_active_mount).format(presets.MONTH_FORMAT)
+  },
+
+  getEmittedConfig: function getEmittedConfig(state) {
+    return state.emitted_config
+  },
+
+  getConfig: function getConfig(state) {
+    if (state.primary_preset) {
+      state.config.dateStart = null;
+      state.config.dateUntil = null;
+      state.config.primaryPreset = state.primary_preset;
+    } else {
+      state.config.dateStart = state.date_start;
+      state.config.dateUntil = state.date_until;
+      state.config.primaryPreset = null;
+    }
+
+    if (state.primary_preset) {
+      state.config.compareStart = null;
+      state.config.compareUntil = null;
+      state.config.comparePreset = state.compare_preset;
+    } else {
+      state.config.compareStart = state.compare_start;
+      state.config.compareUntil = state.compare_until;
+      state.config.comparePreset = null;
+    }
+
+    return state.config
+  },
+
+  // input field helpers
+  getMaxDate: function getMaxDate(state) {
+    return presets.TODAY
+  },
+
+  // preset default
+  getPrimaryPreset: function getPrimaryPreset(state) {
+    return state.primary_preset
+  },
+
+  getComparePreset: function getComparePreset(state) {
+    return state.compare_preset
+  },
+
+  // presets
+  getPrimaryPresets: function getPrimaryPresets(state) {
+    return state.primary_presets
+  },
+
+  getComparePresets: function getComparePresets(state) {
+    return state.compare_presets
+  },
+
+  getDefaultDateFormat: function getDefaultDateFormat() {
+    return function (date) {
+      return moment(date).format(presets.DEFAULT_FORMAT)
+    }
+  },
+};
+
+var defaultPrimaryPreset$1 = "LAST_7_DAYS";
+var defaultComparePreset$1 = "PREVIOUS_PERIOD";
+
+var mutations = {
+  // controls the dialog
+  SET_DIALOG_OPENED: function SET_DIALOG_OPENED(state, status) {
+    state.emitted_config = Object.assign({}, state.config);
+    state.dialog_opened = status;
+  },
+
+  // flips compare period checkbox
+  FLIP_COMPARE_STATE: function FLIP_COMPARE_STATE(state) {
+    state.compare = !state.compare;
+    if (state.compare) {
+      state.picker_primary_active = false;
+    } else {
+      // reset compare preset
+      state.compare_preset = defaultComparePreset$1;
+      state.compare_start = presets.PREVIOUS_PERIOD(presets[defaultPrimaryPreset$1])[0];
+      state.compare_until = presets.PREVIOUS_PERIOD(presets[defaultPrimaryPreset$1])[1];
+    }
+  },
+
+  // Theme mode
+  SET_THEME_STATE: function SET_THEME_STATE(state) {
+    state.dark_theme = !state.dark_theme;
+  },
+
+  // set primary picker active
+  SET_PICKER_PRIMARY_ACTIVE: function SET_PICKER_PRIMARY_ACTIVE(state) {
+    state.picker_primary_active = Boolean(state);
+  },
+
+  // control date range properties
+  SET_DATE_START: function SET_DATE_START(state, date) {
+    state.date_start = date;
+    state.compare_start = presets[state.compare_preset]([state.date_start, state.date_until])[0];
+    state.primary_preset = null;
+  },
+
+  SET_DATE_UNTIL: function SET_DATE_UNTIL(state, date) {
+    state.date_until = date;
+    state.compare_until = presets[state.compare_preset]([state.date_start, state.date_until])[1];
+    state.primary_preset = null;
+  },
+
+  SET_COMPARE_START: function SET_COMPARE_START(state, date) {
+    state.compare_start = date;
+    state.compare_preset = null;
+  },
+
+  SET_COMPARE_UNTIL: function SET_COMPARE_UNTIL(state, date) {
+    state.compare_until = date;
+    state.compare_preset = null;
+  },
+
+  // control selected primary preset
+  SET_PRIMARY_PRESET: function SET_PRIMARY_PRESET(state, preset) {
+    console.log("preset primary", preset);
+
+    state.primary_preset = preset;
+
+    state.picker_active_mount = presets[preset][0];
+    state.date_start = presets[preset][0];
+    state.date_until = presets[preset][1];
+
+    var compare = presets[state.compare_preset]([state.date_start, state.date_until]);
+
+    state.compare_start = compare[0];
+    state.compare_until = compare[1];
+
+    state.picker_primary_active = true;
+
+    // state.picker_primary = true // ?
+    // state.picker_primary = presets.LAST_MONTH
+    // state.picker_primary_left = presets.LAST_MONTH[0]
+  },
+
+  // control selected compare preset
+  SET_COMPARE_PRESET: function SET_COMPARE_PRESET(state, preset) {
+    var range = presets[preset]([state.date_start, state.date_until]);
+
+    state.compare_preset = preset;
+    state.compare_start = range[0];
+    state.compare_until = range[1];
+
+    state.picker_active_mount = range[0];
+    state.picker_primary_active = false;
+
+    // state.preset_compare = true
+    // state.picker_compare = presets.PREVIOUS_YEAR(state.picker_primary)
+    // state.picker_primary_left = state.picker_compare[0]
+    // state.picker_compare_left = moment(state.picker_primary[0]).subtract(1, "year").format(presets.MONTH_FORMAT)
+  },
+
+  // resets primary preset
+  SET_PRIMARY_PRESET_NULL: function SET_PRIMARY_PRESET_NULL(state) {
+    state.primary_preset = null;
+  },
+
+  // resets compare preset
+  SET_COMPARE_PRESET_NULL: function SET_COMPARE_PRESET_NULL(state) {
+    state.compare_preset = null;
+  },
+
+  // load props to the store
+  SET_PROPS: function SET_PROPS(state, props) {
+    console.log("[ SET_PROPS ]:");
+
+    state.compare = Boolean(props.compare);
+
+    if (presets[props.primaryPreset]) {
+      state.primary_preset = props.primaryPreset;
+      state.date_start = presets[props.primaryPreset][0];
+      state.date_until = presets[props.primaryPreset][1];
+
+      console.log("- applying primary preset:", presets[props.primaryPreset]);
+    } else {
+      state.date_start = props.dateStart;
+      state.date_until = props.dateUntil;
+
+      console.log("- applying primary date range:", props.dateStart, "-", props.dateUntil);
+    }
+
+    if (presets[props.comparePreset]) {
+      var range = presets[props.comparePreset]([state.date_start, state.date_until]);
+
+      state.compare_preset = props.comparePreset;
+      state.compare_start = range[0];
+      state.compare_until = range[1];
+
+      console.log("- applying compare preset:", range);
+    } else {
+      state.compare_start = props.compareStart;
+      state.compare_until = props.compareUntil;
+
+      console.log("- applying compare date range:", props.compareStart, "-", props.compareUntil);
+    }
+  },
+
+  // set emitted config from current states
+  SET_CONFIG: function SET_CONFIG(state) {
+    state.config = {
+      compare: state.compare,
+
+      dateStart: state.date_start,
+      dateUntil: state.date_until,
+      compareStart: state.compare_start,
+      compareUntil: state.compare_until,
+      primaryPreset: state.primary_preset,
+      comparePreset: state.compare_preset,
+    };
+    state.emitted_config = Object.assign({}, state.config);
+
+    // close dialog
+    state.dialog_opened = false;
+  },
+
+  // set primary start and until date
+  SET_PICKER_PRIMARY: function SET_PICKER_PRIMARY(state, date) {
+    if (state.date_start && state.date_until) {
+      state.date_start = date;
+      state.date_until = undefined;
+    } else if (state.date_start && !state.date_until) {
+      state.date_until = date;
+    } else {
+      state.date_start = date;
+    }
+    state.primary_preset = "";
+  },
+
+  // set compere start and until date
+  SET_PICKER_COMPARE: function SET_PICKER_COMPARE(state, date) {
+    if (state.compare_start && state.compare_until) {
+      state.compare_start = date;
+      state.compare_until = undefined;
+    } else if (state.compare_start && !state.compare_until) {
+      state.compare_until = date;
+    } else {
+      state.compare_start = date;
+    }
+    state.compare_preset = "";
+  },
+
+  // set active mount
+  SET_PICKER_DATE: function SET_PICKER_DATE(state, ev) {
+    state.picker_active_mount = ev;
+  },
+
+  // set active mount for date piker next to each other
+  SET_PICKER_DATE_LEFT: function SET_PICKER_DATE_LEFT(state, ev) {
+    if (moment(state.picker_active_mount).diff(moment(ev), "months") >= 2) {
+      state.picker_active_mount = ev;
+    }
+  },
+};
+
+var store = {
+  state: state,
+  getters: getters,
+  mutations: mutations,
+};
 
 /*!
  * vuex v3.6.2
@@ -3096,10 +3448,17 @@ __vue_render__$6._withStripped = true;
 // Import vue component
 
 // Declare install function executed by Vue.use()
-function install$1(Vue) {
+function install$1(Vue, options) {
+  if ( options === void 0 ) options = {};
+
   if (install$1.installed) { return }
+
+  if (!options.store) { console.error("DateRangePicker: please provide a store option"); }
+
   install$1.installed = true;
   Vue.component("DateRangeSelector", __vue_component__$6);
+
+  if (options.store) { options.store.registerModule("datePicker", store); }
 }
 
 // Create module definition for Vue.use()
@@ -3118,7 +3477,12 @@ if (typeof window !== "undefined") {
 
 if (GlobalVue) { GlobalVue.use(plugin); }
 
-var presets = DateRangePresets;
+// To allow use as module (npm/webpack/etc.) export component
+var wrapper = {
+  install: install$1,
+  store: store,
+  presets: presets,
+};
 
-export default __vue_component__$6;
-export { install$1 as install, presets };
+export default wrapper;
+export { install$1 as install };
