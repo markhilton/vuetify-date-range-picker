@@ -37,12 +37,19 @@ export default {
   }),
 
   computed: {
-    ...mapGetters("datepicker", ["isDialogOpened"]),
+    ...mapGetters("datepicker", ["isDialogOpened", "getEmittedConfig"]),
+  },
+
+  watch: {
+    getEmittedConfig(state) {
+      if (state && Object.keys(state).length !== 0) {
+        console.log("[emit]:", JSON.stringify(state, null, 2))
+        this.$emit("change", state)
+      }
+    },
   },
 
   mounted() {
-    console.log("[DatePicker -> mounted()] config:", JSON.stringify(this.config, null, 2))
-
     // The classes which are provided to the root element are passed to the <date-selector />
     this.inheritedClasses = this.$el.className
 

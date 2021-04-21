@@ -106,14 +106,14 @@
       </v-row>
 
       <v-row justify="center">
-        <date-picker />
+        <date-picker :config="dateRange" @change="setDateRange" />
       </v-row>
 
       <v-row>
         <v-col>
           <h4 class="mb-2 mt-5 text-decoration-underline">Emitted:</h4>
           <div style="background: #333; color: #fff" class="pa-4">
-            <pre>{{ getEmittedConfig }}</pre>
+            <pre>{{ dateRange }}</pre>
           </div>
         </v-col>
       </v-row>
@@ -122,6 +122,23 @@
 </template>
 
 <script>
+/**
+ * !!! PLEASE READ !!!
+ *
+ * this App.vue file is not a part of the component is its only designed to
+ * test component integration, including passing props & collect emitted result
+ * therefore we should NOT use VueX mappers here to ensure this component
+ * props and emitted values can be properly tested.
+ *
+ * The test has to demonstrate that initial props containing date range object
+ * can be passed to the component, and if not the component will assume default
+ * initial values AND when new date range selection is applied by user, the
+ * emitted object @change contains correct user selections.
+ *
+ * Therefore Vuex mappers in this file have to be removed and code refactored.
+ * However it is allowed to import presets for dropdowns.
+ *
+ */
 import DatePicker from "./components/DatePicker.vue"
 import { mapGetters, mapMutations } from "vuex"
 
@@ -130,12 +147,15 @@ export default {
 
   components: { DatePicker },
 
+  data: () => ({
+    dateRange: {},
+  }),
+
   computed: {
     ...mapGetters("datepicker", [
       // config
       "getMaxDate",
       "getThemeState",
-      "getEmittedConfig",
 
       // compare checkbox
       "getCompareState",
@@ -177,6 +197,10 @@ export default {
       "SET_PRIMARY_PRESET",
       "SET_COMPARE_PRESET",
     ]),
+
+    setDateRange(state) {
+      this.dateRange = state
+    },
   },
 }
 </script>

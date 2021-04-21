@@ -153,6 +153,7 @@ export default {
       primaryPreset: state.primary_preset,
       comparePreset: state.compare_preset,
     }
+
     state.emitted_config = { ...state.config }
 
     // close dialog
