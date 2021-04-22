@@ -175,6 +175,9 @@ export default {
     getThemeState(val) {
       this.$vuetify.theme.dark = val
     },
+    getCompareState(value) {
+      this.dateRange = { ...this.dateRange, compare: value}
+    },
   },
 
   methods: {

@@ -72,6 +72,7 @@ export default {
   padding: 0;
   margin: 0;
   max-height: 60px;
+  width: 280px;
 }
 
 .date-pickers-container {

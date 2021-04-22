@@ -5,7 +5,6 @@
         <v-col cols="5">
           <v-row justify="center" :class="['picker-main', isPickerPrimaryActive ? 'active' : '']">
             <v-col cols="12">
-              <p :class="getCompareState ? 'picker-label' : ''">Primary</p>
               <v-date-picker
                 range
                 no-title
@@ -20,9 +19,8 @@
               />
             </v-col>
           </v-row>
-          <v-row v-if="getCompareState" justify="center" :class="['picker-compare', getCompareState ? 'active' : '']">
+          <v-row v-if="getCompareState" justify="center" class="picker-compare">
             <v-col cols="12">
-              <p>Compare</p>
               <v-date-picker
                 range
                 no-title

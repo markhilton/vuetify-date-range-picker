@@ -36,7 +36,7 @@
             </v-col>
           </v-row>
 
-          <v-row v-if="getCompareState" justify="center" :class="['picker-compare', getCompareState ? 'active' : '']">
+          <v-row v-if="getCompareState" justify="center" class="picker-compare">
             <v-col cols="6">
               <v-date-picker
                 range
