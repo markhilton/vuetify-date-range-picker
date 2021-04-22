@@ -16,7 +16,7 @@ export default {
       state.picker_primary_active = false
     } else {
       // reset compare preset
-      state.compare_preset = state.compare_preset
+      // state.compare_preset = state.compare_preset
       state.compare_start = presets.PREVIOUS_PERIOD(presets[state.primary_preset])[0]
       state.compare_until = presets.PREVIOUS_PERIOD(presets[state.primary_preset])[1]
     }
@@ -28,8 +28,8 @@ export default {
   },
 
   // set primary picker active
-  SET_PICKER_PRIMARY_ACTIVE(state) {
-    state.picker_primary_active = Boolean(state)
+  SET_PICKER_PRIMARY_ACTIVE(state, value) {
+    state.picker_primary_active = value
   },
 
   // control date range properties
@@ -57,16 +57,14 @@ export default {
 
   // control selected primary preset
   SET_PRIMARY_PRESET(state, preset) {
-    console.log("preset primary", preset)
-
     state.primary_preset = preset
 
-    state.picker_active_mount = presets[preset][0]
+    state.picker_active_mount = moment(presets[preset][0]).add(1, "month").format(presets.MONTH_FORMAT)
+    state.piker_left = presets[preset][0]
     state.date_start = presets[preset][0]
     state.date_until = presets[preset][1]
 
     const compare = presets[state.compare_preset]([state.date_start, state.date_until])
-
     state.compare_start = compare[0]
     state.compare_until = compare[1]
 
@@ -85,7 +83,7 @@ export default {
     state.compare_start = range[0]
     state.compare_until = range[1]
 
-    state.picker_active_mount = range[0]
+    state.picker_active_mount = moment(range[0]).add(1, "month").format(presets.MONTH_FORMAT)
     state.picker_primary_active = false
 
     // state.preset_compare = true
@@ -196,7 +194,7 @@ export default {
   // set active mount for date piker next to each other
   SET_PICKER_DATE_LEFT(state, ev) {
     if (moment(state.picker_active_mount).diff(moment(ev), "months") >= 2) {
-      state.picker_active_mount = ev
+      state.picker_active_mount = moment(ev).add(1, "month").format(presets.MONTH_FORMAT)
     }
   },
 }

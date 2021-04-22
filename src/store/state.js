@@ -25,8 +25,8 @@ export default {
   compare_preset: defaultComparePreset,
 
   // primary and compare presets lists
-  primary_presets: Object.keys(primaryPresets),
-  compare_presets: Object.keys(comparePresets),
+  primary_presets: [ " ", ...Object.keys(primaryPresets)],
+  compare_presets: ["", ...Object.keys(comparePresets)],
 
   // layout
   dialog_opened: false,
