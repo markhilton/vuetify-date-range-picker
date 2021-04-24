@@ -59,31 +59,7 @@ export default {
     return moment(state.picker_active_mount).format(presets.MONTH_FORMAT)
   },
 
-  getEmittedConfig(state) {
-    return state.emitted_config
-  },
-
   getConfig(state) {
-    if (state.primary_preset) {
-      state.config.dateStart = null
-      state.config.dateUntil = null
-      state.config.primaryPreset = state.primary_preset
-    } else {
-      state.config.dateStart = state.date_start
-      state.config.dateUntil = state.date_until
-      state.config.primaryPreset = null
-    }
-
-    if (state.primary_preset) {
-      state.config.compareStart = null
-      state.config.compareUntil = null
-      state.config.comparePreset = state.compare_preset
-    } else {
-      state.config.compareStart = state.compare_start
-      state.config.compareUntil = state.compare_until
-      state.config.comparePreset = null
-    }
-
     return state.config
   },
 
@@ -110,9 +86,18 @@ export default {
     return state.compare_presets
   },
 
-  getDefaultDateFormat() {
-    return (date) => {
-      return moment(date).format(presets.DEFAULT_FORMAT)
+  getPrimaryDefaultDateFormat() {
+    return ({primaryPreset, date_start}, index) => {
+      if (primaryPreset) return moment(presets[primaryPreset][index]).format(presets.DEFAULT_FORMAT)
+
+      return moment(date_start).format(presets.DEFAULT_FORMAT)
+    }
+  },
+
+  getCompareDefaultDateFormat() {
+    return ({primaryPreset, comparePreset, compare_start}, index) => {
+      if (comparePreset && comparePreset) return moment(presets[comparePreset](presets[primaryPreset])[index]).format(presets.DEFAULT_FORMAT)
+      return moment(compare_start).format(presets.DEFAULT_FORMAT)
     }
   },
 }

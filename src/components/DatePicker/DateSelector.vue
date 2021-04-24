@@ -1,17 +1,17 @@
 <template>
-  <v-sheet class="pa-2 date-selector d-inline-block elevation-2 rounded" @click="SET_DIALOG_OPENED(true)">
+  <v-sheet class="pa-2 date-selector d-inline-block elevation-2 rounded" @click="SET_DIALOG_OPENED({config, status:true})">
     <v-row>
       <v-col class="date-selector__icon d-flex align-center">
-        <v-icon class="py-1" @click.native.stop="FLIP_COMPARE_STATE()">{{
-          getCompareState ? icon.mdiCalendarCheck : icon.mdiCalendarRemove
+        <v-icon class="py-1" @click.native.stop="FLIP_COMPARE_STATE(config)">{{
+          config.compare ? icon.mdiCalendarCheck : icon.mdiCalendarRemove
         }}</v-icon>
       </v-col>
 
       <v-col style="line-height: 10px" class="date-selector__info d-flex align-center pa-1">
-        {{ getDefaultDateFormat(getDateStart) }} &mdash; {{ getDefaultDateFormat(getDateUntil) }}
-        <small v-if="getCompareState" class="d-flex mt-n2">
+        {{ getPrimaryDefaultDateFormat(config, 0) }} &mdash; {{ getPrimaryDefaultDateFormat(config, 1) }}
+        <small v-if="config.compare" class="d-flex mt-n2">
           Compare to:
-          {{ getDefaultDateFormat(getDateCompareStart) }} &mdash; {{ getDefaultDateFormat(getDateCompareUntil) }}
+          {{ getCompareDefaultDateFormat(config, 0) }} &mdash; {{ getCompareDefaultDateFormat(config, 1) }}
         </small>
       </v-col>
     </v-row>
@@ -25,6 +25,8 @@ import { mdiCalendarCheck, mdiCalendarRemove } from "@mdi/js"
 export default {
   name: "DateSelector",
 
+  props: ["config"],
+
   data: () => ({
     icon: {
       mdiCalendarCheck,
@@ -35,16 +37,8 @@ export default {
   computed: {
     ...mapGetters("datepicker", [
       // date format helper
-      "getDefaultDateFormat",
-
-      // compare checkbox
-      "getCompareState",
-
-      // individual dates
-      "getDateStart",
-      "getDateUntil",
-      "getDateCompareStart",
-      "getDateCompareUntil",
+      "getPrimaryDefaultDateFormat",
+      "getCompareDefaultDateFormat",
     ]),
   },
 

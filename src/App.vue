@@ -10,18 +10,16 @@
       <v-row no-gutters>
         <v-col cols="6" class="pr-1">
           <v-select
-            :items="getPrimaryPresets"
-            :value="getPrimaryPreset"
+            v-model="init.primaryPreset"
+            :items="primaryPresets"
             label="Primary Preset"
-            @input="SET_PRIMARY_PRESET($event)"
           />
         </v-col>
         <v-col cols="6" class="pl-2">
           <v-select
-            :items="getComparePresets"
-            :value="getComparePreset"
+            v-model="init.comparePreset"
+            :items="comparePresets"
             label="Compare Preset"
-            @input="SET_COMPARE_PRESET($event)"
           />
         </v-col>
       </v-row>
@@ -34,7 +32,6 @@
             type="date"
             dense
             outlined
-            :max="getMaxDate"
             class="picker-input"
           />
         </v-col>
@@ -45,7 +42,6 @@
             type="date"
             dense
             outlined
-            :max="getMaxDate"
             class="picker-input"
           />
         </v-col>
@@ -59,8 +55,7 @@
             type="date"
             outlined
             dense
-            :max="getMaxDate"
-            :disabled="!getCompareState"
+            :disabled="!init.compare"
             class="picker-input"
           />
         </v-col>
@@ -71,8 +66,7 @@
             type="date"
             outlined
             dense
-            :max="getMaxDate"
-            :disabled="!getCompareState"
+            :disabled="!init.compare"
             class="picker-input"
           />
         </v-col>
@@ -84,10 +78,9 @@
         </v-col>
         <v-col>
           <v-checkbox
-            :input-value="getThemeState"
+            v-model="darkTheme"
             label="Dark Theme"
             class="compare-label mt-0 mb-5"
-            @change="SET_THEME_STATE()"
           />
         </v-col>
       </v-row>
@@ -127,7 +120,7 @@
  *
  */
 import DatePicker from "./components/DatePicker.vue"
-import { mapGetters, mapMutations } from "vuex"
+import { primaryPresets, comparePresets } from "./components/DatePicker/presets"
 
 export default {
   name: "App",
@@ -138,68 +131,33 @@ export default {
     init: {
       // test with and without init values
       compare: true,
-      // dateStart: "2021-01-01",
-      // dateUntil: "2021-02-01",
-      // compareStart: "2020-01-01",
-      // compareUntil: "2020-02-01",
       primaryPreset: "LAST_30_DAYS",
       comparePreset: "PREVIOUS_YEAR",
     },
+    primaryPresets: Object.keys(primaryPresets),
+    comparePresets: Object.keys(comparePresets),
     dateRange: null,
+    darkTheme: false
   }),
 
-  computed: {
-    ...mapGetters("datepicker", [
-      // config
-      "getMaxDate",
-      "getThemeState",
-
-      // compare checkbox
-      "getCompareState",
-
-      // individual dates
-      "getDateStart",
-      "getDateUntil",
-      "getDateCompareUntil",
-      "getDateCompareStart",
-
-      // vuetify date range calendars setup
-      "getPrimaryPreset",
-      "getComparePreset",
-      "getPrimaryPresets",
-      "getComparePresets",
-    ]),
-  },
-
   watch: {
-    getThemeState(val) {
+    darkTheme(val) {
       this.$vuetify.theme.dark = val
-    },
-    getCompareState(value) {
-      this.dateRange = { ...this.dateRange, compare: value}
     },
   },
 
   methods: {
-    ...mapMutations("datepicker", [
-      // controls compare checkbox
-      "FLIP_COMPARE_STATE",
-
-      // control selected date ranges
-      "SET_DATE_START",
-      "SET_DATE_UNTIL",
-      "SET_COMPARE_START",
-      "SET_COMPARE_UNTIL",
-
-      // control vuetify calendar pickers
-      "SET_PICKER_PRIMARY_ACTIVE",
-      "SET_THEME_STATE",
-      "SET_PRIMARY_PRESET",
-      "SET_COMPARE_PRESET",
-    ]),
-
     setDateRange(state) {
       this.dateRange = state
+      this.init = {
+        compare: state.compare,
+        dateStart: state.dateStart,
+        dateUntil: state.dateUntil,
+        compareStart: state.compareStart,
+        compareUntil: state.compareUntil,
+        primaryPreset: state.primaryPreset,
+        comparePreset: state.comparePreset,
+      }
     },
   },
 }
