@@ -8,42 +8,20 @@
       <h4 class="mb-1 text-decoration-underline">Props:</h4>
 
       <v-row no-gutters>
-        <v-col cols="6" class="pr-1">
-          <v-select
-            v-model="init.primaryPreset"
-            :items="primaryPresets"
-            label="Primary Preset"
-          />
+        <v-col v-model="init.primaryPreset" cols="6"
+          class="pr-1" <v-select :items="primaryPresets" label="Primary Preset" />
         </v-col>
         <v-col cols="6" class="pl-2">
-          <v-select
-            v-model="init.comparePreset"
-            :items="comparePresets"
-            label="Compare Preset"
-          />
+          <v-select v-model="init.comparePreset" :items="comparePresets" label="Compare Preset" />
         </v-col>
       </v-row>
 
       <v-row no-gutters>
         <v-col cols="6" class="pr-1">
-          <v-text-field
-            v-model="init.dateStart"
-            label="From"
-            type="date"
-            dense
-            outlined
-            class="picker-input"
-          />
+          <v-text-field v-model="init.dateStart" label="From" type="date" dense outlined class="picker-input" />
         </v-col>
         <v-col cols="6" class="pl-2">
-          <v-text-field
-            v-model="init.dateUntil"
-            label="To"
-            type="date"
-            dense
-            outlined
-            class="picker-input"
-          />
+          <v-text-field v-model="init.dateUntil" label="To" type="date" dense outlined class="picker-input" />
         </v-col>
       </v-row>
 
@@ -77,11 +55,7 @@
           <v-checkbox v-model="init.compare" label="Compare" class="compare-label mt-0 mb-5" />
         </v-col>
         <v-col>
-          <v-checkbox
-            v-model="darkTheme"
-            label="Dark Theme"
-            class="compare-label mt-0 mb-5"
-          />
+          <v-checkbox v-model="darkTheme" label="Dark Theme" class="compare-label mt-0 mb-5" />
         </v-col>
       </v-row>
 
@@ -131,13 +105,13 @@ export default {
     init: {
       // test with and without init values
       compare: true,
-      primaryPreset: "LAST_30_DAYS",
-      comparePreset: "PREVIOUS_YEAR",
+      primaryPreset: null,
+      comparePreset: null,
     },
     primaryPresets: Object.keys(primaryPresets),
     comparePresets: Object.keys(comparePresets),
     dateRange: null,
-    darkTheme: false
+    darkTheme: false,
   }),
 
   watch: {
