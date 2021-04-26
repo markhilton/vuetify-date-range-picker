@@ -2,7 +2,11 @@
   <div class="date-selector">
     <v-overlay :value="isDialogOpened" @click.native="SET_DIALOG_OPENED(true)" />
 
-    <DateSelector v-bind="$attrs" :class="inheritedClasses" />
+    <DateSelector
+        v-bind="$attrs"
+        :class="inheritedClasses"
+        :config="config"
+    />
 
     <div v-if="isDialogOpened" class="date-pickers-container">
       <DatePickerDesktop v-if="$vuetify.breakpoint.mdAndUp" />
@@ -39,11 +43,11 @@ export default {
   }),
 
   computed: {
-    ...mapGetters("datepicker", ["isDialogOpened", "getEmittedConfig"]),
+    ...mapGetters("datepicker", ["isDialogOpened", "getConfig"]),
   },
 
   watch: {
-    getEmittedConfig(state) {
+    getConfig(state) {
       if (state && Object.keys(state).length !== 0) {
         console.log("[emit]:", JSON.stringify(state, null, 2))
         this.$emit("change", state)

@@ -2,21 +2,42 @@ import moment from "moment"
 import presets from "../components/DatePicker/presets"
 
 export default {
-  // controls the dialog
-  SET_DIALOG_OPENED(state, status) {
-    state.emitted_config = { ...state.config }
-    state.dialog_opened = status
+  // controls the dialog and get initial values
+  SET_DIALOG_OPENED(state, data) {
+    if (data.config) {
+      state.compare = data.config.compare
+      state.primary_preset = data.config.primaryPreset
+      state.compare_preset = data.config.comparePreset
+      if (state.primary_preset) {
+        state.date_start = presets[state.primary_preset][0]
+        state.date_until = presets[state.primary_preset][1]
+      }
+      if (state.compare_preset) {
+        state.compare_start = presets[state.compare_preset](presets[state.primary_preset])[0]
+        state.compare_until = presets[state.compare_preset](presets[state.primary_preset])[1]
+      }
+    }
+    state.dialog_opened = data.status
   },
 
   // flips compare period checkbox
-  FLIP_COMPARE_STATE(state) {
+  FLIP_COMPARE_STATE(state, config) {
     state.compare = !state.compare
-
+    if (config) {
+      state.config = {...config, compare: state.compare}
+      if (config.primaryPreset) {
+        state.config.dateStart = presets[config.primaryPreset][0]
+        state.config.dateUntil = presets[config.primaryPreset][1]
+      }
+      if (config.comparePreset && config.primaryPreset) {
+        state.config.compareStart = presets[config.comparePreset](presets[config.primaryPreset])[0]
+        state.config.compareUntil = presets[config.comparePreset](presets[config.primaryPreset])[1]
+      }
+    }
     if (state.compare) {
       state.picker_primary_active = false
     } else {
       // reset compare preset
-      // state.compare_preset = state.compare_preset
       state.compare_start = presets.PREVIOUS_PERIOD(presets[state.primary_preset])[0]
       state.compare_until = presets.PREVIOUS_PERIOD(presets[state.primary_preset])[1]
     }
@@ -69,10 +90,6 @@ export default {
     state.compare_until = compare[1]
 
     state.picker_primary_active = true
-
-    // state.picker_primary = true // ?
-    // state.picker_primary = presets.LAST_MONTH
-    // state.picker_primary_left = presets.LAST_MONTH[0]
   },
 
   // control selected compare preset
@@ -85,11 +102,6 @@ export default {
 
     state.picker_active_mount = moment(range[0]).add(1, "month").format(presets.MONTH_FORMAT)
     state.picker_primary_active = false
-
-    // state.preset_compare = true
-    // state.picker_compare = presets.PREVIOUS_YEAR(state.picker_primary)
-    // state.picker_primary_left = state.picker_compare[0]
-    // state.picker_compare_left = moment(state.picker_primary[0]).subtract(1, "year").format(presets.MONTH_FORMAT)
   },
 
   // resets primary preset
@@ -145,7 +157,6 @@ export default {
   SET_CONFIG(state) {
     state.config = {
       compare: state.compare,
-
       dateStart: state.date_start,
       dateUntil: state.date_until,
       compareStart: state.compare_start,
@@ -153,8 +164,6 @@ export default {
       primaryPreset: state.primary_preset,
       comparePreset: state.compare_preset,
     }
-
-    state.emitted_config = { ...state.config }
 
     // close dialog
     state.dialog_opened = false
