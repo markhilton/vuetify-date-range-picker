@@ -6,6 +6,10 @@
       </v-row>
 
       <h4 class="mb-1 text-decoration-underline">Props:</h4>
+      <p>These props are loaded as initial state for the component to demonstrate that after component integration with
+        application, when user opens previously created report, which already stored user selections, is able to set
+        initial state of the component.
+      </p>
 
       <v-row no-gutters>
         <v-col v-model="init.primaryPreset" cols="6"
@@ -66,6 +70,10 @@
       <v-row>
         <v-col>
           <h4 class="mb-2 mt-5 text-decoration-underline">Emitted:</h4>
+          <p>These emitted values are to demonstrate that the component ONLY emits result when user interacts with the component.
+            The component should emit full result object in 2 cases: A. When calendar icon is clicked to change compare selection
+            OR B. when user clicks APPLY button after component opens dialog window.
+          </p>
           <div style="background: #333; color: #fff" class="pa-4">
             <pre>{{ dateRange }}</pre>
           </div>
