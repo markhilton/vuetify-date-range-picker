@@ -13,8 +13,8 @@
       </p>
 
       <v-row no-gutters>
-        <v-col v-model="init.primaryPreset" cols="6" class="pr-1">
-          <v-select :items="primaryPresets" label="Primary Preset" />
+        <v-col cols="6" class="pr-1">
+          <v-select v-model="init.primaryPreset" :items="primaryPresets" label="Primary Preset" />
         </v-col>
         <v-col cols="6" class="pl-2">
           <v-select v-model="init.comparePreset" :items="comparePresets" label="Compare Preset" />
