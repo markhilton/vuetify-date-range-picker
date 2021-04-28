@@ -87,7 +87,7 @@ export default {
   },
 
   getPrimaryDefaultDateFormat() {
-    return ({primaryPreset, date_start}, index) => {
+    return ({ primaryPreset, date_start }, index) => {
       if (primaryPreset) return moment(presets[primaryPreset][index]).format(presets.DEFAULT_FORMAT)
 
       return moment(date_start).format(presets.DEFAULT_FORMAT)
@@ -95,8 +95,9 @@ export default {
   },
 
   getCompareDefaultDateFormat() {
-    return ({primaryPreset, comparePreset, compare_start}, index) => {
-      if (comparePreset && comparePreset) return moment(presets[comparePreset](presets[primaryPreset])[index]).format(presets.DEFAULT_FORMAT)
+    return ({ primaryPreset, comparePreset, compare_start }, index) => {
+      if (comparePreset && comparePreset)
+        return moment(presets[comparePreset](presets[primaryPreset])[index]).format(presets.DEFAULT_FORMAT)
       return moment(compare_start).format(presets.DEFAULT_FORMAT)
     }
   },

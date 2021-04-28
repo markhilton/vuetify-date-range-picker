@@ -42,14 +42,14 @@ export default {
     ]),
   },
 
-    watch: {
-      config: {
-        handler: function (initData) {
-          this.SET_STATE_DATA(initData)
-        },
-        deep: true,
+  watch: {
+    config: {
+      handler: function (initData) {
+        this.SET_STATE_DATA(initData)
       },
+      deep: true,
     },
+  },
 
   methods: {
     ...mapMutations("datepicker", ["FLIP_COMPARE_STATE", "SET_DIALOG_OPENED", "SET_STATE_DATA"]),

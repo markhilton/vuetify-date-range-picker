@@ -8,7 +8,7 @@ export default {
   },
 
   //Set initial values
-  SET_STATE_DATA (state, data) {
+  SET_STATE_DATA(state, data) {
     if (!!data) {
       state.compare = data.compare
       state.primary_preset = data.primaryPreset || state.primary_preset
@@ -28,7 +28,7 @@ export default {
   FLIP_COMPARE_STATE(state, config) {
     state.compare = !state.compare
     if (!!config) {
-      state.config = {...config}
+      state.config = { ...config }
       state.config = {
         compare: !config.compare || state.compare,
         dateStart: config.date_start || state.date_start,
@@ -99,7 +99,7 @@ export default {
     state.piker_left = presets[preset][0]
     state.date_start = presets[preset][0]
     state.date_until = presets[preset][1]
-    if (state.compare_preset){
+    if (state.compare_preset) {
       const compare = presets[state.compare_preset]([state.date_start, state.date_until])
       state.compare_start = compare[0]
       state.compare_until = compare[1]

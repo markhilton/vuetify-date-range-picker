@@ -106,7 +106,7 @@
 import DatePicker from "./components/DatePicker.vue"
 import { primaryPresets, comparePresets } from "./components/DatePicker/presets"
 import { mdiCalendarBlank } from "@mdi/js"
-import {mapMutations} from "vuex";
+import { mapMutations } from "vuex"
 
 export default {
   name: "App",
@@ -126,7 +126,7 @@ export default {
     darkTheme: false,
     icon: {
       mdiCalendarBlank,
-    }
+    },
   }),
 
   watch: {
