@@ -63,12 +63,13 @@ export default {
     },
   },
 
-  created() {
+  // this component has to be mounted for this.$el.className
+  mounted() {
     // The classes which are provided to the root element are passed to the <date-selector />
-    // this.inheritedClasses = this.$el.className // generates console Error in created hook: "TypeError: Cannot read property 'className' of undefined"
+    this.inheritedClasses = this.$el.className
 
     // We don't want to lose the default root element classes
-    // this.$el.className = "date-selector d-inline-flex align-center justify-center" // generates console Error in created hook: "TypeError: Cannot set property 'className' of undefined"
+    this.$el.className = "date-selector d-inline-flex align-center justify-center"
 
     this.SET_PROPS(this.config)
   },
