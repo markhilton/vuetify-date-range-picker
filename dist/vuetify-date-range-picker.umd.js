@@ -236,37 +236,21 @@
     },
 
     // flips compare period checkbox
-    FLIP_COMPARE_STATE: function FLIP_COMPARE_STATE(state, config) {
+    FLIP_COMPARE_STATE: function FLIP_COMPARE_STATE(state) {
       state.compare = !state.compare;
 
-      if (!!config) {
-        state.config = Object.assign({}, config);
-        state.config = {
-          compare: !config.compare || state.compare,
-          dateStart: config.date_start || state.date_start,
-          dateUntil: config.date_until || state.date_until,
-          compareStart: config.compare_start || state.compare_start,
-          compareUntil: config.compare_until || state.compare_until,
-          primaryPreset: config.primary_preset || state.primary_preset,
-          comparePreset: config.compare_preset || state.compare_preset,
-        };
-      } else {
-        state.config = {
-          compare: state.compare,
-          dateStart: state.date_start,
-          dateUntil: state.date_until,
-          compareStart: state.compare_start,
-          compareUntil: state.compare_until,
-          primaryPreset: state.primary_preset,
-          comparePreset: state.compare_preset,
-        };
-      }
+      state.config = {
+        compare: state.compare,
+        dateStart: state.date_start,
+        dateUntil: state.date_until,
+        compareStart: state.compare_start,
+        compareUntil: state.compare_until,
+        primaryPreset: state.primary_preset,
+        comparePreset: state.compare_preset,
+      };
+
       if (state.compare) {
         state.picker_primary_active = false;
-      } else {
-        // reset compare preset
-        state.compare_start = DateRangePresets.PREVIOUS_PERIOD(DateRangePresets[state.primary_preset])[0];
-        state.compare_until = DateRangePresets.PREVIOUS_PERIOD(DateRangePresets[state.primary_preset])[1];
       }
     },
 
