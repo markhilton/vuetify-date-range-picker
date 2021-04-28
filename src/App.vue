@@ -105,6 +105,8 @@
  */
 import DatePicker from "./components/DatePicker.vue"
 import { primaryPresets, comparePresets } from "./components/DatePicker/presets"
+import { mdiCalendarBlank } from "@mdi/js"
+import {mapMutations} from "vuex";
 
 export default {
   name: "App",
@@ -122,6 +124,9 @@ export default {
     comparePresets: Object.keys(comparePresets),
     dateRange: null,
     darkTheme: false,
+    icon: {
+      mdiCalendarBlank,
+    }
   }),
 
   watch: {
@@ -131,6 +136,7 @@ export default {
   },
 
   methods: {
+    ...mapMutations("datepicker", ["SET_CONFIG"]),
     setDateRange(state) {
       this.dateRange = state
       this.init = {

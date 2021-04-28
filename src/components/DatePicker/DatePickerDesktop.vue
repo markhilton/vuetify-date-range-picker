@@ -155,7 +155,7 @@
 
     <v-card-actions>
       <v-spacer />
-      <v-btn text class="px-4 mr-6" @click="SET_DIALOG_OPENED({status: false})">Cancel</v-btn>
+      <v-btn text class="px-4 mr-6" @click="SET_DIALOG_OPENED(false)">Cancel</v-btn>
       <v-btn large class="primary px-7" @click="SET_CONFIG()">Apply</v-btn>
     </v-card-actions>
   </v-card>
