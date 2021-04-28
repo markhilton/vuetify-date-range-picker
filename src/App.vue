@@ -23,10 +23,10 @@
 
       <v-row no-gutters>
         <v-col cols="6" class="pr-1">
-          <v-text-field v-model="init.dateStart" label="From" type="date" dense outlined class="picker-input" />
+          <v-text-field v-model="init.dateStart" label="From" type="date" dense outlined />
         </v-col>
         <v-col cols="6" class="pl-2">
-          <v-text-field v-model="init.dateUntil" label="To" type="date" dense outlined class="picker-input" />
+          <v-text-field v-model="init.dateUntil" label="To" type="date" dense outlined dark />
         </v-col>
       </v-row>
 
@@ -146,3 +146,10 @@ export default {
   },
 }
 </script>
+
+<style>
+.theme--dark input[type="date"]::-webkit-calendar-picker-indicator {
+  background: url('data:image/svg+xml;utf-8,<svg xmlns="http://www.w3.org/2000/svg" width="23" height="23" viewBox="0 0 24 24"><path fill="%23FFFFFF" d="M19,19H5V8H19M16,1V3H8V1H6V3H5C3.89,3 3,3.89 3,5V19A2,2 0 0,0 5,21H19A2,2 0 0,0 21,19V5C21,3.89 20.1,3 19,3H18V1M17,12H12V17H17V12Z"></path></svg>')
+    no-repeat;
+}
+</style>
