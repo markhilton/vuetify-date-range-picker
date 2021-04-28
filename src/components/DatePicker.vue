@@ -89,3 +89,11 @@ export default {
   width: 100vw;
 }
 </style>
+
+<style lang="scss">
+/* not scoped white calendar icon for dark theme <v-text-field type="date" /> */
+.theme--dark input[type="date"]::-webkit-calendar-picker-indicator {
+  background: url('data:image/svg+xml;utf-8,<svg xmlns="http://www.w3.org/2000/svg" width="23" height="23" viewBox="0 0 24 24"><path fill="%23FFFFFF" d="M19,19H5V8H19M16,1V3H8V1H6V3H5C3.89,3 3,3.89 3,5V19A2,2 0 0,0 5,21H19A2,2 0 0,0 21,19V5C21,3.89 20.1,3 19,3H18V1" /></svg>')
+    no-repeat;
+}
+</style>
