@@ -44,23 +44,31 @@ export default {
 
   computed: {
     ...mapGetters("datepicker", ["isDialogOpened", "getConfig"]),
-  },
 
-  watch: {
-    getConfig(state) {
-      if (state && Object.keys(state).length !== 0) {
-        console.log("[emit]:", JSON.stringify(state, null, 2))
-        this.$emit("change", state)
-      }
+    // props have to be stringify to be make watch reactive on object
+    propsChange() {
+      return JSON.stringify(this.config)
     },
   },
 
-  mounted() {
+  watch: {
+    // we need to watch for any props update to pass it to component
+    propsChange() {
+      this.SET_PROPS(this.config)
+    },
+
+    // watch for current component config to emit values on change
+    getConfig(state) {
+      this.$emit("change", state)
+    },
+  },
+
+  created() {
     // The classes which are provided to the root element are passed to the <date-selector />
-    this.inheritedClasses = this.$el.className
+    // this.inheritedClasses = this.$el.className // generates console Error in created hook: "TypeError: Cannot read property 'className' of undefined"
 
     // We don't want to lose the default root element classes
-    this.$el.className = "date-selector d-inline-flex align-center justify-center"
+    // this.$el.className = "date-selector d-inline-flex align-center justify-center" // generates console Error in created hook: "TypeError: Cannot set property 'className' of undefined"
 
     this.SET_PROPS(this.config)
   },

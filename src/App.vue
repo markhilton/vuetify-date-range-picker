@@ -77,7 +77,7 @@
             change compare selection OR B. when user clicks APPLY button after component opens dialog window.
           </p>
           <div style="background: #333; color: #fff" class="pa-4">
-            <pre>{{ dateRange }}</pre>
+            <pre>{{ emittedDateRange }}</pre>
           </div>
         </v-col>
       </v-row>
@@ -105,7 +105,6 @@
  */
 import DatePicker from "./components/DatePicker.vue"
 import { primaryPresets, comparePresets } from "./components/DatePicker/presets"
-import { mdiCalendarBlank } from "@mdi/js"
 import { mapMutations } from "vuex"
 
 export default {
@@ -120,34 +119,22 @@ export default {
       primaryPreset: null,
       comparePreset: null,
     },
-    primaryPresets: Object.keys(primaryPresets),
-    comparePresets: Object.keys(comparePresets),
-    dateRange: null,
+    primaryPresets: ["", ...Object.keys(primaryPresets)],
+    comparePresets: ["", ...Object.keys(comparePresets)],
+    emittedDateRange: null, // emitted object from date range picker component
     darkTheme: false,
-    icon: {
-      mdiCalendarBlank,
-    },
   }),
 
-  watch: {
-    darkTheme(val) {
-      this.$vuetify.theme.dark = val
-    },
+  created() {
+    this.$vuetify.theme.dark = this.darkTheme
   },
 
   methods: {
     ...mapMutations("datepicker", ["SET_CONFIG"]),
+
     setDateRange(state) {
-      this.dateRange = state
-      this.init = {
-        compare: state.compare,
-        dateStart: state.dateStart,
-        dateUntil: state.dateUntil,
-        compareStart: state.compareStart,
-        compareUntil: state.compareUntil,
-        primaryPreset: state.primaryPreset,
-        comparePreset: state.comparePreset,
-      }
+      this.init = state
+      this.emittedDateRange = state
     },
   },
 }

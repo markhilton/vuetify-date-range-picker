@@ -2,16 +2,16 @@
   <v-sheet class="pa-2 date-selector d-inline-block elevation-2 rounded" @click="SET_DIALOG_OPENED(true)">
     <v-row>
       <v-col class="date-selector__icon d-flex align-center">
-        <v-icon class="py-1" @click.native.stop="FLIP_COMPARE_STATE()">{{
-          config.compare ? icon.mdiCalendarCheck : icon.mdiCalendarRemove
-        }}</v-icon>
+        <v-icon class="py-1" @click.native.stop="FLIP_COMPARE_STATE()">
+          {{ config.compare ? icon.mdiCalendarCheck : icon.mdiCalendarRemove }}
+        </v-icon>
       </v-col>
 
       <v-col style="line-height: 10px" class="date-selector__info d-flex align-center pa-1">
-        {{ getPrimaryDefaultDateFormat(config, 0) }} &mdash; {{ getPrimaryDefaultDateFormat(config, 1) }}
+        {{ getFormattedDate(getDateStart) }} &mdash; {{ getFormattedDate(getDateUntil) }}
+
         <small v-if="config.compare" class="d-flex mt-n2">
-          Compare to:
-          {{ getCompareDefaultDateFormat(config, 0) }} &mdash; {{ getCompareDefaultDateFormat(config, 1) }}
+          Compare to: {{ getFormattedDate(getDateCompareStart) }} &mdash; {{ getFormattedDate(getDateCompareUntil) }}
         </small>
       </v-col>
     </v-row>
@@ -35,24 +35,18 @@ export default {
   }),
 
   computed: {
+    // date format helper
     ...mapGetters("datepicker", [
-      // date format helper
-      "getPrimaryDefaultDateFormat",
-      "getCompareDefaultDateFormat",
+      "getDateStart",
+      "getDateUntil",
+      "getDateCompareStart",
+      "getDateCompareUntil",
+      "getFormattedDate",
     ]),
   },
 
-  watch: {
-    config: {
-      handler: function (initData) {
-        this.SET_STATE_DATA(initData)
-      },
-      deep: true,
-    },
-  },
-
   methods: {
-    ...mapMutations("datepicker", ["FLIP_COMPARE_STATE", "SET_DIALOG_OPENED", "SET_STATE_DATA"]),
+    ...mapMutations("datepicker", ["FLIP_COMPARE_STATE", "SET_DIALOG_OPENED"]),
   },
 }
 </script>

@@ -1,5 +1,6 @@
 import presets, { primaryPresets, comparePresets } from "../components/DatePicker/presets"
 
+const defaultDateFormat = "MMM D, YYYY"
 const defaultPrimaryPreset = "LAST_7_DAYS"
 const defaultComparePreset = "PREVIOUS_PERIOD"
 
@@ -8,6 +9,7 @@ export default {
   config: null,
   compare: true,
   dark_theme: false,
+  date_format: defaultDateFormat,
 
   // primary date range
   date_start: presets[defaultPrimaryPreset][0],

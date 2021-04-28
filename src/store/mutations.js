@@ -7,23 +7,6 @@ export default {
     state.dialog_opened = status
   },
 
-  //Set initial values
-  SET_STATE_DATA(state, data) {
-    if (!!data) {
-      state.compare = data.compare
-      state.primary_preset = data.primaryPreset || state.primary_preset
-      state.compare_preset = data.comparePreset || state.compare_preset
-      if (state.primary_preset) {
-        state.date_start = presets[state.primary_preset][0]
-        state.date_until = presets[state.primary_preset][1]
-      }
-      if (state.compare_preset && state.primary_preset) {
-        state.compare_start = presets[state.compare_preset](presets[state.primary_preset])[0]
-        state.compare_until = presets[state.compare_preset](presets[state.primary_preset])[1]
-      }
-    }
-  },
-
   // flips compare period checkbox
   FLIP_COMPARE_STATE(state, config) {
     state.compare = !state.compare

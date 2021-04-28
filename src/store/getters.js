@@ -47,6 +47,13 @@ export default {
     return state.picker_primary_active
   },
 
+  // parameter getter to format date
+  getFormattedDate(state) {
+    return (date) => {
+      return moment(date).format(state.date_format)
+    }
+  },
+
   getPickerDate(state) {
     return moment(state.picker_active_mount).format(presets.MONTH_FORMAT)
   },
