@@ -1,8 +1,8 @@
 <template>
-  <v-sheet class="pa-2 date-selector d-inline-block elevation-2 rounded" @click="SET_DIALOG_OPENED({config, status:true})">
+  <v-sheet class="pa-2 date-selector d-inline-block elevation-2 rounded" @click="SET_DIALOG_OPENED(true)">
     <v-row>
       <v-col class="date-selector__icon d-flex align-center">
-        <v-icon class="py-1" @click.native.stop="FLIP_COMPARE_STATE(config)">{{
+        <v-icon class="py-1" @click.native.stop="FLIP_COMPARE_STATE()">{{
           config.compare ? icon.mdiCalendarCheck : icon.mdiCalendarRemove
         }}</v-icon>
       </v-col>
@@ -42,8 +42,18 @@ export default {
     ]),
   },
 
+    watch: {
+      config: {
+        handler: function (initData) {
+          this.SET_STATE_DATA(initData)
+          console.log('watch prop', initData)
+        },
+        deep: true,
+      },
+    },
+
   methods: {
-    ...mapMutations("datepicker", ["FLIP_COMPARE_STATE", "SET_DIALOG_OPENED"]),
+    ...mapMutations("datepicker", ["FLIP_COMPARE_STATE", "SET_DIALOG_OPENED", "SET_STATE_DATA"]),
   },
 }
 </script>
@@ -63,6 +73,10 @@ export default {
     flex-wrap: wrap;
     min-height: 3rem;
     font-size: 0.9em;
+  }
+  .theme--dark.v-sheet,
+  .theme--light.v-sheet {
+    background-color: transparent;
   }
 }
 </style>

@@ -2,12 +2,17 @@ import moment from "moment"
 import presets from "../components/DatePicker/presets"
 
 export default {
-  // controls the dialog and get initial values
-  SET_DIALOG_OPENED(state, data) {
-    if (data.config) {
-      state.compare = data.config.compare
-      state.primary_preset = data.config.primaryPreset
-      state.compare_preset = data.config.comparePreset
+  // controls the dialog
+  SET_DIALOG_OPENED(state, status) {
+    state.dialog_opened = status
+  },
+
+  //Set initial values
+  SET_STATE_DATA (state, data) {
+    if (!!data) {
+      state.compare = data.compare
+      state.primary_preset = data.primaryPreset || state.primary_preset
+      state.compare_preset = data.comparePreset || state.compare_preset
       if (state.primary_preset) {
         state.date_start = presets[state.primary_preset][0]
         state.date_until = presets[state.primary_preset][1]
@@ -17,21 +22,33 @@ export default {
         state.compare_until = presets[state.compare_preset](presets[state.primary_preset])[1]
       }
     }
-    state.dialog_opened = data.status
+    console.log(state.compare);
+    console.log(state.primary_preset);
   },
 
   // flips compare period checkbox
   FLIP_COMPARE_STATE(state, config) {
     state.compare = !state.compare
-    if (config) {
-      state.config = {...config, compare: state.compare}
-      if (config.primaryPreset) {
-        state.config.dateStart = presets[config.primaryPreset][0]
-        state.config.dateUntil = presets[config.primaryPreset][1]
+    if (!!config) {
+      state.config = {...config}
+      state.config = {
+        compare: !config.compare || state.compare,
+        dateStart: config.date_start || state.date_start,
+        dateUntil: config.date_until || state.date_until,
+        compareStart: config.compare_start || state.compare_start,
+        compareUntil: config.compare_until || state.compare_until,
+        primaryPreset: config.primary_preset || state.primary_preset,
+        comparePreset: config.compare_preset || state.compare_preset,
       }
-      if (config.comparePreset && config.primaryPreset) {
-        state.config.compareStart = presets[config.comparePreset](presets[config.primaryPreset])[0]
-        state.config.compareUntil = presets[config.comparePreset](presets[config.primaryPreset])[1]
+    } else {
+      state.config = {
+        compare: state.compare,
+        dateStart: state.date_start,
+        dateUntil: state.date_until,
+        compareStart: state.compare_start,
+        compareUntil: state.compare_until,
+        primaryPreset: state.primary_preset,
+        comparePreset: state.compare_preset,
       }
     }
     if (state.compare) {
@@ -84,11 +101,11 @@ export default {
     state.piker_left = presets[preset][0]
     state.date_start = presets[preset][0]
     state.date_until = presets[preset][1]
-
-    const compare = presets[state.compare_preset]([state.date_start, state.date_until])
-    state.compare_start = compare[0]
-    state.compare_until = compare[1]
-
+    if (state.compare_preset){
+      const compare = presets[state.compare_preset]([state.date_start, state.date_until])
+      state.compare_start = compare[0]
+      state.compare_until = compare[1]
+    }
     state.picker_primary_active = true
   },
 
@@ -154,15 +171,27 @@ export default {
   },
 
   // set emitted config from current states
-  SET_CONFIG(state) {
-    state.config = {
-      compare: state.compare,
-      dateStart: state.date_start,
-      dateUntil: state.date_until,
-      compareStart: state.compare_start,
-      compareUntil: state.compare_until,
-      primaryPreset: state.primary_preset,
-      comparePreset: state.compare_preset,
+  SET_CONFIG(state, data) {
+    if (!!data) {
+      state.config = {
+        compare: !data.compare || !state.compare,
+        dateStart: data.date_start || state.date_start,
+        dateUntil: data.date_until || state.date_until,
+        compareStart: data.compare_start || state.compare_start,
+        compareUntil: data.compare_until || state.compare_until,
+        primaryPreset: data.primary_preset || state.primary_preset,
+        comparePreset: data.compare_preset || state.compare_preset,
+      }
+    } else {
+      state.config = {
+        compare: state.compare,
+        dateStart: state.date_start,
+        dateUntil: state.date_until,
+        compareStart: state.compare_start,
+        compareUntil: state.compare_until,
+        primaryPreset: state.primary_preset,
+        comparePreset: state.compare_preset,
+      }
     }
 
     // close dialog
