@@ -10,6 +10,7 @@ export default {
   // flips compare period checkbox
   FLIP_COMPARE_STATE(state, config) {
     state.compare = !state.compare
+
     if (!!config) {
       state.config = { ...config }
       state.config = {
@@ -39,11 +40,6 @@ export default {
       state.compare_start = presets.PREVIOUS_PERIOD(presets[state.primary_preset])[0]
       state.compare_until = presets.PREVIOUS_PERIOD(presets[state.primary_preset])[1]
     }
-  },
-
-  // Theme mode
-  SET_THEME_STATE(state) {
-    state.dark_theme = !state.dark_theme
   },
 
   // set primary picker active
@@ -102,36 +98,26 @@ export default {
     state.picker_primary_active = false
   },
 
-  // resets primary preset
-  SET_PRIMARY_PRESET_NULL(state) {
-    state.primary_preset = null
-  },
-
-  // resets compare preset
-  SET_COMPARE_PRESET_NULL(state) {
-    state.compare_preset = null
-  },
-
   // load initial component props to the store state
   SET_PROPS(state, props) {
-    console.log("[ SET_PROPS ]:")
+    if (state.debug) console.log("[ SET_PROPS ]:")
 
     state.compare = Boolean(props && props.compare)
 
-    console.log("- applying compare:", state.compare)
+    if (state.debug) console.log("- applying compare:", state.compare)
 
     if (props && presets[props.primaryPreset]) {
       state.primary_preset = props.primaryPreset
       state.date_start = presets[props && props.primaryPreset][0]
       state.date_until = presets[props && props.primaryPreset][1]
 
-      console.log("- applying primary preset:", presets[props.primaryPreset])
+      if (state.debug) console.log("- applying primary preset:", presets[props.primaryPreset])
     } else {
       state.primary_preset = null
       state.date_start = (props && props.dateStart) || presets[state.default_primary_preset][0]
       state.date_until = (props && props.dateUntil) || presets[state.default_primary_preset][1]
 
-      console.log("- applying primary date range:", state.date_start, "-", state.date_until)
+      if (state.debug) console.log("- applying primary date range:", state.date_start, "-", state.date_until)
     }
 
     if (props && presets[props.comparePreset]) {
@@ -141,7 +127,7 @@ export default {
       state.compare_start = range[0]
       state.compare_until = range[1]
 
-      console.log("- applying compare preset:", range)
+      if (state.debug) console.log("- applying compare preset:", range)
     } else {
       state.compare_preset = null
       state.compare_start =
@@ -149,7 +135,8 @@ export default {
       state.compare_until =
         (props && props.compareUntil) || presets[state.default_compare_preset]([state.date_start, state.date_until])[1]
 
-      console.log("- applying compare date range:", props && props.compareStart, "-", props && props.compareUntil)
+      if (state.debug)
+        console.log("- applying compare date range:", props && props.compareStart, "-", props && props.compareUntil)
     }
   },
 

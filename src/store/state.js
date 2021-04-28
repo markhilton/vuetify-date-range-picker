@@ -5,6 +5,8 @@ const defaultPrimaryPreset = "LAST_7_DAYS"
 const defaultComparePreset = "PREVIOUS_PERIOD"
 
 export default {
+  debug: false,
+
   // date range picker config props and emitted values
   config: null,
   compare: true,

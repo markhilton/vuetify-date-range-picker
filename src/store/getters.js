@@ -12,10 +12,6 @@ export default {
     return state.compare
   },
 
-  getThemeState(state) {
-    return state.dark_theme
-  },
-
   // primary date picker state
   getDateStart(state) {
     return state.date_start
@@ -84,28 +80,12 @@ export default {
     return state.compare_preset
   },
 
-  // presets
+  // get presets
   getPrimaryPresets(state) {
     return state.primary_presets
   },
 
   getComparePresets(state) {
     return state.compare_presets
-  },
-
-  getPrimaryDefaultDateFormat() {
-    return ({ primaryPreset, date_start }, index) => {
-      if (primaryPreset) return moment(presets[primaryPreset][index]).format(presets.DEFAULT_FORMAT)
-
-      return moment(date_start).format(presets.DEFAULT_FORMAT)
-    }
-  },
-
-  getCompareDefaultDateFormat() {
-    return ({ primaryPreset, comparePreset, compare_start }, index) => {
-      if (comparePreset && comparePreset)
-        return moment(presets[comparePreset](presets[primaryPreset])[index]).format(presets.DEFAULT_FORMAT)
-      return moment(compare_start).format(presets.DEFAULT_FORMAT)
-    }
   },
 }
