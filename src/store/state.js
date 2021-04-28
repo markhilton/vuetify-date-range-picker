@@ -11,6 +11,11 @@ export default {
   dark_theme: false,
   date_format: defaultDateFormat,
 
+  // defaults
+  default_date_format: defaultDateFormat,
+  default_primary_preset: defaultPrimaryPreset,
+  default_compare_preset: defaultComparePreset,
+
   // primary date range
   date_start: presets[defaultPrimaryPreset][0],
   date_until: presets[defaultPrimaryPreset][1],

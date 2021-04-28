@@ -125,6 +125,12 @@ export default {
     darkTheme: false,
   }),
 
+  watch: {
+    darkTheme() {
+      this.$vuetify.theme.dark = this.darkTheme
+    },
+  },
+
   created() {
     this.$vuetify.theme.dark = this.darkTheme
   },
@@ -133,8 +139,8 @@ export default {
     ...mapMutations("datepicker", ["SET_CONFIG"]),
 
     setDateRange(state) {
-      this.init = state
-      this.emittedDateRange = state
+      this.init = state // update props form
+      this.emittedDateRange = state // update emitted object
     },
   },
 }
