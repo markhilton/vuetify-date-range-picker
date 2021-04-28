@@ -17,13 +17,11 @@ export default {
         state.date_start = presets[state.primary_preset][0]
         state.date_until = presets[state.primary_preset][1]
       }
-      if (state.compare_preset) {
+      if (state.compare_preset && state.primary_preset) {
         state.compare_start = presets[state.compare_preset](presets[state.primary_preset])[0]
         state.compare_until = presets[state.compare_preset](presets[state.primary_preset])[1]
       }
     }
-    console.log(state.compare);
-    console.log(state.primary_preset);
   },
 
   // flips compare period checkbox

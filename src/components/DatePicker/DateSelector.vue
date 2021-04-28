@@ -46,7 +46,6 @@ export default {
       config: {
         handler: function (initData) {
           this.SET_STATE_DATA(initData)
-          console.log('watch prop', initData)
         },
         deep: true,
       },
@@ -59,7 +58,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.date-selector::v-deep {
+.date-selector {
   min-width: 250px;
   max-width: 290px;
   cursor: pointer;
