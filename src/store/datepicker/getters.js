@@ -1,5 +1,5 @@
 import moment from "moment"
-import presets from "../components/DatePicker/presets"
+import presets from "../../components/DatePicker/presets"
 
 export default {
   // dialog window state

@@ -92,10 +92,10 @@
           </v-row>
         </v-card-text>
 
-        <v-card-actions>
+        <v-card-actions class="mt-2">
           <v-spacer />
-          <v-btn text class="px-4 mr-3" @click="SET_DIALOG_OPENED(false)">Cancel</v-btn>
-          <v-btn large class="primary px-7" @click="SET_CONFIG()">Apply</v-btn>
+          <v-btn outlined class="px-4 mr-3" @click="SET_DIALOG_OPENED(false)">Cancel</v-btn>
+          <v-btn class="primary px-7" @click="SET_CONFIG()">Apply</v-btn>
         </v-card-actions>
       </v-container>
     </v-card>

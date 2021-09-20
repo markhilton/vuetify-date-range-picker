@@ -1,4 +1,4 @@
-import presets, { primaryPresets, comparePresets } from "../components/DatePicker/presets"
+import presets, { primaryPresets, comparePresets } from "../../components/DatePicker/presets"
 
 const defaultDateFormat = "MMM D, YYYY"
 const defaultPrimaryPreset = "LAST_7_DAYS"

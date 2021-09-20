@@ -1,15 +1,21 @@
 import Vue from "vue"
 import Vuex from "vuex"
 import App from "./App.vue"
-import datepicker from "@/store"
+import store from "@/store"
 import vuetify from "@/plugins/vuetify.js"
+import DateRangePicker from "./wrapper"
 
 Vue.config.devtools = true
 Vue.config.productionTip = false
 
 Vue.use(Vuex)
 
-const store = new Vuex.Store({ modules: { datepicker } })
+const DateRangePickerSettings = {
+  debug: true,
+  store,
+}
+
+Vue.use(DateRangePicker, DateRangePickerSettings)
 
 new Vue({
   store,
