@@ -65,7 +65,8 @@
       </v-row>
 
       <v-row justify="center">
-        <date-picker :config="init" @change="setDateRange" />
+        <!-- <DateRangePicker :config="init" @change="setDateRange" /> -->
+        <DateRangePicker />
       </v-row>
 
       <v-row>
@@ -103,14 +104,11 @@
  * However it is allowed to import presets for dropdowns.
  *
  */
-import DatePicker from "./components/DatePicker.vue"
-import { primaryPresets, comparePresets } from "./components/DatePicker/presets"
 import { mapMutations } from "vuex"
+import { primaryPresets, comparePresets } from "./components/DatePicker/presets"
 
 export default {
   name: "App",
-
-  components: { DatePicker },
 
   data: () => ({
     init: {

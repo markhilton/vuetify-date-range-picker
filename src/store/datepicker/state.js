@@ -8,7 +8,10 @@ export default {
   debug: false,
 
   // date range picker config props and emitted values
-  config: null,
+  config: {
+    compare: true,
+  },
+
   compare: true,
   dark_theme: false,
   date_format: defaultDateFormat,

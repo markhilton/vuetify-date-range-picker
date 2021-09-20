@@ -1,7 +1,7 @@
 // Import vue component
 import DateRangeStore from "./store/datepicker"
 import DateRangePresets from "./components/DatePicker/presets"
-import DateRangeSelector from "./components/DatePicker.vue"
+import DateRangePicker from "./components/DateRangePicker.vue"
 
 // default npm package init config
 import defaultSettings from "./store/defaultSettings"
@@ -40,7 +40,7 @@ export function install(Vue, options = {}) {
   // commit npm package config to vuex store
   // store.commit("datepicker/SET_CONFIG", config)
 
-  Vue.component("DateRangeSelector", DateRangeSelector)
+  Vue.component("DateRangePicker", DateRangePicker)
 }
 
 // Create module definition for Vue.use()

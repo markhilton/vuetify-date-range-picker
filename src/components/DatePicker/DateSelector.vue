@@ -3,14 +3,14 @@
     <v-row>
       <v-col class="date-selector__icon d-flex align-center">
         <v-icon class="py-1" @click.native.stop="FLIP_COMPARE_STATE()">
-          {{ config.compare ? icon.mdiCalendarCheck : icon.mdiCalendarRemove }}
+          {{ getConfig.compare ? icon.mdiCalendarCheck : icon.mdiCalendarRemove }}
         </v-icon>
       </v-col>
 
       <v-col style="line-height: 10px" class="date-selector__info d-flex align-center pa-1">
         {{ getFormattedDate(getDateStart) }} &mdash; {{ getFormattedDate(getDateUntil) }}
 
-        <small v-if="config.compare" class="d-flex mt-n2">
+        <small v-if="getConfig.compare" class="d-flex mt-n2">
           vs {{ getFormattedDate(getDateCompareStart) }} &mdash; {{ getFormattedDate(getDateCompareUntil) }}
         </small>
       </v-col>
@@ -25,8 +25,6 @@ import { mdiCalendarCheck, mdiCalendarRemove } from "@mdi/js"
 export default {
   name: "DateSelector",
 
-  props: ["config"],
-
   data: () => ({
     icon: {
       mdiCalendarCheck,
@@ -37,6 +35,7 @@ export default {
   computed: {
     // date format helper
     ...mapGetters("datepicker", [
+      "getConfig",
       "getDateStart",
       "getDateUntil",
       "getDateCompareStart",

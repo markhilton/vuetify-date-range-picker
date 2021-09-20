@@ -2,11 +2,7 @@
   <div class="date-selector">
     <v-overlay :value="isDialogOpened" @click.native="SET_DIALOG_OPENED(true)" />
 
-    <DateSelector
-        v-bind="$attrs"
-        :class="inheritedClasses"
-        :config="config"
-    />
+    <DateSelector v-bind="$attrs" :class="inheritedClasses" />
 
     <div v-if="isDialogOpened" class="date-pickers-container">
       <DatePickerDesktop v-if="$vuetify.breakpoint.mdAndUp" />
@@ -40,6 +36,7 @@ export default {
     // The following takes care of the classes which should not go to the root element
     // but to the <date-selector /> which actually represents the whole picker
     inheritedClasses: "",
+    configParsed: {},
   }),
 
   computed: {
@@ -54,7 +51,7 @@ export default {
   watch: {
     // we need to watch for any props update to pass it to component
     propsChange() {
-      this.SET_PROPS(this.config)
+      this.SET_PROPS({ ...this.config })
     },
 
     // watch for current component config to emit values on change
@@ -71,7 +68,7 @@ export default {
     // We don't want to lose the default root element classes
     this.$el.className = "date-selector d-inline-flex align-center justify-center"
 
-    this.SET_PROPS(this.config)
+    this.SET_PROPS({ ...this.config })
   },
 
   methods: {
