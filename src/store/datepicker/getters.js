@@ -7,6 +7,22 @@ export default {
     return state.dialog_opened
   },
 
+  isCalendarIconShown(state) {
+    return state.show_calendar_icon
+  },
+
+  isPresetsIconShown(state) {
+    return state.show_presets_icon
+  },
+
+  getPresetLabel() {
+    return (preset) => preset.replaceAll("_", " ")
+  },
+
+  getPresetLabelSmall() {
+    return (preset) => preset.replaceAll("_", " ").toLowerCase()
+  },
+
   // compare checkbox state
   getCompareState(state) {
     return state.compare
@@ -45,8 +61,26 @@ export default {
 
   // parameter getter to format date
   getFormattedDate(state) {
-    return (date) => {
-      return moment(date).format(state.date_format)
+    return (start, until) => {
+      // moment(start).format(state.date_format)
+      const startMonth = moment(start).month() // jan=0, dec=11
+      const startYear = moment(start).year()
+
+      const untilMonth = moment(until).month() // jan=0, dec=11
+      const untilYear = moment(until).year()
+
+      let first = "MMM D, YYYY"
+      let second = "MMM D, YYYY"
+
+      if (startYear === untilYear && startMonth === untilMonth) {
+        first = "MMM D"
+        second = "D, YYYY"
+      } else if (startYear === untilYear) {
+        first = "MMM D"
+        second = "MMM D, YYYY"
+      }
+
+      return moment(start).format(first) + " - " + moment(until).format(second)
     }
   },
 

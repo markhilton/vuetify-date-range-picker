@@ -12,6 +12,11 @@ export default {
     compare: true,
   },
 
+  // layout
+  show_calendar_icon: true,
+  show_presets_icon: true,
+
+  // config
   compare: true,
   dark_theme: false,
   date_format: defaultDateFormat,

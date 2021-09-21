@@ -95,7 +95,7 @@
         <v-card-actions class="mt-2">
           <v-spacer />
           <v-btn outlined class="px-4 mr-3" @click="SET_DIALOG_OPENED(false)">Cancel</v-btn>
-          <v-btn class="primary px-7" @click="SET_CONFIG()">Apply</v-btn>
+          <v-btn class="primary px-7" @click="emitConfig()">Apply</v-btn>
         </v-card-actions>
       </v-container>
     </v-card>
@@ -118,6 +118,7 @@ export default {
   computed: {
     ...mapGetters("datepicker", [
       // config
+      "getConfig",
       "getMaxDate",
 
       // compare checkbox
@@ -151,6 +152,11 @@ export default {
       // control vuetify calendar pickers
       "SET_PICKER_PRIMARY_ACTIVE",
     ]),
+
+    emitConfig() {
+      this.SET_CONFIG()
+      this.$emit("change", this.getConfig)
+    },
   },
 }
 </script>

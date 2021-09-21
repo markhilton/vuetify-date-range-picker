@@ -38,7 +38,14 @@ export function install(Vue, options = {}) {
   delete config.store
 
   // commit npm package config to vuex store
-  // store.commit("datepicker/SET_CONFIG", config)
+  store.commit("datepicker/SET_DEBUG", config.debug)
+
+  if ([true, false].includes(config.showPresetsIcon)) {
+    store.commit("datepicker/SET_PRESET_ICON_SHOWN", Boolean(config.showPresetsIcon))
+  }
+  if ([true, false].includes(config.showCalendarIcon)) {
+    store.commit("datepicker/SET_CALENDAR_ICON_SHOWN", Boolean(config.showCalendarIcon))
+  }
 
   Vue.component("DateRangePicker", DateRangePicker)
 }

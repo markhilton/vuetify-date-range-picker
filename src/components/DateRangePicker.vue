@@ -2,12 +2,12 @@
   <div class="date-selector">
     <v-overlay :value="isDialogOpened" @click.native="SET_DIALOG_OPENED(true)" />
 
-    <DateSelector v-bind="$attrs" :class="inheritedClasses" />
+    <DateSelector v-bind="$attrs" :class="inheritedClasses" @change="$emit('change', $event)" />
 
     <div v-if="isDialogOpened" class="date-pickers-container">
-      <DatePickerDesktop v-if="$vuetify.breakpoint.mdAndUp" />
-      <DatePickerTablet v-else-if="$vuetify.breakpoint.sm" />
-      <DatePickerMobile v-else />
+      <DatePickerDesktop v-if="$vuetify.breakpoint.mdAndUp" @change="$emit('change', $event)" />
+      <DatePickerTablet v-else-if="$vuetify.breakpoint.sm" @change="$emit('change', $event)" />
+      <DatePickerMobile v-else @change="$emit('change', $event)" />
     </div>
   </div>
 </template>
@@ -53,11 +53,6 @@ export default {
     propsChange() {
       this.SET_PROPS({ ...this.config })
     },
-
-    // watch for current component config to emit values on change
-    getConfig(state) {
-      this.$emit("change", state)
-    },
   },
 
   // this component has to be mounted for this.$el.className
@@ -69,22 +64,16 @@ export default {
     this.$el.className = "date-selector d-inline-flex align-center justify-center"
 
     this.SET_PROPS({ ...this.config })
+    this.SET_CONFIG()
   },
 
   methods: {
-    ...mapMutations("datepicker", ["SET_DIALOG_OPENED", "SET_PROPS"]),
+    ...mapMutations("datepicker", ["SET_DIALOG_OPENED", "SET_PROPS", "SET_CONFIG"]),
   },
 }
 </script>
 
 <style lang="scss" scoped>
-.date-selector {
-  padding: 0;
-  margin: 0;
-  max-height: 60px;
-  width: 280px;
-}
-
 .date-pickers-container {
   position: fixed;
   top: 0;

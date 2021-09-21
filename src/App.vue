@@ -65,8 +65,7 @@
       </v-row>
 
       <v-row justify="center">
-        <!-- <DateRangePicker :config="init" @change="setDateRange" /> -->
-        <DateRangePicker />
+        <DateRangePicker :config="init" @change="setDateRange" />
       </v-row>
 
       <v-row>
@@ -114,8 +113,12 @@ export default {
     init: {
       // test with and without init values
       compare: true,
-      primaryPreset: null,
-      comparePreset: null,
+      dateStart: "2019-01-01",
+      dateUntil: "2020-02-01",
+      compareStart: "2018-01-01",
+      compareUntil: "2019-02-01",
+      // primaryPreset: "LAST_30_DAYS",
+      // comparePreset: "PREVIOUS_YEAR",
     },
     primaryPresets: ["", ...Object.keys(primaryPresets)],
     comparePresets: ["", ...Object.keys(comparePresets)],

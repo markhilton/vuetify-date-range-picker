@@ -13,7 +13,7 @@
                 :value="getPickerPrimary"
                 :picker-date="getPickerDate"
                 class="picker-compare-left pr-1"
-                color="blue darken-2 picker-main-selected"
+                color="primary darken-2 picker-main-selected"
                 @click:date="SET_PICKER_PRIMARY($event)"
                 @update:picker-date="SET_PICKER_DATE($event)"
               />
@@ -123,7 +123,7 @@
     <v-card-actions class="mt-2">
       <v-spacer />
       <v-btn outlined class="px-4 mr-6" @click="SET_DIALOG_OPENED(false)">Cancel</v-btn>
-      <v-btn class="primary px-7" @click="SET_CONFIG()">Apply</v-btn>
+      <v-btn class="primary px-7" @click="emitConfig()">Apply</v-btn>
     </v-card-actions>
   </v-card>
 </template>
@@ -144,6 +144,7 @@ export default {
   computed: {
     ...mapGetters("datepicker", [
       // config
+      "getConfig",
       "getMaxDate",
 
       // compare checkbox
@@ -188,6 +189,11 @@ export default {
       "SET_PICKER_PRIMARY_ACTIVE",
       "SET_PICKER_DATE",
     ]),
+
+    emitConfig() {
+      this.SET_CONFIG()
+      this.$emit("change", this.getConfig)
+    },
   },
 }
 </script>

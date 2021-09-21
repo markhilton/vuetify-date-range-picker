@@ -1,18 +1,56 @@
 <template>
-  <v-sheet class="pa-2 date-selector d-inline-block elevation-2 rounded" @click="SET_DIALOG_OPENED(true)">
-    <v-row>
-      <v-col class="date-selector__icon d-flex align-center">
-        <v-icon class="py-1" @click.native.stop="FLIP_COMPARE_STATE()">
-          {{ getConfig.compare ? icon.mdiCalendarCheck : icon.mdiCalendarRemove }}
-        </v-icon>
+  <v-sheet class="pa-2 date-selector elevation-2 rounded" @click="SET_DIALOG_OPENED(true)">
+    <v-row no-gutters>
+      <v-col v-if="isCalendarIconShown" cols="1" class="mr-2">
+        <v-btn
+          small
+          icon
+          fab
+          @click.native.stop="
+            FLIP_COMPARE_STATE()
+            SET_CONFIG()
+          "
+        >
+          <v-icon>{{ getConfig.compare ? icon.mdiCalendarCheck : icon.mdiCalendarRemove }}</v-icon>
+        </v-btn>
       </v-col>
 
-      <v-col style="line-height: 10px" class="date-selector__info d-flex align-center pa-1">
-        {{ getFormattedDate(getDateStart) }} &mdash; {{ getFormattedDate(getDateUntil) }}
+      <v-col class="ml-3">
+        <div v-if="getConfig.primaryPreset" :class="['title', { 'mt-1': !getConfig.compare }]">
+          {{ getPresetLabel(getConfig.primaryPreset) }}
+        </div>
+        <div v-else :class="['subtitle-1', { 'mt-2': !getConfig.compare }]">
+          {{ getFormattedDate(getConfig.dateStart, getConfig.dateUntil) }}
+        </div>
 
-        <small v-if="getConfig.compare" class="d-flex mt-n2">
-          vs {{ getFormattedDate(getDateCompareStart) }} &mdash; {{ getFormattedDate(getDateCompareUntil) }}
-        </small>
+        <div v-if="getConfig.compare" class="text--lighten-2 mt-n2 caption">
+          <div v-if="getConfig.comparePreset">vs {{ getPresetLabelSmall(getConfig.comparePreset) }}</div>
+          <div v-else>vs {{ getFormattedDate(getConfig.compareStart, getConfig.compareUntil) }}</div>
+        </div>
+      </v-col>
+
+      <v-col v-if="isPresetsIconShown" cols="1" class="mr-4">
+        <v-menu offset-y left>
+          <template #activator="{ on, attrs }">
+            <v-btn primary small icon fab v-bind="attrs" v-on="on">
+              <v-icon>{{ icon.mdiChevronDown }}</v-icon>
+            </v-btn>
+          </template>
+
+          <v-list>
+            <v-list-item
+              v-for="(item, index) in getPrimaryPresets"
+              :key="index"
+              @click="
+                SET_PRIMARY_PRESET(item)
+                SET_CONFIG()
+                $emit('change', getConfig)
+              "
+            >
+              <v-list-item-title>{{ getPresetLabel(item) }}</v-list-item-title>
+            </v-list-item>
+          </v-list>
+        </v-menu>
       </v-col>
     </v-row>
   </v-sheet>
@@ -20,13 +58,14 @@
 
 <script>
 import { mapGetters, mapMutations } from "vuex"
-import { mdiCalendarCheck, mdiCalendarRemove } from "@mdi/js"
+import { mdiCalendarCheck, mdiCalendarRemove, mdiChevronDown } from "@mdi/js"
 
 export default {
   name: "DateSelector",
 
   data: () => ({
     icon: {
+      mdiChevronDown,
       mdiCalendarCheck,
       mdiCalendarRemove,
     },
@@ -36,36 +75,25 @@ export default {
     // date format helper
     ...mapGetters("datepicker", [
       "getConfig",
-      "getDateStart",
-      "getDateUntil",
-      "getDateCompareStart",
-      "getDateCompareUntil",
+      "isPresetsIconShown",
+      "isCalendarIconShown",
       "getFormattedDate",
+      "getPrimaryPresets",
+      "getPresetLabel",
+      "getPresetLabelSmall",
     ]),
   },
 
   methods: {
-    ...mapMutations("datepicker", ["FLIP_COMPARE_STATE", "SET_DIALOG_OPENED"]),
+    ...mapMutations("datepicker", ["FLIP_COMPARE_STATE", "SET_DIALOG_OPENED", "SET_PRIMARY_PRESET", "SET_CONFIG"]),
   },
 }
 </script>
 
 <style lang="scss" scoped>
 .date-selector {
-  min-width: 250px;
-  max-width: 290px;
   cursor: pointer;
 
-  .date-selector__icon {
-    max-width: 3rem;
-    min-height: 3rem;
-  }
-
-  .date-selector__info {
-    flex-wrap: wrap;
-    min-height: 3rem;
-    font-size: 0.9em;
-  }
   .theme--dark.v-sheet,
   .theme--light.v-sheet {
     background-color: transparent;
