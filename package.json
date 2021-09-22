@@ -1,7 +1,7 @@
 {
   "private": false,
   "name": "@nerd305/vuetify-date-range-picker",
-  "version": "0.0.51",
+  "version": "0.0.52",
   "description": "Vuetify Date Range Picker with compare period and presets, optimized for best mobile and desktop user experience",
   "keywords": [
     "DateRangePicker",

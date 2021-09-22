@@ -1,5 +1,5 @@
 import moment from "moment"
-import presets from "../../components/DatePicker/presets"
+import presets, { primaryPresets, comparePresets } from "../../components/DatePicker/presets"
 
 export default {
   // controls the dialog
@@ -158,6 +158,24 @@ export default {
 
   // set emitted config from current states
   SET_CONFIG: (state) => {
+    // apply primary preset if matches current start/until fields
+    Object.keys(primaryPresets).forEach((preset) => {
+      const [start, until] = presets[preset]
+
+      if (start === state.date_start && until === state.date_until) {
+        state.primary_preset = preset
+      }
+    })
+
+    // apply compare preset if matches compare start/until fields
+    Object.keys(comparePresets).forEach((preset) => {
+      const [start, until] = presets[preset]([state.date_start, state.date_until])
+
+      if (start === state.compare_start && until === state.compare_until) {
+        state.compare_preset = preset
+      }
+    })
+
     state.config = {
       compare: state.compare,
       dateStart: state.date_start,
