@@ -17,20 +17,11 @@ export default {
   // flips compare period checkbox
   FLIP_COMPARE_STATE: (state) => {
     state.compare = !state.compare
+  },
 
-    // state.config = {
-    //   compare: state.compare,
-    //   dateStart: state.date_start,
-    //   dateUntil: state.date_until,
-    //   compareStart: state.compare_start,
-    //   compareUntil: state.compare_until,
-    //   primaryPreset: state.primary_preset,
-    //   comparePreset: state.compare_preset,
-    // }
-
-    // if (state.compare) {
-    //   state.picker_primary_active = false
-    // }
+  // flips compare period checkbox
+  SET_COMPARE_STATE: (state, status) => {
+    state.compare = status
   },
 
   // set primary picker active
