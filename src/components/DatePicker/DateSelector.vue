@@ -16,14 +16,17 @@
       </v-col>
 
       <v-col class="ml-3">
-        <div v-if="getConfig.primaryPreset" :class="['title', { 'mt-1': !getConfig.compare }]">
+        <div
+          v-if="getConfig.primaryPreset"
+          :class="['title', { 'mt-1': !getConfig.compare || !show_compare_date_range }]"
+        >
           {{ getPresetLabel(getConfig.primaryPreset) }}
         </div>
-        <div v-else :class="['subtitle-1', { 'mt-2': !getConfig.compare }]">
+        <div v-else :class="['subtitle-1', { 'mt-2': !getConfig.compare || !show_compare_date_range }]">
           {{ getFormattedDate(getConfig.dateStart, getConfig.dateUntil) }}
         </div>
 
-        <div v-if="getConfig.compare" class="text--lighten-2 mt-n2 caption">
+        <div v-if="show_compare_date_range && getConfig.compare" class="text--lighten-2 mt-n2 caption">
           <div v-if="getConfig.comparePreset">vs {{ getPresetLabelSmall(getConfig.comparePreset) }}</div>
           <div v-else>vs {{ getFormattedDate(getConfig.compareStart, getConfig.compareUntil) }}</div>
         </div>
@@ -57,7 +60,7 @@
 </template>
 
 <script>
-import { mapGetters, mapMutations } from "vuex"
+import { mapState, mapGetters, mapMutations } from "vuex"
 import { mdiCalendarCheck, mdiCalendarRemove, mdiChevronDown } from "@mdi/js"
 
 export default {
@@ -72,6 +75,8 @@ export default {
   }),
 
   computed: {
+    ...mapState("datepicker", ["show_compare_date_range"]),
+
     // date format helper
     ...mapGetters("datepicker", [
       "getConfig",

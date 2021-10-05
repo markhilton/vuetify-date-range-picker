@@ -46,6 +46,9 @@ export function install(Vue, options = {}) {
   if ([true, false].includes(config.showCalendarIcon)) {
     store.commit("datepicker/SET_CALENDAR_ICON_SHOWN", Boolean(config.showCalendarIcon))
   }
+  if ([true, false].includes(config.showCompare)) {
+    store.commit("datepicker/SET_COMPARE_DATE_RANGE_SHOWN", Boolean(config.showCompare))
+  }
 
   Vue.component("DateRangePicker", DateRangePicker)
 }

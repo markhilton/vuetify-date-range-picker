@@ -42,7 +42,7 @@
                 <PresetsPrimary />
               </v-row>
 
-              <v-row class="pl-2 pt-0">
+              <v-row v-if="show_compare_date_range" class="pl-2 pt-0">
                 <v-checkbox
                   :input-value="getCompareState"
                   label="Compare to the following"
@@ -51,7 +51,7 @@
                 />
               </v-row>
 
-              <v-row>
+              <v-row v-if="show_compare_date_range">
                 <v-col cols="12">
                   <v-text-field
                     label="From"
@@ -67,7 +67,8 @@
                   />
                 </v-col>
               </v-row>
-              <v-row>
+
+              <v-row v-if="show_compare_date_range">
                 <v-col cols="12">
                   <v-text-field
                     label="To"
@@ -85,7 +86,7 @@
               </v-row>
 
               <!-- presets for compare period -->
-              <v-row justify="start" class="pl-2">
+              <v-row v-if="show_compare_date_range" justify="start" class="pl-2">
                 <PresetsCompare />
               </v-row>
             </v-col>
@@ -105,7 +106,7 @@
 <script>
 import PresetsPrimary from "./PresetsPrimary.vue"
 import PresetsCompare from "./PresetsCompare.vue"
-import { mapGetters, mapMutations } from "vuex"
+import { mapState, mapGetters, mapMutations } from "vuex"
 
 export default {
   name: "DatePickerMobile",
@@ -116,6 +117,7 @@ export default {
   },
 
   computed: {
+    ...mapState("datepicker", ["show_compare_date_range"]),
     ...mapGetters("datepicker", [
       // config
       "getConfig",

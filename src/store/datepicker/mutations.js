@@ -14,6 +14,9 @@ export default {
   // controls the dialog
   SET_CALENDAR_ICON_SHOWN: (state, status) => (state.show_calendar_icon = status),
 
+  // controls the compare date range visibility
+  SET_COMPARE_DATE_RANGE_SHOWN: (state, status) => (state.show_compare_date_range = status),
+
   // flips compare period checkbox
   FLIP_COMPARE_STATE: (state) => {
     state.compare = !state.compare

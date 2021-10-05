@@ -15,6 +15,7 @@ export default {
   // layout
   show_calendar_icon: true,
   show_presets_icon: true,
+  show_compare_date_range: true,
 
   // config
   compare: true,

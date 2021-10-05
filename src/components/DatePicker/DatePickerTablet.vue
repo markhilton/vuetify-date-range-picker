@@ -72,7 +72,7 @@
             <PresetsPrimary />
           </v-row>
 
-          <v-row class="pl-2 pt-6">
+          <v-row v-if="show_compare_date_range" class="pl-2 pt-6">
             <v-checkbox
               :input-value="getCompareState"
               label="Compare to the following"
@@ -81,7 +81,7 @@
             />
           </v-row>
 
-          <v-row>
+          <v-row v-if="show_compare_date_range">
             <v-col cols="6">
               <v-text-field
                 label="From"
@@ -113,7 +113,7 @@
           </v-row>
 
           <!-- presets for compare period -->
-          <v-row class="pl-2">
+          <v-row v-if="show_compare_date_range" class="pl-2">
             <PresetsCompare />
           </v-row>
         </v-col>
@@ -131,7 +131,7 @@
 <script>
 import PresetsPrimary from "./PresetsPrimary.vue"
 import PresetsCompare from "./PresetsCompare.vue"
-import { mapGetters, mapMutations } from "vuex"
+import { mapState, mapGetters, mapMutations } from "vuex"
 
 export default {
   name: "DatePickerTablet",
@@ -142,6 +142,7 @@ export default {
   },
 
   computed: {
+    ...mapState("datepicker", ["show_compare_date_range"]),
     ...mapGetters("datepicker", [
       // config
       "getConfig",
