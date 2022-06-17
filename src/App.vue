@@ -135,12 +135,6 @@ export default {
   }),
 
   watch: {
-    init: function() {
-      console.log(this.$store)
-      console.log(this.$store.getters["datepicker/getDateStart"] + " - " + this.$store.getters["datepicker/getDateUntil"])
-      console.log(this.$store.getters["reports/getDateStart"] + " - " + this.$store.getters["reports/getDateUntil"])
-      console.log(this.$store.getters["transactions/getDateStart"] + " - " + this.$store.getters["transactions/getDateUntil"])
-    },
     darkTheme() {
       this.$vuetify.theme.dark = this.darkTheme
     },
