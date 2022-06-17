@@ -2,6 +2,7 @@
 import DateRangeStore from "./store/datepicker"
 import DateRangePresets from "./components/DatePicker/presets"
 import DateRangePicker from "./components/DateRangePicker.vue"
+import deepcopy from "deepcopy"
 
 // default npm package init config
 import defaultSettings from "./store/defaultSettings"
@@ -29,7 +30,9 @@ export function install(Vue, options = {}) {
   }
 
   // register vuex store namespace
-  store.registerModule("datepicker", DateRangeStore)
+  if (options.moduleNames) {
+    options.moduleNames.forEach((module) => store.registerModule(module, deepcopy(DateRangeStore)))
+  } else store.registerModule("datepicker", DateRangeStore)
 
   if (config.debug) {
     console.log("[ date picker ]: registering VueX namespace: datepicker")

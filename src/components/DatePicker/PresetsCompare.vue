@@ -36,17 +36,33 @@
 </template>
 
 <script>
-import { mapGetters, mapMutations } from "vuex"
+import { mapMutations, mapState } from "vuex"
 
 export default {
   name: "ComparePresets",
 
-  computed: {
-    ...mapGetters("datepicker", ["getCompareState", "getComparePreset"]),
+  props: {
+    namespace: {
+      type: String,
+      default: "datepicker"
+    }
   },
 
+  computed: mapState({
+    getCompareState (state, getters) {
+      return getters[this.namespace + '/getCompareState']
+    },
+    getComparePreset (state, getters) {
+      return getters[this.namespace + '/getComparePreset']
+    },
+  }),
+
   methods: {
-    ...mapMutations("datepicker", ["SET_COMPARE_PRESET"]),
+    ...mapMutations({
+      SET_COMPARE_PRESET(commit, payload) {
+        return commit(this.namespace + '/SET_COMPARE_PRESET', payload)
+      },
+    }),
   },
 }
 </script>

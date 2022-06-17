@@ -2,18 +2,18 @@
   <div class="date-selector">
     <v-overlay :value="isDialogOpened" @click.native="SET_DIALOG_OPENED(true)" />
 
-    <DateSelector v-bind="$attrs" :class="inheritedClasses" @change="$emit('change', $event)" />
+    <DateSelector v-bind="$attrs" :class="inheritedClasses" @change="$emit('change', $event)" :namespace="namespace" />
 
     <div v-if="isDialogOpened" class="date-pickers-container">
-      <DatePickerDesktop v-if="$vuetify.breakpoint.mdAndUp" @change="$emit('change', $event)" />
-      <DatePickerTablet v-else-if="$vuetify.breakpoint.sm" @change="$emit('change', $event)" />
-      <DatePickerMobile v-else @change="$emit('change', $event)" />
+      <DatePickerDesktop v-if="$vuetify.breakpoint.mdAndUp" @change="$emit('change', $event)" :namespace="namespace" />
+      <DatePickerTablet v-else-if="$vuetify.breakpoint.sm" @change="$emit('change', $event)" :namespace="namespace" />
+      <DatePickerMobile v-else @change="$emit('change', $event)" :namespace="namespace" />
     </div>
   </div>
 </template>
 
 <script>
-import { mapGetters, mapMutations } from "vuex"
+import { mapMutations, mapState } from "vuex"
 
 import DateSelector from "./DatePicker/DateSelector.vue"
 import DatePickerDesktop from "./DatePicker/DatePickerDesktop.vue"
@@ -30,7 +30,13 @@ export default {
     DatePickerMobile,
   },
 
-  props: ["config"],
+  props: {
+    config: Object,
+    namespace: {
+      type: String,
+      default: "datepicker"
+    }
+  },
 
   data: () => ({
     // The following takes care of the classes which should not go to the root element
@@ -39,14 +45,19 @@ export default {
     configParsed: {},
   }),
 
-  computed: {
-    ...mapGetters("datepicker", ["isDialogOpened", "getConfig"]),
+  computed: mapState({
+    isDialogOpened (state, getters) {
+      return getters[this.namespace + '/isDialogOpened']
+    },
+    getConfig (state, getters) {
+      return getters[this.namespace + '/getConfig']
+    },
 
     // props have to be stringify to be make watch reactive on object
     propsChange() {
       return JSON.stringify(this.config)
     },
-  },
+  }),
 
   watch: {
     // we need to watch for any props update to pass it to component
@@ -68,7 +79,17 @@ export default {
   },
 
   methods: {
-    ...mapMutations("datepicker", ["SET_DIALOG_OPENED", "SET_PROPS", "SET_CONFIG"]),
+    ...mapMutations({
+      SET_DIALOG_OPENED(commit, payload) {
+        return commit(this.namespace + '/SET_DIALOG_OPENED', payload)
+      },
+      SET_PROPS(commit, payload) {
+        return commit(this.namespace + '/SET_PROPS', payload)
+      },
+      SET_CONFIG(commit, payload) {
+        return commit(this.namespace + '/SET_CONFIG', payload)
+      }
+    })
   },
 }
 </script>

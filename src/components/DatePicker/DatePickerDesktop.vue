@@ -101,7 +101,7 @@
 
           <!-- presets for main period -->
           <v-row class="pl-2 pr-1">
-            <PresetsPrimary />
+            <PresetsPrimary :namespace="namespace" />
           </v-row>
 
           <v-row v-if="show_compare_date_range" class="pl-2 pt-6">
@@ -147,7 +147,7 @@
 
           <!-- presets for compare period -->
           <v-row v-if="show_compare_date_range" class="pl-2">
-            <PresetsCompare />
+            <PresetsCompare :namespace="namespace" />
           </v-row>
         </v-col>
       </v-row>
@@ -164,7 +164,7 @@
 <script>
 import PresetsPrimary from "./PresetsPrimary.vue"
 import PresetsCompare from "./PresetsCompare.vue"
-import { mapState, mapGetters, mapMutations } from "vuex"
+import { mapState, mapMutations } from "vuex"
 
 export default {
   name: "DatePickerDesktop",
@@ -174,58 +174,116 @@ export default {
     PresetsCompare,
   },
 
-  computed: {
-    ...mapState("datepicker", ["show_compare_date_range"]),
-    ...mapGetters("datepicker", [
-      // config
-      "getConfig",
-      "getMaxDate",
-
-      // compare checkbox
-      "getCompareState",
-
-      // individual dates
-      "getDateStart",
-      "getDateUntil",
-      "getDateCompareStart",
-      "getDateCompareUntil",
-
-      // date picker arrays of date range
-      "getPickerPrimary",
-      "getPickerCompare",
-      "getPickerDate",
-      "getPickerPrimaryLeft",
-      "getPickerPrimaryRight",
-
-      // vuetify date range calendars setup
-      "isPickerPrimaryActive",
-    ]),
+  props: {
+    namespace: {
+      type: String,
+      default: "datepicker",
+    }
   },
 
+  computed: mapState({
+    show_compare_date_range (state) {
+      return state[this.namespace]
+    },
+
+    // config
+    getConfig (state, getters) {
+      return getters[this.namespace + '/getConfig']
+    },
+    getMaxDate (state, getters) {
+      return getters[this.namespace + '/getMaxDate']
+    },
+
+    // compare checkbox
+    getCompareState (state, getters) {
+      return getters[this.namespace + '/getCompareState']
+    },
+
+    // individual dates
+    getDateStart (state, getters) {
+      return getters[this.namespace + '/getDateStart']
+    },
+    getDateUntil (state, getters) {
+      return getters[this.namespace + '/getDateUntil']
+    },
+    getDateCompareStart (state, getters) {
+      return getters[this.namespace + '/getDateCompareStart']
+    },
+    getDateCompareUntil (state, getters) {
+      return getters[this.namespace + '/getDateCompareUntil']
+    },
+
+    // date picker arrays of date range
+    getPickerPrimary (state, getters) {
+      return getters[this.namespace + '/getPickerPrimary']
+    },
+    getPickerCompare (state, getters) {
+      return getters[this.namespace + '/getPickerCompare']
+    },
+    getPickerDate (state, getters) {
+      return getters[this.namespace + '/getPickerDate']
+    },
+    getPickerPrimaryLeft (state, getters) {
+      return getters[this.namespace + '/getPickerPrimaryLeft']
+    },
+    getPickerPrimaryRight (state, getters) {
+      return getters[this.namespace + '/getPickerPrimaryRight']
+    },
+
+    // vuetify date range calendars setup
+    isPickerPrimaryActive (state, getters) {
+      return getters[this.namespace + '/isPickerPrimaryActive']
+    },
+  }),
+
   methods: {
-    ...mapMutations("datepicker", [
+    ...mapMutations({
       // controls compare checkbox
-      "FLIP_COMPARE_STATE",
+      FLIP_COMPARE_STATE(commit, payload) {
+        return commit(this.namespace + '/FLIP_COMPARE_STATE', payload)
+      },
 
       // controls applied selections
-      "SET_CONFIG",
+      SET_CONFIG(commit, payload) {
+        return commit(this.namespace + '/SET_CONFIG', payload)
+      },
 
       // controls dialog modal
-      "SET_DIALOG_OPENED",
+      SET_DIALOG_OPENED(commit, payload) {
+        return commit(this.namespace + '/SET_DIALOG_OPENED', payload)
+      },
 
       // control selected date ranges
-      "SET_DATE_START",
-      "SET_DATE_UNTIL",
-      "SET_COMPARE_START",
-      "SET_COMPARE_UNTIL",
+      SET_DATE_START(commit, payload) {
+        return commit(this.namespace + '/SET_DATE_START', payload)
+      },
+      SET_DATE_UNTIL(commit, payload) {
+        return commit(this.namespace + '/SET_DATE_UNTIL', payload)
+      },
+      SET_COMPARE_START(commit, payload) {
+        return commit(this.namespace + '/SET_COMPARE_START', payload)
+      },
+      SET_COMPARE_UNTIL(commit, payload) {
+        return commit(this.namespace + '/SET_COMPARE_UNTIL', payload)
+      },
 
       // control vuetify calendar pickers
-      "SET_PICKER_PRIMARY_ACTIVE",
-      "SET_PICKER_DATE",
-      "SET_PICKER_PRIMARY",
-      "SET_PICKER_COMPARE",
-      "SET_PICKER_DATE_LEFT",
-    ]),
+      SET_PICKER_PRIMARY_ACTIVE(commit, payload) {
+        return commit(this.namespace + '/SET_PICKER_PRIMARY_ACTIVE', payload)
+      },
+      SET_PICKER_DATE(commit, payload) {
+        return commit(this.namespace + '/SET_PICKER_DATE', payload)
+      },
+      SET_PICKER_PRIMARY(commit, payload) {
+        return commit(this.namespace + '/SET_PICKER_PRIMARY', payload)
+      },
+      SET_PICKER_COMPARE(commit, payload) {
+        return commit(this.namespace + '/SET_PICKER_COMPARE', payload)
+      },
+      SET_PICKER_DATE_LEFT(commit, payload) {
+        return commit(this.namespace + '/SET_PICKER_DATE_LEFT', payload)
+      },
+    }),
 
     emitConfig() {
       this.SET_CONFIG()

@@ -65,7 +65,15 @@
       </v-row>
 
       <v-row justify="center">
-        <DateRangePicker :config="init" @change="setDateRange" />
+        <DateRangePicker :config="init" @change="setDateRange" namespace="datepicker" />
+      </v-row>
+
+      <v-row justify="center" class="mt-10">
+        <DateRangePicker @change="setDateRange" namespace="reports" />
+      </v-row>
+
+      <v-row justify="center" class="mt-10">
+        <DateRangePicker @change="setDateRange" namespace="transactions" />
       </v-row>
 
       <v-row>
@@ -127,6 +135,12 @@ export default {
   }),
 
   watch: {
+    init: function() {
+      console.log(this.$store)
+      console.log(this.$store.getters["datepicker/getDateStart"] + " - " + this.$store.getters["datepicker/getDateUntil"])
+      console.log(this.$store.getters["reports/getDateStart"] + " - " + this.$store.getters["reports/getDateUntil"])
+      console.log(this.$store.getters["transactions/getDateStart"] + " - " + this.$store.getters["transactions/getDateUntil"])
+    },
     darkTheme() {
       this.$vuetify.theme.dark = this.darkTheme
     },
