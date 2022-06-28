@@ -29,7 +29,7 @@ export default {
     vuetify(),
     buble({
       objectAssign: "Object.assign",
-      transforms: { asyncAwait: false },
+      transforms: { asyncAwait: false, forOf: false },
     }), // Transpile to ES5
   ],
 }
