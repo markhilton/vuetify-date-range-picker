@@ -144,56 +144,56 @@ export default {
   props: {
     namespace: {
       type: String,
-      default: "datepicker"
-    }
+      default: "datepicker",
+    },
   },
 
   computed: mapState({
-    show_compare_date_range (state) {
+    show_compare_date_range(state) {
       return state[this.namespace]
     },
 
     // config
-    getConfig (state, getters) {
-      return getters[this.namespace + '/getConfig']
+    getConfig(state, getters) {
+      return getters[this.namespace + "/getConfig"]
     },
-    getMaxDate (state, getters) {
-      return getters[this.namespace + '/getMaxDate']
+    getMaxDate(state, getters) {
+      return getters[this.namespace + "/getMaxDate"]
     },
 
     // compare checkbox
-    getCompareState (state, getters) {
-      return getters[this.namespace + '/getCompareState']
+    getCompareState(state, getters) {
+      return getters[this.namespace + "/getCompareState"]
     },
 
     // individual dates
-    getDateStart (state, getters) {
-      return getters[this.namespace + '/getDateStart']
+    getDateStart(state, getters) {
+      return getters[this.namespace + "/getDateStart"]
     },
-    getDateUntil (state, getters) {
-      return getters[this.namespace + '/getDateUntil']
+    getDateUntil(state, getters) {
+      return getters[this.namespace + "/getDateUntil"]
     },
-    getDateCompareStart (state, getters) {
-      return getters[this.namespace + '/getDateCompareStart']
+    getDateCompareStart(state, getters) {
+      return getters[this.namespace + "/getDateCompareStart"]
     },
-    getDateCompareUntil (state, getters) {
-      return getters[this.namespace + '/getDateCompareUntil']
+    getDateCompareUntil(state, getters) {
+      return getters[this.namespace + "/getDateCompareUntil"]
     },
 
     // date picker arrays of date range
-    getPickerPrimary (state, getters) {
-      return getters[this.namespace + '/getPickerPrimary']
+    getPickerPrimary(state, getters) {
+      return getters[this.namespace + "/getPickerPrimary"]
     },
-    getPickerCompare (state, getters) {
-      return getters[this.namespace + '/getPickerCompare']
+    getPickerCompare(state, getters) {
+      return getters[this.namespace + "/getPickerCompare"]
     },
 
     // vuetify date range calendars setup
-    isPickerPrimaryActive (state, getters) {
-      return getters[this.namespace + '/isPickerPrimaryActive']
+    isPickerPrimaryActive(state, getters) {
+      return getters[this.namespace + "/isPickerPrimaryActive"]
     },
-    getPickerDate (state, getters) {
-      return getters[this.namespace + '/getPickerDate']
+    getPickerDate(state, getters) {
+      return getters[this.namespace + "/getPickerDate"]
     },
   }),
 
@@ -201,45 +201,45 @@ export default {
     ...mapMutations({
       // controls compare checkbox
       FLIP_COMPARE_STATE(commit, payload) {
-        return commit(this.namespace + '/FLIP_COMPARE_STATE', payload)
+        return commit(this.namespace + "/FLIP_COMPARE_STATE", payload)
       },
 
       // controls applied selections
       SET_CONFIG(commit, payload) {
-        return commit(this.namespace + '/SET_CONFIG', payload)
+        return commit(this.namespace + "/SET_CONFIG", payload)
       },
 
       // controls dialog modal
       SET_DIALOG_OPENED(commit, payload) {
-        return commit(this.namespace + '/SET_DIALOG_OPENED', payload)
+        return commit(this.namespace + "/SET_DIALOG_OPENED", payload)
       },
 
       // control selected date ranges
       SET_DATE_START(commit, payload) {
-        return commit(this.namespace + '/SET_DATE_START', payload)
+        return commit(this.namespace + "/SET_DATE_START", payload)
       },
       SET_DATE_UNTIL(commit, payload) {
-        return commit(this.namespace + '/SET_DATE_UNTIL', payload)
+        return commit(this.namespace + "/SET_DATE_UNTIL", payload)
       },
       SET_COMPARE_START(commit, payload) {
-        return commit(this.namespace + '/SET_COMPARE_START', payload)
+        return commit(this.namespace + "/SET_COMPARE_START", payload)
       },
       SET_COMPARE_UNTIL(commit, payload) {
-        return commit(this.namespace + '/SET_COMPARE_UNTIL', payload)
+        return commit(this.namespace + "/SET_COMPARE_UNTIL", payload)
       },
       SET_PICKER_PRIMARY(commit, payload) {
-        return commit(this.namespace + '/SET_PICKER_PRIMARY', payload)
+        return commit(this.namespace + "/SET_PICKER_PRIMARY", payload)
       },
       SET_PICKER_COMPARE(commit, payload) {
-        return commit(this.namespace + '/SET_PICKER_COMPARE', payload)
+        return commit(this.namespace + "/SET_PICKER_COMPARE", payload)
       },
 
       // control vuetify calendar pickers
       SET_PICKER_PRIMARY_ACTIVE(commit, payload) {
-        return commit(this.namespace + '/SET_PICKER_PRIMARY_ACTIVE', payload)
+        return commit(this.namespace + "/SET_PICKER_PRIMARY_ACTIVE", payload)
       },
       SET_PICKER_DATE(commit, payload) {
-        return commit(this.namespace + '/SET_PICKER_DATE', payload)
+        return commit(this.namespace + "/SET_PICKER_DATE", payload)
       },
     }),
 
