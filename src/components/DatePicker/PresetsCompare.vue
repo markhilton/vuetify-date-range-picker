@@ -44,23 +44,23 @@ export default {
   props: {
     namespace: {
       type: String,
-      default: "datepicker"
-    }
+      default: "datepicker",
+    },
   },
 
   computed: mapState({
-    getCompareState (state, getters) {
-      return getters[this.namespace + '/getCompareState']
+    getCompareState(state, getters) {
+      return getters[this.namespace + "/getCompareState"]
     },
-    getComparePreset (state, getters) {
-      return getters[this.namespace + '/getComparePreset']
+    getComparePreset(state, getters) {
+      return getters[this.namespace + "/getComparePreset"]
     },
   }),
 
   methods: {
     ...mapMutations({
       SET_COMPARE_PRESET(commit, payload) {
-        return commit(this.namespace + '/SET_COMPARE_PRESET', payload)
+        return commit(this.namespace + "/SET_COMPARE_PRESET", payload)
       },
     }),
   },

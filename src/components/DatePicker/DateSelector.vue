@@ -69,8 +69,8 @@ export default {
   props: {
     namespace: {
       type: String,
-      default: "datepicker"
-    }
+      default: "datepicker",
+    },
   },
 
   data: () => ({
@@ -82,49 +82,49 @@ export default {
   }),
 
   computed: mapState({
-    show_compare_date_range (state) {
+    show_compare_date_range(state) {
       return state[this.namespace]
     },
 
     // date format helper
-    getConfig (state, getters) {
-      return getters[this.namespace + '/getConfig']
+    getConfig(state, getters) {
+      return getters[this.namespace + "/getConfig"]
     },
-    isPresetsIconShown (state, getters) {
-      return getters[this.namespace + '/isPresetsIconShown']
+    isPresetsIconShown(state, getters) {
+      return getters[this.namespace + "/isPresetsIconShown"]
     },
-    isCalendarIconShown (state, getters) {
-      return getters[this.namespace + '/isCalendarIconShown']
+    isCalendarIconShown(state, getters) {
+      return getters[this.namespace + "/isCalendarIconShown"]
     },
-    getFormattedDate (state, getters) {
-      return getters[this.namespace + '/getFormattedDate']
+    getFormattedDate(state, getters) {
+      return getters[this.namespace + "/getFormattedDate"]
     },
-    getPrimaryPresets (state, getters) {
-      return getters[this.namespace + '/getPrimaryPresets']
+    getPrimaryPresets(state, getters) {
+      return getters[this.namespace + "/getPrimaryPresets"]
     },
-    getPresetLabel (state, getters) {
-      return getters[this.namespace + '/getPresetLabel']
+    getPresetLabel(state, getters) {
+      return getters[this.namespace + "/getPresetLabel"]
     },
-    getPresetLabelSmall (state, getters) {
-      return getters[this.namespace + '/getPresetLabelSmall']
+    getPresetLabelSmall(state, getters) {
+      return getters[this.namespace + "/getPresetLabelSmall"]
     },
   }),
 
   methods: {
     ...mapMutations({
       FLIP_COMPARE_STATE(commit, payload) {
-        return commit(this.namespace + '/FLIP_COMPARE_STATE', payload)
+        return commit(this.namespace + "/FLIP_COMPARE_STATE", payload)
       },
       SET_DIALOG_OPENED(commit, payload) {
-        return commit(this.namespace + '/SET_DIALOG_OPENED', payload)
+        return commit(this.namespace + "/SET_DIALOG_OPENED", payload)
       },
       SET_PRIMARY_PRESET(commit, payload) {
-        return commit(this.namespace + '/SET_PRIMARY_PRESET', payload)
+        return commit(this.namespace + "/SET_PRIMARY_PRESET", payload)
       },
       SET_CONFIG(commit, payload) {
-        return commit(this.namespace + '/SET_CONFIG', payload)
+        return commit(this.namespace + "/SET_CONFIG", payload)
       },
-    })
+    }),
   },
 }
 </script>
