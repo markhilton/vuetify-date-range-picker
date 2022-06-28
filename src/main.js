@@ -13,7 +13,7 @@ Vue.use(Vuex)
 const DateRangePickerSettings = {
   debug: true,
   store,
-  moduleNames: ["transactions", "reports", "datepicker"]
+  // moduleNames: ["transactions", "reports", "datepicker"]
 }
 
 Vue.use(DateRangePicker, DateRangePickerSettings)

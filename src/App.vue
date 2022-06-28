@@ -65,16 +65,17 @@
       </v-row>
 
       <v-row justify="center">
-        <DateRangePicker :config="init" @change="setDateRange" namespace="datepicker" />
+        <DateRangePicker :config="init" @change="setDateRange" />
       </v-row>
 
-      <v-row justify="center" class="mt-10">
-        <DateRangePicker @change="setDateRange" namespace="reports" />
-      </v-row>
+      <!-- add moduleNames from main.js and remove comments to see a few states -->
+<!--      <v-row justify="center" class="mt-10">-->
+<!--        <DateRangePicker @change="setDateRange" namespace="reports" />-->
+<!--      </v-row>-->
 
-      <v-row justify="center" class="mt-10">
-        <DateRangePicker @change="setDateRange" namespace="transactions" />
-      </v-row>
+<!--      <v-row justify="center" class="mt-10">-->
+<!--        <DateRangePicker @change="setDateRange" namespace="transactions" />-->
+<!--      </v-row>-->
 
       <v-row>
         <v-col>
