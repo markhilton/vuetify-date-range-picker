@@ -14,23 +14,17 @@ export default {
   // controls the dialog
   SET_CALENDAR_ICON_SHOWN: (state, status) => (state.show_calendar_icon = status),
 
+  // controls the compare date range visibility
+  SET_COMPARE_DATE_RANGE_SHOWN: (state, status) => (state.show_compare_date_range = status),
+
   // flips compare period checkbox
   FLIP_COMPARE_STATE: (state) => {
     state.compare = !state.compare
+  },
 
-    // state.config = {
-    //   compare: state.compare,
-    //   dateStart: state.date_start,
-    //   dateUntil: state.date_until,
-    //   compareStart: state.compare_start,
-    //   compareUntil: state.compare_until,
-    //   primaryPreset: state.primary_preset,
-    //   comparePreset: state.compare_preset,
-    // }
-
-    // if (state.compare) {
-    //   state.picker_primary_active = false
-    // }
+  // flips compare period checkbox
+  SET_COMPARE_STATE: (state, status) => {
+    state.compare = status
   },
 
   // set primary picker active

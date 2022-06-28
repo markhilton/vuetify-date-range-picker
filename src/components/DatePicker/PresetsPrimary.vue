@@ -83,17 +83,30 @@
 </template>
 
 <script>
-import { mapGetters, mapMutations } from "vuex"
+import { mapMutations, mapState } from "vuex"
 
 export default {
   name: "PrimaryPresets",
 
-  computed: {
-    ...mapGetters("datepicker", ["getPrimaryPreset"]),
+  props: {
+    namespace: {
+      type: String,
+      default: "datepicker"
+    }
   },
 
+  computed: mapState({
+    getPrimaryPreset (state, getters) {
+      return getters[this.namespace + '/getPrimaryPreset']
+    },
+  }),
+
   methods: {
-    ...mapMutations("datepicker", ["SET_PRIMARY_PRESET"]),
+    ...mapMutations({
+      SET_PRIMARY_PRESET(commit, payload) {
+        return commit(this.namespace + '/SET_PRIMARY_PRESET', payload)
+      },
+    }),
   },
 }
 </script>

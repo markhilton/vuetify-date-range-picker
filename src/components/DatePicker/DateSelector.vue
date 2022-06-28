@@ -16,14 +16,17 @@
       </v-col>
 
       <v-col class="ml-3">
-        <div v-if="getConfig.primaryPreset" :class="['title', { 'mt-1': !getConfig.compare }]">
+        <div
+          v-if="getConfig.primaryPreset"
+          :class="['title', { 'mt-1': !getConfig.compare || !show_compare_date_range }]"
+        >
           {{ getPresetLabel(getConfig.primaryPreset) }}
         </div>
-        <div v-else :class="['subtitle-1', { 'mt-2': !getConfig.compare }]">
+        <div v-else :class="['subtitle-1', { 'mt-2': !getConfig.compare || !show_compare_date_range }]">
           {{ getFormattedDate(getConfig.dateStart, getConfig.dateUntil) }}
         </div>
 
-        <div v-if="getConfig.compare" class="text--lighten-2 mt-n2 caption">
+        <div v-if="show_compare_date_range && getConfig.compare" class="text--lighten-2 mt-n2 caption">
           <div v-if="getConfig.comparePreset">vs {{ getPresetLabelSmall(getConfig.comparePreset) }}</div>
           <div v-else>vs {{ getFormattedDate(getConfig.compareStart, getConfig.compareUntil) }}</div>
         </div>
@@ -57,11 +60,18 @@
 </template>
 
 <script>
-import { mapGetters, mapMutations } from "vuex"
+import { mapState, mapMutations } from "vuex"
 import { mdiCalendarCheck, mdiCalendarRemove, mdiChevronDown } from "@mdi/js"
 
 export default {
   name: "DateSelector",
+
+  props: {
+    namespace: {
+      type: String,
+      default: "datepicker"
+    }
+  },
 
   data: () => ({
     icon: {
@@ -71,21 +81,50 @@ export default {
     },
   }),
 
-  computed: {
+  computed: mapState({
+    show_compare_date_range (state) {
+      return state[this.namespace]
+    },
+
     // date format helper
-    ...mapGetters("datepicker", [
-      "getConfig",
-      "isPresetsIconShown",
-      "isCalendarIconShown",
-      "getFormattedDate",
-      "getPrimaryPresets",
-      "getPresetLabel",
-      "getPresetLabelSmall",
-    ]),
-  },
+    getConfig (state, getters) {
+      return getters[this.namespace + '/getConfig']
+    },
+    isPresetsIconShown (state, getters) {
+      return getters[this.namespace + '/isPresetsIconShown']
+    },
+    isCalendarIconShown (state, getters) {
+      return getters[this.namespace + '/isCalendarIconShown']
+    },
+    getFormattedDate (state, getters) {
+      return getters[this.namespace + '/getFormattedDate']
+    },
+    getPrimaryPresets (state, getters) {
+      return getters[this.namespace + '/getPrimaryPresets']
+    },
+    getPresetLabel (state, getters) {
+      return getters[this.namespace + '/getPresetLabel']
+    },
+    getPresetLabelSmall (state, getters) {
+      return getters[this.namespace + '/getPresetLabelSmall']
+    },
+  }),
 
   methods: {
-    ...mapMutations("datepicker", ["FLIP_COMPARE_STATE", "SET_DIALOG_OPENED", "SET_PRIMARY_PRESET", "SET_CONFIG"]),
+    ...mapMutations({
+      FLIP_COMPARE_STATE(commit, payload) {
+        return commit(this.namespace + '/FLIP_COMPARE_STATE', payload)
+      },
+      SET_DIALOG_OPENED(commit, payload) {
+        return commit(this.namespace + '/SET_DIALOG_OPENED', payload)
+      },
+      SET_PRIMARY_PRESET(commit, payload) {
+        return commit(this.namespace + '/SET_PRIMARY_PRESET', payload)
+      },
+      SET_CONFIG(commit, payload) {
+        return commit(this.namespace + '/SET_CONFIG', payload)
+      },
+    })
   },
 }
 </script>

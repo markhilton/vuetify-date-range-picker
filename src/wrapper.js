@@ -2,6 +2,8 @@
 import DateRangeStore from "./store/datepicker"
 import DateRangePresets from "./components/DatePicker/presets"
 import DateRangePicker from "./components/DateRangePicker.vue"
+import localStore from "@/store"
+import deepcopy from "deepcopy"
 
 // default npm package init config
 import defaultSettings from "./store/defaultSettings"
@@ -17,19 +19,19 @@ export function install(Vue, options = {}) {
 
   let { store } = config
 
-  // verify if required dependency instances are passed to this package config
-  if (config.debug) {
-    if (store === null) {
-      console.error("[ date picker ]: WARNING: VueX store instance missing in DateRangePicker config!")
-    }
-  }
+  // check if store is not passed to the package config
   if (store === null) {
-    // use backup store if none passed in options - backwards compatibility
-    store = DateRangeStore
+    // use our local store
+    store = localStore
+    if (config.debug) {
+      console.log("[ date picker ]: INFO: using local Store")
+    }
   }
 
   // register vuex store namespace
-  store.registerModule("datepicker", DateRangeStore)
+  if (options.moduleNames) {
+    options.moduleNames.forEach((module) => store.registerModule(module, deepcopy(DateRangeStore)))
+  } else store.registerModule("datepicker", DateRangeStore)
 
   if (config.debug) {
     console.log("[ date picker ]: registering VueX namespace: datepicker")
@@ -45,6 +47,9 @@ export function install(Vue, options = {}) {
   }
   if ([true, false].includes(config.showCalendarIcon)) {
     store.commit("datepicker/SET_CALENDAR_ICON_SHOWN", Boolean(config.showCalendarIcon))
+  }
+  if ([true, false].includes(config.showCompare)) {
+    store.commit("datepicker/SET_COMPARE_DATE_RANGE_SHOWN", Boolean(config.showCompare))
   }
 
   Vue.component("DateRangePicker", DateRangePicker)

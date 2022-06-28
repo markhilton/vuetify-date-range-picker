@@ -39,10 +39,10 @@
 
               <!-- presets for main period -->
               <v-row justify="start" class="pl-2 pr-1">
-                <PresetsPrimary />
+                <PresetsPrimary :namespace="namespace" />
               </v-row>
 
-              <v-row class="pl-2 pt-0">
+              <v-row v-if="show_compare_date_range" class="pl-2 pt-0">
                 <v-checkbox
                   :input-value="getCompareState"
                   label="Compare to the following"
@@ -51,7 +51,7 @@
                 />
               </v-row>
 
-              <v-row>
+              <v-row v-if="show_compare_date_range">
                 <v-col cols="12">
                   <v-text-field
                     label="From"
@@ -67,7 +67,8 @@
                   />
                 </v-col>
               </v-row>
-              <v-row>
+
+              <v-row v-if="show_compare_date_range">
                 <v-col cols="12">
                   <v-text-field
                     label="To"
@@ -85,8 +86,8 @@
               </v-row>
 
               <!-- presets for compare period -->
-              <v-row justify="start" class="pl-2">
-                <PresetsCompare />
+              <v-row v-if="show_compare_date_range" justify="start" class="pl-2">
+                <PresetsCompare :namespace="namespace" />
               </v-row>
             </v-col>
           </v-row>
@@ -105,7 +106,7 @@
 <script>
 import PresetsPrimary from "./PresetsPrimary.vue"
 import PresetsCompare from "./PresetsCompare.vue"
-import { mapGetters, mapMutations } from "vuex"
+import { mapState, mapMutations } from "vuex"
 
 export default {
   name: "DatePickerMobile",
@@ -115,43 +116,82 @@ export default {
     PresetsCompare,
   },
 
-  computed: {
-    ...mapGetters("datepicker", [
-      // config
-      "getConfig",
-      "getMaxDate",
-
-      // compare checkbox
-      "getCompareState",
-
-      // individual dates
-      "getDateStart",
-      "getDateUntil",
-      "getDateCompareStart",
-      "getDateCompareUntil",
-    ]),
+  props: {
+    namespace: {
+      type: String,
+      default: "datepicker"
+    }
   },
 
+  computed: mapState({
+    show_compare_date_range (state) {
+      return state[this.namespace]
+    },
+
+    // config
+    getConfig (state, getters) {
+      return getters[this.namespace + '/getConfig']
+    },
+    getMaxDate (state, getters) {
+      return getters[this.namespace + '/getMaxDate']
+    },
+
+    // compare checkbox
+    getCompareState (state, getters) {
+      return getters[this.namespace + '/getCompareState']
+    },
+
+    // individual dates
+    getDateStart (state, getters) {
+      return getters[this.namespace + '/getDateStart']
+    },
+    getDateUntil (state, getters) {
+      return getters[this.namespace + '/getDateUntil']
+    },
+    getDateCompareStart (state, getters) {
+      return getters[this.namespace + '/getDateCompareStart']
+    },
+    getDateCompareUntil (state, getters) {
+      return getters[this.namespace + '/getDateCompareUntil']
+    },
+  }),
+
   methods: {
-    ...mapMutations("datepicker", [
+    ...mapMutations({
       // controls compare checkbox
-      "FLIP_COMPARE_STATE",
+      FLIP_COMPARE_STATE(commit, payload) {
+        return commit(this.namespace + '/FLIP_COMPARE_STATE', payload)
+      },
 
       // controls applied selections
-      "SET_CONFIG",
+      SET_CONFIG(commit, payload) {
+        return commit(this.namespace + '/SET_CONFIG', payload)
+      },
 
       // controls dialog modal
-      "SET_DIALOG_OPENED",
+      SET_DIALOG_OPENED(commit, payload) {
+        return commit(this.namespace + '/SET_DIALOG_OPENED', payload)
+      },
 
       // control selected date ranges
-      "SET_DATE_START",
-      "SET_DATE_UNTIL",
-      "SET_COMPARE_START",
-      "SET_COMPARE_UNTIL",
+      SET_DATE_START(commit, payload) {
+        return commit(this.namespace + '/SET_DATE_START', payload)
+      },
+      SET_DATE_UNTIL(commit, payload) {
+        return commit(this.namespace + '/SET_DATE_UNTIL', payload)
+      },
+      SET_COMPARE_START(commit, payload) {
+        return commit(this.namespace + '/SET_COMPARE_START', payload)
+      },
+      SET_COMPARE_UNTIL(commit, payload) {
+        return commit(this.namespace + '/SET_COMPARE_UNTIL', payload)
+      },
 
       // control vuetify calendar pickers
-      "SET_PICKER_PRIMARY_ACTIVE",
-    ]),
+      SET_PICKER_PRIMARY_ACTIVE(commit, payload) {
+        return commit(this.namespace + '/SET_PICKER_PRIMARY_ACTIVE', payload)
+      },
+    }),
 
     emitConfig() {
       this.SET_CONFIG()
