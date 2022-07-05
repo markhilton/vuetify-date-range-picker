@@ -19,6 +19,9 @@ import DateSelector from "./DatePicker/DateSelector.vue"
 import DatePickerDesktop from "./DatePicker/DatePickerDesktop.vue"
 import DatePickerTablet from "./DatePicker/DatePickerTablet.vue"
 import DatePickerMobile from "./DatePicker/DatePickerMobile.vue"
+import DateRangeStore from "../store/datepicker"
+import localStore from "@/store"
+import deepcopy from "deepcopy";
 
 export default {
   name: "DatePicker",
@@ -32,10 +35,6 @@ export default {
 
   props: {
     config: Object,
-    namespace: {
-      type: String,
-      default: "datepicker",
-    },
   },
 
   data: () => ({
@@ -43,6 +42,7 @@ export default {
     // but to the <date-selector /> which actually represents the whole picker
     inheritedClasses: "",
     configParsed: {},
+    namespace: "datepicker"
   }),
 
   computed: mapState({
@@ -64,6 +64,14 @@ export default {
     propsChange() {
       this.SET_PROPS({ ...this.config })
     },
+  },
+
+  beforeMount() {
+    // register module
+    const number = Math.random()
+    const moduleName = this.namespace + number
+    this.namespace += number
+    localStore.registerModule(moduleName, deepcopy(DateRangeStore))
   },
 
   // this component has to be mounted for this.$el.className

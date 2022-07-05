@@ -68,14 +68,9 @@
         <DateRangePicker :config="init" @change="setDateRange" />
       </v-row>
 
-      <!-- add moduleNames from main.js and remove comments to see a few states -->
-<!--      <v-row justify="center" class="mt-10">-->
-<!--        <DateRangePicker @change="setDateRange" namespace="reports" />-->
-<!--      </v-row>-->
-
-<!--      <v-row justify="center" class="mt-10">-->
-<!--        <DateRangePicker @change="setDateRange" namespace="transactions" />-->
-<!--      </v-row>-->
+      <v-row justify="center" class="mt-10">
+        <DateRangePicker :config="init2" @change="setDateRange2" />
+      </v-row>
 
       <v-row>
         <v-col>
@@ -114,9 +109,14 @@
  */
 import { mapMutations } from "vuex"
 import { primaryPresets, comparePresets } from "./components/DatePicker/presets"
+import DateRangePicker from "./components/DateRangePicker"
 
 export default {
   name: "App",
+
+  components: {
+    DateRangePicker
+  },
 
   data: () => ({
     init: {
@@ -126,6 +126,16 @@ export default {
       dateUntil: "2020-02-01",
       compareStart: "2018-01-01",
       compareUntil: "2019-02-01",
+      // primaryPreset: "LAST_30_DAYS",
+      // comparePreset: "PREVIOUS_YEAR",
+    },
+    init2: {
+      // test with and without init values
+      compare: true,
+      dateStart: "2021-03-01",
+      dateUntil: "2022-05-01",
+      compareStart: "2020-01-01",
+      compareUntil: "2021-02-01",
       // primaryPreset: "LAST_30_DAYS",
       // comparePreset: "PREVIOUS_YEAR",
     },
@@ -150,6 +160,10 @@ export default {
 
     setDateRange(state) {
       this.init = state // update props form
+      this.emittedDateRange = state // update emitted object
+    },
+    setDateRange2(state) {
+      this.init2 = state // update props form
       this.emittedDateRange = state // update emitted object
     },
   },
