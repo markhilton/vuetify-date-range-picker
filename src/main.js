@@ -16,7 +16,7 @@ const DateRangePickerSettings = {
   // moduleNames: ["transactions", "reports", "datepicker"]
 }
 
-Vue.use(DateRangePicker, DateRangePickerSettings)
+// Vue.use(DateRangePicker, DateRangePickerSettings)
 
 new Vue({
   store,
