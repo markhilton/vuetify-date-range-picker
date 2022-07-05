@@ -1,4 +1,4 @@
-FROM node:12
+FROM node:16
 
 ARG TAG_NAME
 ARG NPM_TOKEN

@@ -91,20 +91,20 @@ export default {
   props: {
     namespace: {
       type: String,
-      default: "datepicker"
-    }
+      default: "datepicker",
+    },
   },
 
   computed: mapState({
-    getPrimaryPreset (state, getters) {
-      return getters[this.namespace + '/getPrimaryPreset']
+    getPrimaryPreset(state, getters) {
+      return getters[this.namespace + "/getPrimaryPreset"]
     },
   }),
 
   methods: {
     ...mapMutations({
       SET_PRIMARY_PRESET(commit, payload) {
-        return commit(this.namespace + '/SET_PRIMARY_PRESET', payload)
+        return commit(this.namespace + "/SET_PRIMARY_PRESET", payload)
       },
     }),
   },

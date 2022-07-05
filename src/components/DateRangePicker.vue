@@ -2,12 +2,12 @@
   <div class="date-selector">
     <v-overlay :value="isDialogOpened" @click.native="SET_DIALOG_OPENED(true)" />
 
-    <DateSelector v-bind="$attrs" :class="inheritedClasses" @change="$emit('change', $event)" :namespace="namespace" />
+    <DateSelector v-bind="$attrs" :class="inheritedClasses" :namespace="namespace" @change="$emit('change', $event)" />
 
     <div v-if="isDialogOpened" class="date-pickers-container">
-      <DatePickerDesktop v-if="$vuetify.breakpoint.mdAndUp" @change="$emit('change', $event)" :namespace="namespace" />
-      <DatePickerTablet v-else-if="$vuetify.breakpoint.sm" @change="$emit('change', $event)" :namespace="namespace" />
-      <DatePickerMobile v-else @change="$emit('change', $event)" :namespace="namespace" />
+      <DatePickerDesktop v-if="$vuetify.breakpoint.mdAndUp" :namespace="namespace" @change="$emit('change', $event)" />
+      <DatePickerTablet v-else-if="$vuetify.breakpoint.sm" :namespace="namespace" @change="$emit('change', $event)" />
+      <DatePickerMobile v-else :namespace="namespace" @change="$emit('change', $event)" />
     </div>
   </div>
 </template>
@@ -46,11 +46,11 @@ export default {
   }),
 
   computed: mapState({
-    isDialogOpened (state, getters) {
-      return getters[this.namespace + '/isDialogOpened']
+    isDialogOpened(state, getters) {
+      return getters[this.namespace + "/isDialogOpened"]
     },
-    getConfig (state, getters) {
-      return getters[this.namespace + '/getConfig']
+    getConfig(state, getters) {
+      return getters[this.namespace + "/getConfig"]
     },
 
     // props have to be stringify to be make watch reactive on object
@@ -89,15 +89,15 @@ export default {
   methods: {
     ...mapMutations({
       SET_DIALOG_OPENED(commit, payload) {
-        return commit(this.namespace + '/SET_DIALOG_OPENED', payload)
+        return commit(this.namespace + "/SET_DIALOG_OPENED", payload)
       },
       SET_PROPS(commit, payload) {
-        return commit(this.namespace + '/SET_PROPS', payload)
+        return commit(this.namespace + "/SET_PROPS", payload)
       },
       SET_CONFIG(commit, payload) {
-        return commit(this.namespace + '/SET_CONFIG', payload)
-      }
-    })
+        return commit(this.namespace + "/SET_CONFIG", payload)
+      },
+    }),
   },
 }
 </script>
