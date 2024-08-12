@@ -1,105 +1,73 @@
 <template>
   <div class="date-selector">
-    <v-overlay :value="isDialogOpened" @click.native="SET_DIALOG_OPENED(true)" />
-
-    <DateSelector v-bind="$attrs" :class="inheritedClasses" :namespace="namespace" @change="$emit('change', $event)" />
-
-    <div v-if="isDialogOpened" class="date-pickers-container">
-      <DatePickerDesktop v-if="$vuetify.breakpoint.mdAndUp" :namespace="namespace" @change="$emit('change', $event)" />
-      <DatePickerTablet v-else-if="$vuetify.breakpoint.sm" :namespace="namespace" @change="$emit('change', $event)" />
-      <DatePickerMobile v-else :namespace="namespace" @change="$emit('change', $event)" />
-    </div>
+    <DateSelector v-bind="$attrs" :class="inheritedClasses" :namespace="namespace" :pinia-store="datePickerStore"  @change="$emit('change', $event)" />
+    <!-- <v-overlay v-model="isDialogOpened" @click="datePickerStore.SET_DIALOG_OPENED(true)"> -->
+    <v-overlay v-model="isDialogOpened">
+      <div v-if="isDialogOpened" class="date-pickers-container">
+        <DatePickerDesktop v-if="mdAndUp" :pinia-store="datePickerStore"  :namespace="namespace" @change="$emit('change', $event)" />
+        <DatePickerTablet v-else-if="sm" :pinia-store="datePickerStore" :namespace="namespace" @change="$emit('change', $event)" />
+        <DatePickerMobile v-else :pinia-store="datePickerStore" :namespace="namespace" @change="$emit('change', $event)" /> 
+      </div>
+    </v-overlay>
   </div>
 </template>
 
-<script>
-import { mapMutations, mapState } from "vuex"
+<script setup>
+import { ref, computed, onMounted, onBeforeMount } from "vue";
+import { defineStore } from "pinia"
+import { useDisplay } from "vuetify";
 
-import DateSelector from "./DatePicker/DateSelector.vue"
-import DatePickerDesktop from "./DatePicker/DatePickerDesktop.vue"
-import DatePickerTablet from "./DatePicker/DatePickerTablet.vue"
-import DatePickerMobile from "./DatePicker/DatePickerMobile.vue"
-import DateRangeStore from "../store/datepicker"
-import localStore from "@/store"
-import deepcopy from "deepcopy";
+import DateSelector from "@/components/DatePicker/DateSelector.vue"
+import DatePickerDesktop from "@/components/DatePicker/DatePickerDesktop.vue"
+import DatePickerTablet from "@/components/DatePicker/DatePickerTablet.vue"
+import DatePickerMobile from "@/components/DatePicker/DatePickerMobile.vue"
 
-export default {
-  name: "DatePicker",
+import datePicker from '@/stores/datePicker'
 
-  components: {
-    DateSelector,
-    DatePickerDesktop,
-    DatePickerTablet,
-    DatePickerMobile,
+const props = defineProps({
+  config: {
+    type: Object,
   },
-
-  props: {
-    config: Object,
+  namespace: {
+    type: String,
+    // default: "datepicker",
+    // required: true
   },
+});
 
-  data: () => ({
-    // The following takes care of the classes which should not go to the root element
-    // but to the <date-selector /> which actually represents the whole picker
-    inheritedClasses: "",
-    configParsed: {},
-    namespace: "datepicker"
-  }),
+const { mdAndUp, sm } = useDisplay();
 
-  computed: mapState({
-    isDialogOpened(state, getters) {
-      return getters[this.namespace + "/isDialogOpened"]
-    },
-    getConfig(state, getters) {
-      return getters[this.namespace + "/getConfig"]
-    },
+let useDatePickerStore = {}
+let datePickerStore = {}
 
-    // props have to be stringify to be make watch reactive on object
-    propsChange() {
-      return JSON.stringify(this.config)
-    },
-  }),
 
-  watch: {
-    // we need to watch for any props update to pass it to component
-    propsChange() {
-      this.SET_PROPS({ ...this.config })
-    },
-  },
+const inheritedClasses = ref("");
 
-  beforeMount() {
-    // register module
-    const number = Math.random()
-    const moduleName = this.namespace + number
-    this.namespace += number
-    localStore.registerModule(moduleName, deepcopy(DateRangeStore))
-  },
+const isDialogOpened = computed(() => datePickerStore.isDialogOpened)
 
-  // this component has to be mounted for this.$el.className
-  mounted() {
-    // The classes which are provided to the root element are passed to the <date-selector />
-    this.inheritedClasses = this.$el.className
+onMounted(() => {
+  // inheritedClasses.value = window.$el.
 
-    // We don't want to lose the default root element classes
-    this.$el.className = "date-selector d-inline-flex align-center justify-center"
+  // // We don't want to lose the default root element classes
+  // window.$el.className = "date-selector d-inline-flex align-center justify-center"
 
-    this.SET_PROPS({ ...this.config })
-    this.SET_CONFIG()
-  },
+  datePickerStore.SET_PROPS({ ...props.config })
+  datePickerStore.SET_CONFIG()
+});
 
-  methods: {
-    ...mapMutations({
-      SET_DIALOG_OPENED(commit, payload) {
-        return commit(this.namespace + "/SET_DIALOG_OPENED", payload)
-      },
-      SET_PROPS(commit, payload) {
-        return commit(this.namespace + "/SET_PROPS", payload)
-      },
-      SET_CONFIG(commit, payload) {
-        return commit(this.namespace + "/SET_CONFIG", payload)
-      },
-    }),
-  },
-}
+onBeforeMount(() => {
+  const number = Math.random();
+  const generatedNamespace = 'datepicker' + number;
+
+  if (props.namespace) {
+    useDatePickerStore = defineStore(props.namespace, datePicker)
+  }
+  else {
+    useDatePickerStore = defineStore(generatedNamespace, datePicker)
+  }
+  datePickerStore = useDatePickerStore();
+})
+
 </script>
 
 <style lang="scss" scoped>
@@ -117,7 +85,6 @@ export default {
 <style lang="scss">
 /* not scoped white calendar icon for dark theme <v-text-field type="date" /> */
 .theme--dark input[type="date"]::-webkit-calendar-picker-indicator {
-  background: url('data:image/svg+xml;utf-8,<svg xmlns="http://www.w3.org/2000/svg" width="23" height="23" viewBox="0 0 24 24"><path fill="%23FFFFFF" d="M19,19H5V8H19M16,1V3H8V1H6V3H5C3.89,3 3,3.89 3,5V19A2,2 0 0,0 5,21H19A2,2 0 0,0 21,19V5C21,3.89 20.1,3 19,3H18V1" /></svg>')
-    no-repeat;
+  background: url('data:image/svg+xml;utf-8,<svg xmlns="http://www.w3.org/2000/svg" width="23" height="23" viewBox="0 0 24 24"><path fill="%23FFFFFF" d="M19,19H5V8H19M16,1V3H8V1H6V3H5C3.89,3 3,3.89 3,5V19A2,2 0 0,0 5,21H19A2,2 0 0,0 21,19V5C21,3.89 20.1,3 19,3H18V1" /></svg>') no-repeat;
 }
 </style>

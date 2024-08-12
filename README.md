@@ -14,13 +14,13 @@ npm install @nerd305/vuetify-date-range-picker
 ```
 
 ```javascript
-import DateRangePicker from "@nerd305/vuetify-date-range-picker"
+import DateRangePicker from '@nerd305/vuetify-date-range-picker'
 
 export default {
   // ...
   components: {
-    DateRangePicker,
-  },
+    DateRangePicker
+  }
   // ...
 }
 ```
@@ -28,34 +28,35 @@ export default {
 ## Usage
 
 ```html
-<date-range-picker :config="configuration" @change="setDateRange" />
+<date-range-picker :namespace="namespace" :config="configuration" @change="setDateRange" />
 ```
 
 example configuration using last 30 days preset and compare to previous period:
 
 ```html
 <script>
-  import { presets } from "@nerd305/vuetify-date-range-picker"
+  import { presets } from '@nerd305/vuetify-date-range-picker'
 
   const configuration = {
     dark: false,
     compare: true,
-    dateFormat: "MMM Do, YYYY",
+    dateFormat: 'MMM Do, YYYY',
     dateStart: presets.LAST_30_DAYS[0],
     dateUntil: presets.LAST_30_DAYS[1],
     compareStart: presets.PREVIOUS_PERIOD[LAST_30_DAYS][0],
     compareUntil: presets.PREVIOUS_PERIOD[LAST_30_DAYS][1],
     primaryPreset: LAST_30_DAYS,
-    comparePreset: PREVIOUS_PERIOD,
+    comparePreset: PREVIOUS_PERIOD
   }
 </script>
 ```
 
 ## Available props
 
-| Prop   | Type   | Default       | Description                        |
-| ------ | ------ | ------------- | ---------------------------------- |
-| config | Object | configuration | Date format of the DateRangePicker |
+| Prop      | Type   | Default       | Description                                  |
+| --------- | ------ | ------------- | -------------------------------------------- |
+| config    | Object | configuration | Date format of the DateRangePicker           |
+| namespace | String | none          | Namespace of the DateRangePicker Pinia Store |
 
 | Object property | Type    | Default         | Description                                                              |
 | --------------- | ------- | --------------- | ------------------------------------------------------------------------ |

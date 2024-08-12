@@ -14,10 +14,10 @@
 
       <v-row no-gutters>
         <v-col cols="6" class="pr-1">
-          <v-select v-model="init.primaryPreset" :items="primaryPresets" label="Primary Preset" />
+          <v-select v-model="init.primaryPreset" :items="primaryPreset" label="Primary Preset" />
         </v-col>
         <v-col cols="6" class="pl-2">
-          <v-select v-model="init.comparePreset" :items="comparePresets" label="Compare Preset" />
+          <v-select v-model="init.comparePreset" :items="comparePreset" label="Compare Preset" />
         </v-col>
       </v-row>
 
@@ -60,12 +60,12 @@
           <v-checkbox v-model="init.compare" label="Compare" class="compare-label mt-0 mb-5" />
         </v-col>
         <v-col>
-          <v-checkbox v-model="darkTheme" label="Dark Theme" class="compare-label mt-0 mb-5" />
+          <v-checkbox v-model="darkTheme" @click="toggleTheme" label="Dark Theme" class="compare-label mt-0 mb-5" />
         </v-col>
       </v-row>
 
       <v-row justify="center">
-        <DateRangePicker :config="init" @change="setDateRange" />
+        <DateRangePicker namespace="dakepickertestone" :config="init" @change="setDateRange" />
       </v-row>
 
       <v-row justify="center" class="mt-10">
@@ -89,7 +89,7 @@
   </v-app>
 </template>
 
-<script>
+<script setup>
 /**
  * !!! PLEASE READ !!!
  *
@@ -107,65 +107,53 @@
  * However it is allowed to import presets for dropdowns.
  *
  */
-import { mapMutations } from "vuex"
+import { ref, defineAsyncComponent } from "vue";
 import { primaryPresets, comparePresets } from "./components/DatePicker/presets"
-import DateRangePicker from "./components/DateRangePicker"
+import { useTheme } from "vuetify"
 
-export default {
-  name: "App",
+const DateRangePicker = defineAsyncComponent(() => import("@/components/DateRangePicker.vue"))
 
-  components: {
-    DateRangePicker
-  },
+const init = ref({
+  // test with and without init values
+  // compare: true,
+  // dateStart: "2023-01-01",
+  // dateUntil: "2023-02-01",
+  // compareStart: "2024-01-01",
+  // compareUntil: "2024-02-01",
+  // primaryPreset: "LAST_30_DAYS",
+  // comparePreset: "PREVIOUS_YEAR",
+});
 
-  data: () => ({
-    init: {
-      // test with and without init values
-      compare: true,
-      dateStart: "2019-01-01",
-      dateUntil: "2020-02-01",
-      compareStart: "2018-01-01",
-      compareUntil: "2019-02-01",
-      // primaryPreset: "LAST_30_DAYS",
-      // comparePreset: "PREVIOUS_YEAR",
-    },
-    init2: {
-      // test with and without init values
-      compare: true,
-      dateStart: "2021-03-01",
-      dateUntil: "2022-05-01",
-      compareStart: "2020-01-01",
-      compareUntil: "2021-02-01",
-      // primaryPreset: "LAST_30_DAYS",
-      // comparePreset: "PREVIOUS_YEAR",
-    },
-    primaryPresets: ["", ...Object.keys(primaryPresets)],
-    comparePresets: ["", ...Object.keys(comparePresets)],
-    emittedDateRange: null, // emitted object from date range picker component
-    darkTheme: false,
-  }),
+const init2 = ref({
+  // test with and without init values
+  compare: true,
+  dateStart: "2024-03-01",
+  dateUntil: "2024-05-01",
+  compareStart: "2024-06-01",
+  compareUntil: "2024-07-01",
+  // primaryPreset: "LAST_30_DAYS",
+  // comparePreset: "PREVIOUS_YEAR",
+});
 
-  watch: {
-    darkTheme() {
-      this.$vuetify.theme.dark = this.darkTheme
-    },
-  },
+const theme = useTheme();
 
-  created() {
-    this.$vuetify.theme.dark = this.darkTheme
-  },
+const primaryPreset = ref(["", ...Object.keys(primaryPresets)])
+const comparePreset = ref(["", ...Object.keys(comparePresets)]);
+let emittedDateRange = ref(null); // emitted object from date range picker component
+let darkTheme = ref(theme.global.name.value.dark ? true : false);
 
-  methods: {
-    ...mapMutations("datepicker", ["SET_CONFIG"]),
-
-    setDateRange(state) {
-      this.init = state // update props form
-      this.emittedDateRange = state // update emitted object
-    },
-    setDateRange2(state) {
-      this.init2 = state // update props form
-      this.emittedDateRange = state // update emitted object
-    },
-  },
+const setDateRange = (state) => {
+  init.value = state // update props form
+  emittedDateRange.value = state // update emitted object
 }
+
+const setDateRange2 = (state) => {
+  init2.value = state // update props form
+  emittedDateRange.value = state // update emitted object
+}
+
+function toggleTheme() {
+  theme.global.name.value = theme.global.current.value.dark ? 'light' : 'dark'
+}
+
 </script>

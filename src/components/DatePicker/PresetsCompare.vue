@@ -1,68 +1,53 @@
 <template>
   <div>
     <v-btn
-      x-small
-      depressed
+      size="x-small"
+      variant="flat"
       :disabled="!getCompareState"
-      :text="getComparePreset !== 'PREVIOUS_PERIOD'"
       :color="getComparePreset === 'PREVIOUS_PERIOD' ? 'primary' : null"
-      @click="SET_COMPARE_PRESET('PREVIOUS_PERIOD')"
+      @click="datePickerStore.SET_COMPARE_PRESET('PREVIOUS_PERIOD')"
     >
       Previous period
     </v-btn>
 
     <v-btn
-      x-small
-      depressed
+      size="x-small"
+      variant="flat"
       :disabled="!getCompareState"
-      :text="getComparePreset !== 'PREVIOUS_MONTH'"
       :color="getComparePreset === 'PREVIOUS_MONTH' ? 'primary' : null"
-      @click="SET_COMPARE_PRESET('PREVIOUS_MONTH')"
+      @click="datePickerStore.SET_COMPARE_PRESET('PREVIOUS_MONTH')"
     >
       Previous month
     </v-btn>
 
     <v-btn
-      x-small
-      depressed
+      size="x-small"
+      variant="flat"
       :disabled="!getCompareState"
-      :text="getComparePreset !== 'PREVIOUS_YEAR'"
       :color="getComparePreset === 'PREVIOUS_YEAR' ? 'primary' : null"
-      @click="SET_COMPARE_PRESET('PREVIOUS_YEAR')"
+      @click="datePickerStore.SET_COMPARE_PRESET('PREVIOUS_YEAR')"
     >
       Previous year
     </v-btn>
   </div>
 </template>
 
-<script>
-import { mapMutations, mapState } from "vuex"
+<script setup>
+import { computed } from "vue"
 
-export default {
-  name: "ComparePresets",
-
-  props: {
-    namespace: {
-      type: String,
-      default: "datepicker",
-    },
+const props = defineProps({
+  namespace: {
+    type: String,
+    default: "datepicker",
   },
+  piniaStore: {
+    required: true
+  }
+})
 
-  computed: mapState({
-    getCompareState(state, getters) {
-      return getters[this.namespace + "/getCompareState"]
-    },
-    getComparePreset(state, getters) {
-      return getters[this.namespace + "/getComparePreset"]
-    },
-  }),
+const datePickerStore = props.piniaStore;
 
-  methods: {
-    ...mapMutations({
-      SET_COMPARE_PRESET(commit, payload) {
-        return commit(this.namespace + "/SET_COMPARE_PRESET", payload)
-      },
-    }),
-  },
-}
+const getCompareState = computed(() => datePickerStore.getCompareState)
+const getComparePreset = computed(() => datePickerStore.getComparePreset)
+
 </script>

@@ -1,25 +1,12 @@
-import Vue from "vue"
-import Vuex from "vuex"
-import App from "./App.vue"
-import store from "@/store"
-import vuetify from "@/plugins/vuetify.js"
-import DateRangePicker from "./wrapper"
+import vuetify from './plugins/vuetify'
+import App from './App.vue'
 
-Vue.config.devtools = true
-Vue.config.productionTip = false
+import { createApp } from 'vue'
+import { createPinia } from 'pinia'
 
-Vue.use(Vuex)
+const app = createApp(App)
 
-const DateRangePickerSettings = {
-  debug: true,
-  store,
-  // moduleNames: ["transactions", "reports", "datepicker"]
-}
+app.use(vuetify)
+app.use(createPinia())
 
-// Vue.use(DateRangePicker, DateRangePickerSettings)
-
-new Vue({
-  store,
-  vuetify,
-  render: (h) => h(App),
-}).$mount("#app")
+app.mount('#app')

@@ -1,120 +1,127 @@
 <template>
-  <v-card class="date-picker-tablet elevation-4 mx-auto">
+  <div class="date-picker-tablet elevation-4 mx-auto">
     <v-card-text class="pickers">
       <v-row>
-        <v-col cols="5">
+        <v-col cols="6">
           <v-row justify="center" :class="['picker-main', isPickerPrimaryActive ? 'active' : '']">
             <v-col cols="12">
               <v-date-picker
-                range
+                multiple="range"
                 no-title
                 first-day-of-week="1"
+                :v-model:month="new Date(getPickerDate).getMonth()"
+                :v-model:year="new Date(getPickerDate).getFullYear()"
                 :max="getMaxDate"
-                :value="getPickerPrimary"
-                :picker-date="getPickerDate"
+                :model-value="getPickerPrimary"
                 class="picker-compare-left pr-1"
                 color="primary darken-2 picker-main-selected"
-                @click:date="SET_PICKER_PRIMARY($event)"
-                @update:picker-date="SET_PICKER_DATE($event)"
+                @update:model-value="datePickerStore.SET_PICKER_PRIMARY($event)"
+                @update:picker-date="datePickerStore.SET_PICKER_DATE($event)"
               />
             </v-col>
           </v-row>
           <v-row v-if="getCompareState" justify="center" class="picker-compare">
             <v-col cols="12">
               <v-date-picker
-                range
+                multiple="range"
                 no-title
                 first-day-of-week="1"
                 class="picker-main-right"
-                color="orange darken-2 picker-compare-selected"
+                color="orange-darken-2"
                 :max="getMaxDate"
-                :value="getPickerCompare"
-                :picker-date="getPickerDate"
-                @click:date="SET_PICKER_COMPARE($event)"
-                @update:picker-date="SET_PICKER_DATE($event)"
+                :v-model:month="new Date(getPickerDate).getMonth()"
+                :v-model:year="new Date(getPickerDate).getFullYear()"
+                :model-value="getPickerCompare"
+                @update:model-value="datePickerStore.SET_PICKER_COMPARE($event)"
+                @update:picker-date="datePickerStore.SET_PICKER_DATE($event)"
               />
             </v-col>
           </v-row>
         </v-col>
 
-        <v-col cols="7">
+        <v-col cols="6">
           <v-row>
             <v-col cols="6">
               <v-text-field
+                hide-details
                 label="From"
                 type="date"
                 dense
-                outlined
-                :max="getMaxDate"
+                variant="outlined"
+                :max="getMaxDateForTextField"
                 :value="getDateStart"
                 class="picker-input"
-                @input="SET_DATE_START($event)"
-                @click="SET_PICKER_PRIMARY_ACTIVE(true)"
+                @update:model-value="datePickerStore.SET_DATE_START($event)"
+                @click="datePickerStore.SET_PICKER_PRIMARY_ACTIVE(true)"
               />
             </v-col>
             <v-col cols="6">
               <v-text-field
+                hide-details
                 label="To"
                 type="date"
                 dense
-                outlined
-                :max="getMaxDate"
+                variant="outlined"
+                :max="getMaxDateForTextField"
                 :value="getDateUntil"
                 class="picker-input"
-                @input="SET_DATE_UNTIL($event)"
-                @click="SET_PICKER_PRIMARY_ACTIVE(true)"
+                @update:model-value="datePickerStore.SET_DATE_UNTIL($event)"
+                @click="datePickerStore.SET_PICKER_PRIMARY_ACTIVE(true)"
               />
             </v-col>
           </v-row>
 
           <!-- presets for main period -->
           <v-row class="pl-2 pr-1">
-            <PresetsPrimary :namespace="namespace" />
+            <PresetsPrimary :pinia-store="datePickerStore" :namespace="namespace" />
           </v-row>
 
           <v-row v-if="show_compare_date_range" class="pl-2 pt-6">
             <v-checkbox
-              :input-value="getCompareState"
+              v-model="getCompareState"
               label="Compare to the following"
               class="compare-label"
-              @change="FLIP_COMPARE_STATE()"
+              hide-details
+              @change="datePickerStore.FLIP_COMPARE_STATE()"
             />
           </v-row>
 
           <v-row v-if="show_compare_date_range">
             <v-col cols="6">
               <v-text-field
+                hide-details
                 label="From"
                 type="date"
-                outlined
+                variant="outlined"
                 dense
-                :max="getMaxDate"
+                :max="getMaxDateForTextField"
                 :value="getDateCompareStart"
                 :disabled="!getCompareState"
                 class="picker-input"
-                @input="SET_COMPARE_START($event)"
-                @click="SET_PICKER_PRIMARY_ACTIVE(false)"
+                @input="datePickerStore.SET_COMPARE_START($event)"
+                @click="datePickerStore.SET_PICKER_PRIMARY_ACTIVE(false)"
               />
             </v-col>
             <v-col cols="6">
               <v-text-field
+                hide-details
                 label="To"
                 type="date"
-                outlined
+                variant="outlined"
                 dense
-                :max="getMaxDate"
+                :max="getMaxDateForTextField"
                 :value="getDateCompareUntil"
                 :disabled="!getCompareState"
                 class="picker-input"
-                @input="SET_COMPARE_UNTIL($event)"
-                @click="SET_PICKER_PRIMARY_ACTIVE(false)"
+                @input="datePickerStore.SET_COMPARE_UNTIL($event)"
+                @click="datePickerStore.SET_PICKER_PRIMARY_ACTIVE(false)"
               />
             </v-col>
           </v-row>
 
           <!-- presets for compare period -->
           <v-row v-if="show_compare_date_range" class="pl-2">
-            <PresetsCompare :namespace="namespace" />
+            <PresetsCompare :pinia-store="datePickerStore" :namespace="namespace" />
           </v-row>
         </v-col>
       </v-row>
@@ -122,142 +129,81 @@
 
     <v-card-actions class="mt-2">
       <v-spacer />
-      <v-btn outlined class="px-4 mr-6" @click="SET_DIALOG_OPENED(false)">Cancel</v-btn>
-      <v-btn class="primary px-7" @click="emitConfig()">Apply</v-btn>
+      <v-btn variant="outlined" class="px-4 mr-6" @click="datePickerStore.SET_DIALOG_OPENED(false)"
+        >Cancel</v-btn
+      >
+      <v-btn class="px-7" variant="elevated" color="primary" @click="emitConfig()">Apply</v-btn>
     </v-card-actions>
-  </v-card>
+  </div>
 </template>
 
-<script>
-import PresetsPrimary from "./PresetsPrimary.vue"
-import PresetsCompare from "./PresetsCompare.vue"
-import { mapState, mapMutations } from "vuex"
+<script setup>
+import { computed } from 'vue'
+import moment from 'moment'
+import presets from './presets'
 
-export default {
-  name: "DatePickerTablet",
+import PresetsPrimary from '@/components/DatePicker/PresetsPrimary.vue'
+import PresetsCompare from '@/components/DatePicker/PresetsCompare.vue'
 
-  components: {
-    PresetsPrimary,
-    PresetsCompare,
+const props = defineProps({
+  namespace: {
+    type: String,
+    default: 'datepicker'
   },
+  piniaStore: {
+    required: true
+  }
+})
 
-  props: {
-    namespace: {
-      type: String,
-      default: "datepicker",
-    },
-  },
+const datePickerStore = props.piniaStore;
 
-  computed: mapState({
-    show_compare_date_range(state) {
-      return state[this.namespace]
-    },
+const show_compare_date_range = computed(() => datePickerStore.show_compare_date_range)
 
-    // config
-    getConfig(state, getters) {
-      return getters[this.namespace + "/getConfig"]
-    },
-    getMaxDate(state, getters) {
-      return getters[this.namespace + "/getMaxDate"]
-    },
+const getConfig = computed(() => datePickerStore.getConfig)
+const getMaxDate = computed(() => datePickerStore.getMaxDate)
+const getMaxDateForTextField = computed(() => moment(datePickerStore.getMaxDate).format(presets.DATE_FORMAT))
+const isPickerPrimaryActive = computed(() => datePickerStore.isPickerPrimaryActive)
+const getPickerPrimary = computed(() => datePickerStore.getPickerPrimary)
+const getPickerDate = computed(() => datePickerStore.getPickerDate)
+const getDateStart = computed(() => datePickerStore.getDateStart)
+const getDateUntil = computed(() => datePickerStore.getDateUntil)
+const getCompareState = computed(() => datePickerStore.getCompareState)
+const getPickerCompare = computed(() => datePickerStore.getPickerCompare)
+const getDateCompareStart = computed(() => datePickerStore.getDateCompareStart)
+const getDateCompareUntil = computed(() => datePickerStore.getDateCompareUntil)
 
-    // compare checkbox
-    getCompareState(state, getters) {
-      return getters[this.namespace + "/getCompareState"]
-    },
+const emit = defineEmits(['emitConfig'])
 
-    // individual dates
-    getDateStart(state, getters) {
-      return getters[this.namespace + "/getDateStart"]
-    },
-    getDateUntil(state, getters) {
-      return getters[this.namespace + "/getDateUntil"]
-    },
-    getDateCompareStart(state, getters) {
-      return getters[this.namespace + "/getDateCompareStart"]
-    },
-    getDateCompareUntil(state, getters) {
-      return getters[this.namespace + "/getDateCompareUntil"]
-    },
-
-    // date picker arrays of date range
-    getPickerPrimary(state, getters) {
-      return getters[this.namespace + "/getPickerPrimary"]
-    },
-    getPickerCompare(state, getters) {
-      return getters[this.namespace + "/getPickerCompare"]
-    },
-
-    // vuetify date range calendars setup
-    isPickerPrimaryActive(state, getters) {
-      return getters[this.namespace + "/isPickerPrimaryActive"]
-    },
-    getPickerDate(state, getters) {
-      return getters[this.namespace + "/getPickerDate"]
-    },
-  }),
-
-  methods: {
-    ...mapMutations({
-      // controls compare checkbox
-      FLIP_COMPARE_STATE(commit, payload) {
-        return commit(this.namespace + "/FLIP_COMPARE_STATE", payload)
-      },
-
-      // controls applied selections
-      SET_CONFIG(commit, payload) {
-        return commit(this.namespace + "/SET_CONFIG", payload)
-      },
-
-      // controls dialog modal
-      SET_DIALOG_OPENED(commit, payload) {
-        return commit(this.namespace + "/SET_DIALOG_OPENED", payload)
-      },
-
-      // control selected date ranges
-      SET_DATE_START(commit, payload) {
-        return commit(this.namespace + "/SET_DATE_START", payload)
-      },
-      SET_DATE_UNTIL(commit, payload) {
-        return commit(this.namespace + "/SET_DATE_UNTIL", payload)
-      },
-      SET_COMPARE_START(commit, payload) {
-        return commit(this.namespace + "/SET_COMPARE_START", payload)
-      },
-      SET_COMPARE_UNTIL(commit, payload) {
-        return commit(this.namespace + "/SET_COMPARE_UNTIL", payload)
-      },
-      SET_PICKER_PRIMARY(commit, payload) {
-        return commit(this.namespace + "/SET_PICKER_PRIMARY", payload)
-      },
-      SET_PICKER_COMPARE(commit, payload) {
-        return commit(this.namespace + "/SET_PICKER_COMPARE", payload)
-      },
-
-      // control vuetify calendar pickers
-      SET_PICKER_PRIMARY_ACTIVE(commit, payload) {
-        return commit(this.namespace + "/SET_PICKER_PRIMARY_ACTIVE", payload)
-      },
-      SET_PICKER_DATE(commit, payload) {
-        return commit(this.namespace + "/SET_PICKER_DATE", payload)
-      },
-    }),
-
-    emitConfig() {
-      this.SET_CONFIG()
-      this.$emit("change", this.getConfig)
-    },
-  },
+const emitConfig = () => {
+  datePickerStore.SET_CONFIG()
+  emit('change', getConfig.value)
 }
 </script>
 
 <style lang="scss" scoped>
-.date-picker-tablet::v-deep {
+.date-picker-tablet:deep() {
   max-width: 785px;
   margin-top: 15vh;
+  background-color: rgb(var(--v-theme-background)) !important;
+
+  .v-card {
+    overflow: hidden !important;
+  }
 
   .pickers {
-    max-height: 23em;
+    max-height: 23.5em;
+
+    .v-date-picker-header {
+      display: none;
+    }
+
+    .v-picker-title {
+      display: none;
+    }
+
+    .v-text-field__details {
+      display: none;
+    }
   }
 
   .picker-input {
@@ -269,11 +215,13 @@ export default {
   .picker-main {
     position: relative;
     z-index: 1;
+
     .picker-label {
       opacity: 0;
     }
+
     .v-picker {
-      background-color: transparent;
+      //  background-color: transparent;
     }
 
     &.active {
@@ -289,6 +237,7 @@ export default {
       button:not(.picker-main-selected) {
         background-color: transparent;
       }
+
       button:focus {
         background-color: #1976d2;
         color: #ffffff;
@@ -310,9 +259,11 @@ export default {
 
     position: relative;
     z-index: 2;
+
     &.active {
       z-index: 1015;
     }
+
     // Header should be rendered but not visible
     .v-date-picker-header {
       opacity: 0;
@@ -326,6 +277,7 @@ export default {
       button:not(.picker-compare-selected) {
         color: transparent;
       }
+
       button:focus {
         background-color: #f57c00;
         color: #ffffff;
@@ -333,7 +285,8 @@ export default {
     }
 
     .v-picker {
-      background-color: transparent !important;
+      // background-color: transparent !important;
+
       .v-picker__body {
         background-color: transparent !important;
       }

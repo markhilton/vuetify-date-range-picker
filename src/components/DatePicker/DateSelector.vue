@@ -3,16 +3,10 @@
     <v-row no-gutters>
       <v-col v-if="isCalendarIconShown" cols="1" class="mr-2">
         <v-btn
-          small
-          icon
-          fab
-          @click.native.stop="
-            FLIP_COMPARE_STATE()
-            SET_CONFIG()
-          "
-        >
-          <v-icon>{{ getConfig.compare ? icon.mdiCalendarCheck : icon.mdiCalendarRemove }}</v-icon>
-        </v-btn>
+          variant="text"
+          rounded
+          :icon="getConfig.compare ? 'mdi-calendar-month' : 'mdi-free-cancellation'"
+        />
       </v-col>
 
       <v-col class="ml-3">
@@ -34,98 +28,48 @@
 
       <v-col v-if="isPresetsIconShown" cols="1" class="mr-4">
         <v-menu offset-y left>
-          <template #activator="{ on, attrs }">
-            <v-btn primary small icon fab v-bind="attrs" v-on="on">
-              <v-icon>{{ icon.mdiChevronDown }}</v-icon>
+          <template v-slot:activator="{ props }">
+            <v-btn rounded variant="text" v-bind="props" icon="mdi-chevron-down">
             </v-btn>
           </template>
-
-          <v-list>
-            <v-list-item
-              v-for="(item, index) in getPrimaryPresets"
-              :key="index"
-              @click="
-                SET_PRIMARY_PRESET(item)
-                SET_CONFIG()
-                $emit('change', getConfig)
-              "
-            >
-              <v-list-item-title>{{ getPresetLabel(item) }}</v-list-item-title>
-            </v-list-item>
-          </v-list>
-        </v-menu>
-      </v-col>
-    </v-row>
-  </v-sheet>
+<v-list>
+  <v-list-item v-for="(item, index) in getPrimaryPresets" :key="index">
+    <v-list-item-title>{{ getPresetLabel(item) }}</v-list-item-title>
+  </v-list-item>
+</v-list>
+</v-menu>
+</v-col>
+</v-row>
+</v-sheet>
 </template>
 
-<script>
-import { mapState, mapMutations } from "vuex"
-import { mdiCalendarCheck, mdiCalendarRemove, mdiChevronDown } from "@mdi/js"
+<script setup>
+import { computed } from "vue"
 
-export default {
-  name: "DateSelector",
-
-  props: {
-    namespace: {
-      type: String,
-      default: "datepicker",
-    },
+const props = defineProps({
+  namespace: {
+    type: String,
+    default: "datepicker",
   },
+  piniaStore: {
+    required: true
+  }
+})
 
-  data: () => ({
-    icon: {
-      mdiChevronDown,
-      mdiCalendarCheck,
-      mdiCalendarRemove,
-    },
-  }),
+const datePickerStore = props.piniaStore;
 
-  computed: mapState({
-    show_compare_date_range(state) {
-      return state[this.namespace]
-    },
+const show_compare_date_range = computed(() => datePickerStore.show_compare_date_range)
 
-    // date format helper
-    getConfig(state, getters) {
-      return getters[this.namespace + "/getConfig"]
-    },
-    isPresetsIconShown(state, getters) {
-      return getters[this.namespace + "/isPresetsIconShown"]
-    },
-    isCalendarIconShown(state, getters) {
-      return getters[this.namespace + "/isCalendarIconShown"]
-    },
-    getFormattedDate(state, getters) {
-      return getters[this.namespace + "/getFormattedDate"]
-    },
-    getPrimaryPresets(state, getters) {
-      return getters[this.namespace + "/getPrimaryPresets"]
-    },
-    getPresetLabel(state, getters) {
-      return getters[this.namespace + "/getPresetLabel"]
-    },
-    getPresetLabelSmall(state, getters) {
-      return getters[this.namespace + "/getPresetLabelSmall"]
-    },
-  }),
+const getConfig = computed(() => datePickerStore.getConfig)
+const isPresetsIconShown = computed(() => datePickerStore.isPresetsIconShown)
+const isCalendarIconShown = computed(() => datePickerStore.isCalendarIconShown)
+const getFormattedDate = computed(() => datePickerStore.getFormattedDate)
+const getPrimaryPresets = computed(() => datePickerStore.getPrimaryPresets)
+const getPresetLabel = computed(() => datePickerStore.getPresetLabel)
+const getPresetLabelSmall = computed(() => datePickerStore.getPresetLabelSmall)
 
-  methods: {
-    ...mapMutations({
-      FLIP_COMPARE_STATE(commit, payload) {
-        return commit(this.namespace + "/FLIP_COMPARE_STATE", payload)
-      },
-      SET_DIALOG_OPENED(commit, payload) {
-        return commit(this.namespace + "/SET_DIALOG_OPENED", payload)
-      },
-      SET_PRIMARY_PRESET(commit, payload) {
-        return commit(this.namespace + "/SET_PRIMARY_PRESET", payload)
-      },
-      SET_CONFIG(commit, payload) {
-        return commit(this.namespace + "/SET_CONFIG", payload)
-      },
-    }),
-  },
+const SET_DIALOG_OPENED = (payload) => {
+  datePickerStore.dialog_opened = payload;
 }
 </script>
 
