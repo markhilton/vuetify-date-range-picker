@@ -1,0 +1,54 @@
+{
+  "name": "@nerd305/vuetify-date-range-picker",
+  "version": "0.1.1",
+  "description": "Vuetify Date Range Picker with compare period and presets, optimized for best mobile and desktop user experience",
+  "keywords": [
+    "DateRangePicker",
+    "VuetifyDateRangePicker"
+  ],
+  "private": false,
+  "author": "Mark Hilton",
+  "type": "module",
+  "license": "MIT",
+  "homepage": "https://github.com/markhilton/vuetify-date-range-picker",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/markhilton/vuetify-date-range-picker"
+  },
+  "main": "dist/vuetify-date-range-picker.umd.js",
+  "module": "dist/vuetify-date-range-picker.es.js",
+  "browser": {
+    "./sfc": "src/DateRangePicker.vue"
+  },
+  "scripts": {
+    "serve": "vite preview",
+    "lint": "eslint --ext .js,.vue --ignore-path .gitignore --fix src",
+    "dev": "vite",
+    "build": "vite build",
+    "format": "prettier --write src/"
+  },
+  "dependencies": {
+    "deepcopy": "^2.1.0",
+    "pinia": "^2.1.7",
+    "vue": "^3.4.29",
+    "vue-moment": "^4.1.0",
+    "vue-router": "^4.3.3",
+    "vuetify": "^3.6.11"
+  },
+  "devDependencies": {
+    "@mdi/font": "^7.2.96",
+    "@rushstack/eslint-patch": "^1.8.0",
+    "@vitejs/plugin-vue": "^5.0.5",
+    "@vue/eslint-config-prettier": "^9.0.0",
+    "eslint": "^8.57.0",
+    "eslint-plugin-vue": "^9.23.0",
+    "prettier": "^3.2.5",
+    "sass": "^1.77.7",
+    "vite": "^5.3.1",
+    "vite-plugin-css-injected-by-js": "^3.1.0",
+    "vite-plugin-eslint": "^1.8.1",
+    "vite-plugin-vuetify": "^2.0.4",
+    "vue-cli-plugin-vuetify": "~2.5.8",
+    "vue-template-compiler": "^2.7.14"
+  }
+}
