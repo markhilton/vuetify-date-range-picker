@@ -24,7 +24,7 @@ export default defineConfig({
     target: 'esnext',
 
     lib: {
-      entry: './src/main.js',
+      entry: './src/wrapper.js',
       name: 'vuetify-date-range-picker',
       fileName: 'vuetify-date-range-picker'
     },

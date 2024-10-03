@@ -15,10 +15,10 @@
     "type": "git",
     "url": "https://github.com/markhilton/vuetify-date-range-picker"
   },
-  "main": "dist/vuetify-date-range-picker.umd.js",
-  "module": "dist/vuetify-date-range-picker.es.js",
+  "main": "dist/vuetify-date-range-picker.umd.cjs",
+  "module": "dist/vuetify-date-range-picker.js",
   "browser": {
-    "./sfc": "src/DateRangePicker.vue"
+    "./sfc": "src/DateRangePicker.ce.vue"
   },
   "scripts": {
     "serve": "vite preview",
@@ -28,15 +28,16 @@
     "format": "prettier --write src/"
   },
   "dependencies": {
+    "@mdi/font": "^7.2.96",
     "deepcopy": "^2.1.0",
     "pinia": "^2.1.7",
     "vue": "^3.4.29",
     "vue-moment": "^4.1.0",
     "vue-router": "^4.3.3",
-    "vuetify": "^3.6.11"
+    "vuetify": "^3.6.11",
+    "v-mask": "^2.3.0"
   },
   "devDependencies": {
-    "@mdi/font": "^7.2.96",
     "@rushstack/eslint-patch": "^1.8.0",
     "@vitejs/plugin-vue": "^5.0.5",
     "@vue/eslint-config-prettier": "^9.0.0",
@@ -50,5 +51,8 @@
     "vite-plugin-vuetify": "^2.0.4",
     "vue-cli-plugin-vuetify": "~2.5.8",
     "vue-template-compiler": "^2.7.14"
+  },
+  "bugs": {
+    "url": "https://github.com/markhilton/vuetify-date-range-picker/issues"
   }
 }
