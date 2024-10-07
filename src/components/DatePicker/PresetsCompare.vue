@@ -37,8 +37,7 @@ import { computed } from "vue"
 
 const props = defineProps({
   namespace: {
-    type: String,
-    default: "datepicker",
+    required: true
   },
   piniaStore: {
     required: true
