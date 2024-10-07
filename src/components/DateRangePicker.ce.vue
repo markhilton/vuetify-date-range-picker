@@ -32,7 +32,7 @@ const props = defineProps({
 
 const { mdAndUp, sm } = useDisplay();
 
-let datePickerStore = {}
+let datePickerStore = props.namespace
 const inheritedClasses = ref("");
 
 const isDialogOpened = computed(() => datePickerStore.isDialogOpened)

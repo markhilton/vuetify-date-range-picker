@@ -4,7 +4,7 @@
       <v-row justify="center">
         <h2 class="font-weight-light ma-10">Vuetify Date Picker Demo</h2>
       </v-row>
-
+ 
       <h4 class="mb-1 text-decoration-underline">Props:</h4>
       <p>
         These props are loaded as initial state for the component to demonstrate that after component integration with
@@ -65,11 +65,11 @@
       </v-row>
 
       <v-row justify="center">
-        <DateRangePicker namespace="dakepickertestone" :config="init" @change="setDateRange" />
+        <DateRangePicker :namespace="datePickerStores.transactions" :config="init" @change="setDateRange" />
       </v-row>
 
       <v-row justify="center" class="mt-10">
-        <DateRangePicker :config="init2" @change="setDateRange2" />
+        <DateRangePicker :namespace="datePickerStores.reports" :config="init" @change="setDateRange2" />
       </v-row>
 
       <v-row>
@@ -111,7 +111,9 @@ import { ref, defineAsyncComponent } from "vue";
 import { primaryPresets, comparePresets } from "./components/DatePicker/presets"
 import { useTheme } from "vuetify"
 
-const DateRangePicker = defineAsyncComponent(() => import("@/components/DateRangePicker.vue"))
+const DateRangePicker = defineAsyncComponent(() => import("@/components/DateRangePicker.ce.vue"))
+
+import { datePickerStores } from "./wrapper";
 
 const init = ref({
   // test with and without init values
@@ -127,10 +129,10 @@ const init = ref({
 const init2 = ref({
   // test with and without init values
   compare: true,
-  dateStart: "2024-03-01",
-  dateUntil: "2024-05-01",
-  compareStart: "2024-06-01",
-  compareUntil: "2024-07-01",
+  // dateStart: "2024-03-01",
+  // dateUntil: "2024-05-01",
+  // compareStart: "2024-06-01",
+  // compareUntil: "2024-07-01",
   // primaryPreset: "LAST_30_DAYS",
   // comparePreset: "PREVIOUS_YEAR",
 });

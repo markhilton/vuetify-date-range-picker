@@ -1,5 +1,5 @@
 <template>
-  <v-sheet class="pa-2 date-selector elevation-2 rounded" @click="SET_DIALOG_OPENED(true)">
+  <v-sheet class="pa-2 date-selector rounded" @click="SET_DIALOG_OPENED(true)">
     <v-row no-gutters>
       <v-col v-if="isCalendarIconShown" cols="1" class="mr-2">
         <v-btn
@@ -20,7 +20,7 @@
           {{ getFormattedDate(getConfig.dateStart, getConfig.dateUntil) }}
         </div>
 
-        <div v-if="show_compare_date_range && getConfig.compare" class="text--lighten-2 mt-n2 caption">
+        <div v-if="show_compare_date_range && getConfig.compare" class="text-lighten-2 mt-n2 caption">
           <div v-if="getConfig.comparePreset">vs {{ getPresetLabelSmall(getConfig.comparePreset) }}</div>
           <div v-else>vs {{ getFormattedDate(getConfig.compareStart, getConfig.compareUntil) }}</div>
         </div>
@@ -32,15 +32,15 @@
             <v-btn rounded variant="text" v-bind="props" icon="mdi-chevron-down">
             </v-btn>
           </template>
-<v-list>
-  <v-list-item v-for="(item, index) in getPrimaryPresets" :key="index">
-    <v-list-item-title>{{ getPresetLabel(item) }}</v-list-item-title>
-  </v-list-item>
-</v-list>
-</v-menu>
-</v-col>
-</v-row>
-</v-sheet>
+          <v-list>
+            <v-list-item v-for="(item, index) in getPrimaryPresets" :key="index" @click="emitConfig(item)">
+              <v-list-item-title>{{ getPresetLabel(item) }}</v-list-item-title>
+            </v-list-item>
+          </v-list>
+        </v-menu>
+      </v-col>
+    </v-row>
+  </v-sheet>
 </template>
 
 <script setup>
@@ -48,8 +48,7 @@ import { computed } from "vue"
 
 const props = defineProps({
   namespace: {
-    type: String,
-    default: "datepicker",
+    required: true
   },
   piniaStore: {
     required: true
@@ -70,6 +69,14 @@ const getPresetLabelSmall = computed(() => datePickerStore.getPresetLabelSmall)
 
 const SET_DIALOG_OPENED = (payload) => {
   datePickerStore.dialog_opened = payload;
+}
+
+const emit = defineEmits(["emitConfig"])
+
+const emitConfig = (item) => {
+  datePickerStore.SET_PRIMARY_PRESET(item);
+  datePickerStore.SET_CONFIG();
+  emit("change", getConfig.value)
 }
 </script>
 
