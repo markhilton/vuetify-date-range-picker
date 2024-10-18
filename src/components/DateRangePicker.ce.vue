@@ -2,7 +2,7 @@
   <div class="date-selector">
     <DateSelector v-bind="$attrs" :class="inheritedClasses" :namespace="namespace" :pinia-store="datePickerStore"  @change="$emit('change', $event)" />
     <!-- <v-overlay v-model="isDialogOpened" @click="datePickerStore.SET_DIALOG_OPENED(true)"> -->
-    <v-overlay v-model="isDialogOpened">
+    <v-overlay v-model="isDialogOpened"  class="align-center justify-center">
       <div v-if="isDialogOpened" class="date-pickers-container">
         <DatePickerDesktop v-if="mdAndUp" :pinia-store="datePickerStore"  :namespace="namespace" @change="$emit('change', $event)" />
         <DatePickerTablet v-else-if="sm" :pinia-store="datePickerStore" :namespace="namespace" @change="$emit('change', $event)" />

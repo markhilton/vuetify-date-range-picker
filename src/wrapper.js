@@ -70,7 +70,7 @@ export default {
         useDatePickerStore().SET_PRESET_ICON_SHOWN(Boolean(config.showCompare))
       }
       // Setting back
-      datePickerStores['datePickerStore'] = useDatePickerStore(); 
+      datePickerStores = useDatePickerStore(); // If storenames are not provided just use datePickerStores 
     }
     // delete config?.store
 
