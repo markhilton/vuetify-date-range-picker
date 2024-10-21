@@ -13,8 +13,7 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted, onBeforeMount } from "vue";
-import { defineStore } from "pinia"
+import { ref, computed, onMounted } from "vue";
 import { useDisplay } from "vuetify";
 
 import DateSelector from "@/components/DatePicker/DateSelector.vue"
@@ -22,25 +21,18 @@ import DatePickerDesktop from "@/components/DatePicker/DatePickerDesktop.vue"
 import DatePickerTablet from "@/components/DatePicker/DatePickerTablet.vue"
 import DatePickerMobile from "@/components/DatePicker/DatePickerMobile.vue"
 
-import datePicker from '@/stores/datePicker'
-
 const props = defineProps({
   config: {
     type: Object,
   },
   namespace: {
-    type: String,
-    // default: "datepicker",
-    // required: true
+    required: true
   },
 });
 
 const { mdAndUp, sm } = useDisplay();
 
-let useDatePickerStore = {}
-let datePickerStore = {}
-
-
+let datePickerStore = props.namespace
 const inheritedClasses = ref("");
 
 const isDialogOpened = computed(() => datePickerStore.isDialogOpened)
@@ -54,20 +46,6 @@ onMounted(() => {
   datePickerStore.SET_PROPS({ ...props.config })
   datePickerStore.SET_CONFIG()
 });
-
-onBeforeMount(() => {
-  const number = Math.random();
-  const generatedNamespace = 'datepicker' + number;
-
-  if (props.namespace) {
-    useDatePickerStore = defineStore(props.namespace, datePicker)
-  }
-  else {
-    useDatePickerStore = defineStore(generatedNamespace, datePicker)
-  }
-  datePickerStore = useDatePickerStore();
-})
-
 </script>
 
 <style lang="scss" scoped>

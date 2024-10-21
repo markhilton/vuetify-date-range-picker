@@ -196,8 +196,7 @@ import PresetsCompare from '@/components/DatePicker/PresetsCompare.vue'
 
 const props = defineProps({
   namespace: {
-    type: String,
-    default: "datepicker",
+    required: true
   },
   piniaStore: {
     required: true
@@ -271,7 +270,7 @@ watch(
 <style lang="scss" scoped>
 .date-picker-desktop:deep() {
   max-width: 1150px;
-  margin-top: 15vh;
+  // margin-top: 15vh;
   background-color: rgb(var(--v-theme-background)) !important;
 
   .pickers {

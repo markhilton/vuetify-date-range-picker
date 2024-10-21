@@ -118,8 +118,7 @@ import PresetsCompare from "@/components/DatePicker/PresetsCompare.vue"
 
 const props = defineProps({
   namespace: {
-    type: String,
-    default: "datepicker",
+    required: true
   },
   piniaStore: {
     required: true
