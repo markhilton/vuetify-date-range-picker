@@ -13,27 +13,30 @@ const app  = createApp({
 app.use(createPinia())
 app.use(vuetify)
 
-const transactions= {
-  name: "transactions",
-  config:{
-    showPresetsIcon:false,
-    showCalendarIcon:false,
-    showCompare:true
-  }
-}
+// const transactions= {
+//   name: "transactions",
+//   config:{
+//     showPresetsIcon:false,
+//     showCalendarIcon:false,
+//     showCompare:true
+//   }
+// }
 
-const reports= {
-  name: "reports",
-  config:{
-    showPresetsIcon:false,
-    showCalendarIcon:true,
-    showCompare:true
-  }
-}
+// const reports= {
+//   name: "reports",
+//   config:{
+//     showPresetsIcon:false,
+//     showCalendarIcon:true,
+//     showCompare:true
+//   }
+// }
 
 const DateRangePickerSettings = {
   debug: true,
-  storeNames: [ transactions , reports], // Storenames
+  // showPresetsIcon: false,
+  // showCalendarIcon: true,
+  showCompare: true
+  // storeNames: [ transactions , reports], // Storenames
 }
 
 app.use(DateRangePicker,DateRangePickerSettings )
