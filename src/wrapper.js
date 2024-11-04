@@ -46,7 +46,7 @@ export default {
         }
 
         if ([true, false].includes(storeName?.config?.showCompare)) {
-          newStore().SET_PRESET_ICON_SHOWN(Boolean(storeName?.config?.showCompare))
+          newStore().SET_COMPARE_DATE_RANGE_SHOWN(Boolean(storeName?.config?.showCompare))
         }
         // Setting back 
        datePickerStores[storeName.name] = newStore(); 
@@ -67,7 +67,7 @@ export default {
       }
 
       if ([true, false].includes(config.showCompare)) {
-        useDatePickerStore().SET_PRESET_ICON_SHOWN(Boolean(config.showCompare))
+        useDatePickerStore().SET_COMPARE_DATE_RANGE_SHOWN(Boolean(config.showCompare))
       }
       // Setting back
       datePickerStores = useDatePickerStore(); // If storenames are not provided just use datePickerStores 
