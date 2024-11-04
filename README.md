@@ -28,15 +28,15 @@ export default {
 ## Usage
 
 ```html
-<date-range-picker :namespace="datePickerStores.transactions" :config="configuration" @change="setDateRange" />
+<date-range-picker :namespace="datePickerStores" :config="configuration" @change="setDateRange" />
 ```
 
 example configuration using last 30 days preset and compare to previous period:
 
 ```html
 <script>
-  import { presets } from '@nerd305/vuetify-date-range-picker'
   import { datePickerStores } from '@nerd305/vuetify-date-range-picker'
+  import { presets } from '@nerd305/vuetify-date-range-picker'
 
   const configuration = {
     dark: false,
@@ -50,36 +50,6 @@ example configuration using last 30 days preset and compare to previous period:
     comparePreset: PREVIOUS_PERIOD
   }
 
-  const transactions= {
-    name: "transactions",
-    config: {
-      dark: false,
-      compare: false,
-      dateFormat: 'MMM Do, YYYY',
-      dateStart: presets.LAST_30_DAYS[0],
-      dateUntil: presets.LAST_30_DAYS[1],
-      compareStart: presets.PREVIOUS_PERIOD[LAST_30_DAYS][0],
-      compareUntil: presets.PREVIOUS_PERIOD[LAST_30_DAYS][1],
-      primaryPreset: LAST_30_DAYS,
-      comparePreset: PREVIOUS_PERIOD
-    }
-  }
-
-  const reports= {
-    name: "reports",
-    config:{
-        dark: false,
-        compare: true,
-        dateFormat: 'MMM Do, YYYY',
-        dateStart: presets.LAST_30_DAYS[0],
-        dateUntil: presets.LAST_30_DAYS[1],
-        compareStart: presets.PREVIOUS_PERIOD[LAST_30_DAYS][0],
-        compareUntil: presets.PREVIOUS_PERIOD[LAST_30_DAYS][1],
-        primaryPreset: LAST_30_DAYS,
-        comparePreset: PREVIOUS_PERIOD
-      }
-  }
-
 </script>
 ```
 
@@ -88,7 +58,7 @@ example configuration using last 30 days preset and compare to previous period:
 | Prop        | Type   | Default       | Description                                     |
 | ----------- | ------ | ------------- | ----------------------------------------------  |
 | config      | Object | configuration | Date format of the DateRangePicker              |
-| namespace   | String | none          | Namespace of the DateRangePicker Pinia Store    | 
+| namespace   | String | none          | DateRangePicker Pinia Store    | 
 | storeNames  | Array  | none          | Array of Date formats for the DateRangePicker   |
 
 | Object property | Type    | Default         | Description                                                              |

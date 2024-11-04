@@ -65,11 +65,11 @@
       </v-row>
 
       <v-row justify="center">
-        <DateRangePicker :namespace="datePickerStores.transactions" :config="init" @change="setDateRange" />
+        <DateRangePicker :namespace="datePickerStores" :config="init" @change="setDateRange" />
       </v-row>
 
       <v-row justify="center" class="mt-10">
-        <DateRangePicker :namespace="datePickerStores.reports" :config="init" @change="setDateRange2" />
+        <DateRangePicker :namespace="datePickerStores" :config="init2" @change="setDateRange2" />
       </v-row>
 
       <v-row>
@@ -117,7 +117,7 @@ import { datePickerStores } from "./wrapper";
 
 const init = ref({
   // test with and without init values
-  // compare: true,
+  compare: false,
   // dateStart: "2023-01-01",
   // dateUntil: "2023-02-01",
   // compareStart: "2024-01-01",
