@@ -69,7 +69,7 @@
       </v-row>
 
       <v-row justify="center" class="mt-10">
-        <DateRangePicker :namespace="datePickerStores" :config="init2" @change="setDateRange2" />
+        <DateRangePicker :namespace="datePickerStores" :config="init" @change="setDateRange" />
       </v-row>
 
       <v-row>
@@ -117,7 +117,7 @@ import { datePickerStores } from "./wrapper";
 
 const init = ref({
   // test with and without init values
-  compare: false,
+  compare: true,
   // dateStart: "2023-01-01",
   // dateUntil: "2023-02-01",
   // compareStart: "2024-01-01",
@@ -126,16 +126,16 @@ const init = ref({
   // comparePreset: "PREVIOUS_YEAR",
 });
 
-const init2 = ref({
-  // test with and without init values
-  compare: true,
-  // dateStart: "2024-03-01",
-  // dateUntil: "2024-05-01",
-  // compareStart: "2024-06-01",
-  // compareUntil: "2024-07-01",
-  // primaryPreset: "LAST_30_DAYS",
-  // comparePreset: "PREVIOUS_YEAR",
-});
+// const init2 = ref({
+//   // test with and without init values
+//   compare: false,
+//   // dateStart: "2024-03-01",
+//   // dateUntil: "2024-05-01",
+//   // compareStart: "2024-06-01",
+//   // compareUntil: "2024-07-01",
+//   // primaryPreset: "LAST_30_DAYS",
+//   // comparePreset: "PREVIOUS_YEAR",
+// });
 
 const theme = useTheme();
 
@@ -149,10 +149,10 @@ const setDateRange = (state) => {
   emittedDateRange.value = state // update emitted object
 }
 
-const setDateRange2 = (state) => {
-  init2.value = state // update props form
-  emittedDateRange.value = state // update emitted object
-}
+// const setDateRange2 = (state) => {
+//   init2.value = state // update props form
+//   emittedDateRange.value = state // update emitted object
+// }
 
 function toggleTheme() {
   theme.global.name.value = theme.global.current.value.dark ? 'light' : 'dark'

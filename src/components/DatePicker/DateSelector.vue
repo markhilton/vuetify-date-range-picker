@@ -12,11 +12,11 @@
       <v-col class="ml-3">
         <div
           v-if="getConfig.primaryPreset"
-          :class="['title', { 'mt-1': !getConfig.compare || !show_compare_date_range }]"
+          :class="['text-h6', { 'mt-1': !getConfig.compare || !show_compare_date_range }]"
         >
           {{ getPresetLabel(getConfig.primaryPreset) }}
         </div>
-        <div v-else :class="['subtitle-1', { 'mt-2': !getConfig.compare || !show_compare_date_range }]">
+        <div v-else :class="['text-subtitle-1', { 'mt-2': !getConfig.compare || !show_compare_date_range }]">
           {{ getFormattedDate(getConfig.dateStart, getConfig.dateUntil) }}
         </div>
 

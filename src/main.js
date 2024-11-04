@@ -35,7 +35,7 @@ const DateRangePickerSettings = {
   debug: true,
   // showPresetsIcon: false,
   // showCalendarIcon: true,
-  // showCompare: true
+  showCompare: true
   // storeNames: [ transactions , reports], // Storenames
 }
 
