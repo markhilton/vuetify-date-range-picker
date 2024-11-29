@@ -27,7 +27,7 @@
       </v-col>
 
       <v-col v-if="isPresetsIconShown" cols="1" class="mr-4">
-        <v-menu offset-y left>
+        <v-menu offset-y left style="z-index: 2500 !important;">
           <template v-slot:activator="{ props }">
             <v-btn rounded variant="text" v-bind="props" icon="mdi-chevron-down">
             </v-btn>
